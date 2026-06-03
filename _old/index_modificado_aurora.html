@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Álvaro & Gabriela — Nuestro Viaje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&family=Great+Vibes&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#fdf8f2;--parchment:#f5ede0;--dusty-rose:#d4a5a5;--blush:#e8c5c5;
+  --wine:#7a3b3b;--ink:#2b2020;--soft-ink:#4a3535;--muted:#8a7070;
+  --gold:#c9a96e;--gold-light:#e8d5b0;
+  --ff-display:'Cormorant Garamond',Georgia,serif;
+  --ff-script:'Great Vibes',cursive;
+  --ff-body:'Jost',sans-serif;
+  --header-h:64px;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-body);background:linear-gradient(180deg,#f2e8ff,#dac7ff,#c7b2ff);color:var(--ink);overflow-x:hidden;transition:background-color .7s var(--ease)}
+img{display:block;max-width:100%}
+button{cursor:pointer;border:none;background:none;font:inherit}
+.no-scroll{overflow:hidden}
+::selection{background:var(--blush);color:var(--wine)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--blush);border-radius:10px}
+
+
+.aurora{position:fixed;width:1000px;height:1000px;border-radius:50%;filter:blur(140px);opacity:.35;z-index:-2;animation:drift 30s ease-in-out infinite alternate}
+.a1{background:#ffd6f5;left:-250px;top:-250px}
+.a2{background:#d7c2ff;right:-250px;top:10%;animation-duration:36s}
+.a3{background:#c9e4ff;left:25%;bottom:-300px;animation-duration:42s}
+#starsBg{position:fixed;inset:0;z-index:-1;pointer-events:none}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(180px,-100px) scale(1.2)}}
+
+/* ────────────────────────────────────────
+   PORTADA
+──────────────────────────────────────── */
+.cover{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#2b1a1a 0%,#4a2a2a 45%,#7a4545 75%,#a06060 100%);
+  overflow:hidden;
+  transition:opacity .85s var(--ease),transform .85s var(--ease);
+}
+/* pétalos detrás de todo */
+.cover__petals{position:absolute;inset:0;pointer-events:none;z-index:0}
+/* resplandor decorativo — pointer-events:none obligatorio */
+.cover__glow{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 55%,rgba(201,169,110,.2) 0%,transparent 65%);
+}
+/* contenido encima de todo */
+.cover__content{
+  position:relative;z-index:2;
+  text-align:center;padding:2rem;
+  animation:fadeUp 1.1s .25s both;
+}
+.cover--exit{opacity:0;transform:scale(1.03);pointer-events:none}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+.cover__sub{font-family:var(--ff-body);font-weight:200;font-size:clamp(.8rem,1.8vw,.95rem);letter-spacing:.28em;text-transform:uppercase;color:var(--gold-light);margin-bottom:.6rem}
+.cover__title{font-family:var(--ff-script);font-size:clamp(4.5rem,13vw,9.5rem);color:#fff;line-height:1;text-shadow:0 2px 40px rgba(201,169,110,.45);margin-bottom:.15em}
+.cover__from{font-family:var(--ff-display);font-style:italic;font-size:clamp(.95rem,2.2vw,1.3rem);color:var(--gold-light);margin-bottom:1.6rem}
+.cover__tagline{font-family:var(--ff-display);font-size:clamp(.9rem,1.8vw,1.1rem);font-weight:300;color:rgba(255,255,255,.72);line-height:1.9;margin-bottom:2.8rem}
+
+/* BOTÓN — sin ::before para evitar bloqueo de clicks */
+.cover__btn{
+  display:inline-block;
+  padding:.9rem 3rem;
+  border:1.5px solid var(--gold-light);
+  color:var(--gold-light);
+  font-family:var(--ff-body);font-weight:300;font-size:.82rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  border-radius:50px;
+  background:transparent;
+  cursor:pointer;
+  transition:background .28s,color .28s,transform .28s var(--spring),box-shadow .28s;
+  /* sin position:relative ni z-index — no necesario */
+}
+.cover__btn:hover{
+  background:var(--gold-light);
+  color:#4a2a2a;
+  transform:scale(1.05);
+  box-shadow:0 6px 30px rgba(201,169,110,.35);
+}
+.cover__btn:active{transform:scale(.98)}
+
+.cover__hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.3);font-size:1.4rem;animation:bob 2.2s ease-in-out infinite;pointer-events:none;z-index:2}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* pétalos */
+.petal{
+  position:absolute;top:-20px;left:var(--x);
+  width:var(--sz);height:var(--sz);
+  border-radius:50% 0 50% 0;
+  background:radial-gradient(ellipse at 40% 40%,rgba(255,205,205,.88),rgba(200,125,125,.35));
+  filter:blur(.4px);
+  animation:fall var(--dur) var(--delay) infinite linear;
+}
+@keyframes fall{
+  0%  {top:-25px;transform:translateX(0) rotate(var(--rot)) scale(1);opacity:0}
+  6%  {opacity:.9}
+  92% {opacity:.6}
+  100%{top:108vh;transform:translateX(var(--drift)) rotate(calc(var(--rot) + 500deg)) scale(.65);opacity:0}
+}
+
+/* ────────────────────────────────────────
+   SITE
+──────────────────────────────────────── */
+.site{display:none;min-height:100vh}
+.site[hidden]{display:none!important}
+.site:not([hidden]){display:block}
+.site--in{animation:siteIn .7s var(--ease) both}
+@keyframes siteIn{from{opacity:0}to{opacity:1}}
+
+/* ────────────────────────────────────────
+   HEADER
+──────────────────────────────────────── */
+.hdr{
+  position:sticky;top:0;z-index:50;
+  background:rgba(253,248,242,.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(212,165,165,.22);
+  display:flex;align-items:center;gap:1rem;
+  padding:0 1.5rem;height:var(--header-h);
+}
+.hdr__logo{flex-shrink:0;padding-right:1.4rem;border-right:1px solid var(--blush)}
+.hdr__ag{font-family:var(--ff-script);font-size:1.95rem;color:var(--wine);white-space:nowrap}
+.hdr__ag .amp{color:var(--gold);font-size:1.55rem}
+
+/* ────────────────────────────────────────
+   TABS
+──────────────────────────────────────── */
+.tabs-nav{flex:1;min-width:0;position:relative}
+.tabs-toggle{display:none;flex-direction:column;gap:5px;padding:8px;margin-left:auto}
+.tabs-toggle span{display:block;width:22px;height:2px;background:var(--wine);border-radius:2px;transition:.3s}
+.tabs-list{list-style:none;display:flex;overflow-x:auto;scrollbar-width:none;padding:0;gap:0}
+.tabs-list::-webkit-scrollbar{display:none}
+
+.tab{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:.5rem 1rem;
+  color:var(--muted);font-family:var(--ff-body);font-weight:300;
+  font-size:.72rem;letter-spacing:.08em;white-space:nowrap;
+  border-bottom:2px solid transparent;
+  transition:color .22s,border-color .22s;position:relative;
+}
+.tab__flag{font-size:1.1rem;line-height:1}
+.tab__name{text-transform:uppercase;font-size:.62rem;letter-spacing:.13em}
+.tab:hover{color:var(--soft-ink)}
+.tab--on{color:var(--wine);border-bottom-color:var(--wine);font-weight:400}
+.tab--on::after{content:"";position:absolute;bottom:-2px;left:50%;width:6px;height:6px;background:var(--gold);border-radius:50%;transform:translateX(-50%)}
+
+/* ────────────────────────────────────────
+   PANEL DE PAÍS
+──────────────────────────────────────── */
+.panel{min-height:calc(100vh - var(--header-h));background:var(--bg-tone,var(--cream));padding-bottom:5rem;transition:background .5s var(--ease)}
+.panel--in .panel__hdr{animation:phIn .65s var(--ease) both}
+.panel--in .panel__gw {animation:pgIn .65s .12s var(--ease) both}
+@keyframes phIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pgIn {from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.panel__hdr{text-align:center;padding:clamp(3rem,8vw,5.5rem) 1.5rem 2.8rem;position:relative}
+.panel__hdr::after{content:"";display:block;width:54px;height:1px;background:linear-gradient(to right,transparent,var(--accent,var(--dusty-rose)),transparent);margin:1.8rem auto 0}
+.panel__flag{font-size:clamp(2.4rem,5.5vw,3.8rem);display:block;margin-bottom:.9rem;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.panel__name{font-family:var(--ff-display);font-size:clamp(2.6rem,7.5vw,5.5rem);font-weight:300;letter-spacing:.04em;color:var(--ink);line-height:1.1;margin-bottom:.25rem}
+.panel__tag{font-family:var(--ff-display);font-style:italic;font-size:clamp(.95rem,2.2vw,1.3rem);color:var(--accent,var(--wine));margin-bottom:1.4rem}
+.panel__quote{font-family:var(--ff-display);font-style:italic;font-size:clamp(.88rem,1.8vw,1.05rem);color:var(--muted);max-width:500px;margin:0 auto;line-height:1.85;padding:0 1.2rem;position:relative}
+.panel__quote::before{content:"\201C";font-family:var(--ff-script);font-size:2.8rem;color:var(--accent,var(--dusty-rose));opacity:.38;position:absolute;top:-.55rem;left:.1rem;line-height:1}
+
+/* ────────────────────────────────────────
+   ZONA DE CARGA
+──────────────────────────────────────── */
+.panel__gw{max-width:1380px;margin:0 auto;padding:0 clamp(1rem,4vw,2.8rem)}
+
+.upload-zone{
+  max-width:580px;margin:0 auto 2.2rem;
+  border:1.5px dashed var(--blush);border-radius:14px;
+  padding:1.8rem 1.5rem;text-align:center;
+  background:rgba(255,255,255,.45);
+  transition:border-color .22s,background .22s;
+}
+.upload-zone:hover,.upload-zone--over{border-color:var(--dusty-rose);background:rgba(232,197,197,.1)}
+.upload-zone__ico{font-size:2rem;margin-bottom:.5rem;opacity:.55}
+.upload-zone__txt{font-family:var(--ff-display);font-size:1rem;color:var(--soft-ink);margin-bottom:.25rem}
+.upload-zone__hint{font-size:.78rem;color:var(--muted);line-height:1.65}
+.upload-zone__lbl{
+  display:inline-block;margin-top:.9rem;padding:.45rem 1.5rem;
+  border:1px solid var(--dusty-rose);border-radius:50px;
+  color:var(--wine);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--ff-body);font-weight:300;cursor:pointer;
+  transition:background .22s,color .22s;
+}
+.upload-zone__lbl:hover{background:var(--wine);color:#fff}
+.upload-zone__input{display:none}
+
+/* ────────────────────────────────────────
+   GALERÍA MASONRY
+──────────────────────────────────────── */
+.gallery{columns:4;column-gap:11px}
+@media(max-width:1100px){.gallery{columns:3}}
+@media(max-width:700px) {.gallery{columns:2}}
+@media(max-width:420px) {.gallery{columns:1}}
+
+.gitem{break-inside:avoid;margin-bottom:11px;opacity:0;transform:translateY(18px) scale(.97);transition:opacity .5s calc(var(--i,0)*.035s) var(--ease),transform .5s calc(var(--i,0)*.035s) var(--ease)}
+.gitem--on{opacity:1;transform:none}
+
+.gthumb-btn{display:block;width:100%;border-radius:6px;overflow:hidden;position:relative}
+.gthumb-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(0,0,0,.28));opacity:0;transition:opacity .28s;border-radius:6px;pointer-events:none}
+.gthumb-btn:hover::after{opacity:1}
+.gthumb-btn:hover .gthumb{transform:scale(1.04)}
+.gthumb{width:100%;height:auto;display:block;border-radius:6px;transition:transform .45s var(--ease);background:var(--parchment,#f5ede0)}
+
+/* ────────────────────────────────────────
+   LIGHTBOX
+──────────────────────────────────────── */
+.lb{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(18,8,8,0);transition:background .32s var(--ease)}
+.lb--on{background:rgba(18,8,8,.91)}
+.lb__stage{max-width:min(90vw,1200px);max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.lb__img{max-width:100%;max-height:calc(90vh - 56px);border-radius:4px;object-fit:contain;opacity:0;transform:scale(.96);transition:opacity .28s var(--ease),transform .28s var(--ease);box-shadow:0 18px 70px rgba(0,0,0,.55)}
+.lb__img--on{opacity:1;transform:none}
+.lb__cap{font-family:var(--ff-display);font-style:italic;font-size:.88rem;color:rgba(255,255,255,.45);letter-spacing:.05em}
+.lb__close,.lb__prev,.lb__next{position:fixed;z-index:10;color:rgba(255,255,255,.65);font-size:2rem;padding:.5rem;line-height:1;transition:color .18s,transform .18s var(--spring)}
+.lb__close{top:1.1rem;right:1.3rem;font-size:2.4rem}
+.lb__prev{left:.8rem;top:50%;transform:translateY(-50%)}
+.lb__next{right:.8rem;top:50%;transform:translateY(-50%)}
+.lb__close:hover{color:#fff;transform:scale(1.12) rotate(88deg)}
+.lb__prev:hover{color:#fff;transform:translateY(-50%) translateX(-3px)}
+.lb__next:hover{color:#fff;transform:translateY(-50%) translateX(3px)}
+.lb__prev:disabled,.lb__next:disabled{opacity:.18;pointer-events:none}
+
+/* ────────────────────────────────────────
+   FOOTER
+──────────────────────────────────────── */
+.ftr{text-align:center;padding:2.8rem 1.5rem 3.8rem;background:var(--parchment);border-top:1px solid rgba(212,165,165,.18)}
+.ftr__txt{font-family:var(--ff-script);font-size:1.75rem;color:var(--wine);margin-bottom:.4rem}
+.ftr__txt .h{color:var(--dusty-rose);display:inline-block;animation:hb 1.6s ease-in-out infinite}
+@keyframes hb{0%,100%{transform:scale(1)}15%{transform:scale(1.28)}30%{transform:scale(1)}45%{transform:scale(1.14)}}
+.ftr__sub{font-family:var(--ff-display);font-style:italic;font-size:.92rem;color:var(--muted)}
+
+/* ────────────────────────────────────────
+   MOBILE NAV
+──────────────────────────────────────── */
+@media(max-width:767px){
+  :root{--header-h:56px}
+  .hdr{padding:0 1rem}
+  .tabs-toggle{display:flex;margin-left:auto}
+  .tabs-list{
+    display:none;position:absolute;
+    top:calc(var(--header-h) - 6px);left:50%;
+    transform:translateX(-50%);
+    width:min(90vw,340px);flex-direction:column;
+    background:rgba(253,248,242,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--blush);border-radius:12px;
+    box-shadow:0 8px 36px rgba(0,0,0,.11);
+    padding:.45rem;max-height:68vh;overflow-y:auto;z-index:60;
+  }
+  .tabs-list--open{display:flex;animation:drop .28s var(--spring) both}
+  @keyframes drop{from{opacity:0;transform:translateX(-50%) translateY(-8px) scale(.97)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+  .tab{flex-direction:row;padding:.7rem .9rem;border-bottom:none;border-radius:8px;gap:.7rem;width:100%;justify-content:flex-start;border-left:3px solid transparent}
+  .tab--on{background:rgba(122,59,59,.05);border-left-color:var(--wine);color:var(--wine)}
+  .tab--on::after{display:none}
+  .lb__prev{left:.2rem}.lb__next{right:.2rem}
+}
+</style>
+</head>
+<body>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+<canvas id="starsBg"></canvas>
+
+<!-- ══════════════ PORTADA ══════════════ -->
+<div class="cover" id="cover">
+  <div class="cover__petals" id="petals"></div>
+  <div class="cover__glow"></div>
+  <div class="cover__content">
+    <p class="cover__sub">un regalo para ti,</p>
+    <h1 class="cover__title">Gabriela</h1>
+    <p class="cover__from">de Álvaro, con todo mi amor</p>
+    <p class="cover__tagline">Cada país guarda un recuerdo nuestro.<br>Este es nuestro viaje.</p>
+    <button class="cover__btn" id="enterBtn" onclick="window.location.href='el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html'">Comenzar el viaje</button>
+  </div>
+  <div class="cover__hint">↓</div>
+</div>
+
+<!-- ══════════════ SITE ══════════════ -->
+<div class="site" id="site" hidden>
+  <header class="hdr">
+    <div class="hdr__logo">
+      <span class="hdr__ag">A <span class="amp">&amp;</span> G</span>
+    </div>
+    <nav class="tabs-nav" aria-label="Países">
+      <button class="tabs-toggle" id="navToggle" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="tabs-list" id="tabsList" role="tablist"></ul>
+    </nav>
+  </header>
+
+  <main id="main"></main>
+
+  <footer class="ftr">
+    <p class="ftr__txt">Hecho con <span class="h">♡</span> por Álvaro</p>
+    <p class="ftr__sub">Cada foto, un momento. Cada país, un capítulo de nuestra historia.</p>
+  </footer>
+</div>
+
+<!-- ══════════════ LIGHTBOX ══════════════ -->
+<div class="lb" id="lb" hidden>
+  <button class="lb__close" id="lbClose" aria-label="Cerrar">×</button>
+  <button class="lb__prev"  id="lbPrev"  aria-label="Anterior">‹</button>
+  <button class="lb__next"  id="lbNext"  aria-label="Siguiente">›</button>
+  <div class="lb__stage">
+    <img class="lb__img" id="lbImg" src="" alt=""/>
+    <p class="lb__cap" id="lbCap"></p>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   DATOS DE PAÍSES
+══════════════════════════════════════════ */
+var PAISES = [
+  {id:"espana",          name:"España",          flag:"🇪🇸", tag:"Donde todo empezó",                      q:"El hogar siempre huele a ti.",                                            ac:"#b03030", bg:"#fff9f5"},
+  {id:"italia",          name:"Italia",           flag:"🇮🇹", tag:"La dolce vita contigo",                  q:"Roma no se construyó en un día, pero en un día contigo ya era eterna.",   ac:"#1e7a40", bg:"#f7fbf5"},
+  {id:"francia",         name:"Francia",          flag:"🇫🇷", tag:"París siempre es buena idea",           q:"La ciudad de la luz, más brillante aún a tu lado.",                       ac:"#2c3e8a", bg:"#f5f7fc"},
+  {id:"hungria",         name:"Hungría",          flag:"🇭🇺", tag:"Budapest, la perla del Danubio",        q:"El Danubio nos unió bajo la misma luz dorada.",                           ac:"#8e3a2e", bg:"#fdf8f5"},
+  {id:"austria",         name:"Austria",          flag:"🇦🇹", tag:"Valses y montañas",                     q:"Viena suena como tú cuando ríes.",                                        ac:"#5c3d28", bg:"#faf8f5"},
+  {id:"albania",         name:"Albania",          flag:"🇦🇱", tag:"El secreto mejor guardado de Europa",   q:"Descubrimos juntos lo que pocos conocen.",                                ac:"#8b0000", bg:"#fdf5f5"},
+  {id:"irlanda",         name:"Irlanda",          flag:"🇮🇪", tag:"Verde infinito",                        q:"La lluvia irlandesa era solo lluvia hasta que la compartí contigo.",      ac:"#1a6b3e", bg:"#f4fbf6"},
+  {id:"alemania",        name:"Alemania",         flag:"🇩🇪", tag:"Cuentos y castillos",                   q:"Somos el cuento de hadas que nadie escribió todavía.",                    ac:"#3a3a3a", bg:"#f8f8f8"},
+  {id:"eslovaquia",      name:"Eslovaquia",       flag:"🇸🇰", tag:"El corazón de los Cárpatos",            q:"Bratislava guarda nuestras huellas en sus adoquines.",                    ac:"#1a5276", bg:"#f5f9fd"},
+  {id:"republica-checa", name:"República Checa",  flag:"🇨🇿", tag:"Praga, la ciudad de oro",               q:"Mil torres y una sola mirada: la tuya.",                                  ac:"#6c3483", bg:"#faf5fd"},
+  {id:"estonia",         name:"Estonia",          flag:"🇪🇪", tag:"Noches blancas del norte",              q:"Tallinn nos contó sus siglos y nosotros le contamos el nuestro.",         ac:"#154360", bg:"#f5f8fc"},
+  {id:"finlandia",       name:"Finlandia",        flag:"🇫🇮", tag:"Auroras y silencio",                    q:"Las auroras boreales son hermosas, pero no tanto como tú bajo su luz.",   ac:"#1a5276", bg:"#f5f9ff"}
+];
+
+/* fotos en memoria: id → [{url, name}] */
+var FOTOS = {};
+PAISES.forEach(function(p){ FOTOS[p.id] = []; });
+
+/* ══════════════════════════════════════════
+   REFS
+══════════════════════════════════════════ */
+var cover    = document.getElementById("cover");
+var site     = document.getElementById("site");
+var enterBtn = document.getElementById("enterBtn");
+var tabsList = document.getElementById("tabsList");
+var main     = document.getElementById("main");
+var navToggle= document.getElementById("navToggle");
+var lb       = document.getElementById("lb");
+var lbImg    = document.getElementById("lbImg");
+var lbCap    = document.getElementById("lbCap");
+var lbClose  = document.getElementById("lbClose");
+var lbPrev   = document.getElementById("lbPrev");
+var lbNext   = document.getElementById("lbNext");
+var petals   = document.getElementById("petals");
+
+var activoId  = null;
+var lbFotos   = [];
+var lbIdx     = 0;
+var built     = false;
+
+/* ══════════════════════════════════════════
+   PÉTALOS
+══════════════════════════════════════════ */
+function hacerPetalos(){
+  var n = window.innerWidth < 600 ? 18 : 32;
+  for(var i=0;i<n;i++){
+    var el = document.createElement("div");
+    el.className = "petal";
+    el.style.cssText =
+      "--x:"    +(Math.random()*108-4)+"vw;"  +
+      "--delay:"+(Math.random()*9)+"s;"        +
+      "--sz:"   +(Math.random()*13+7)+"px;"    +
+      "--drift:"+(Math.random()*70-35)+"px;"   +
+      "--dur:"  +(Math.random()*6+8)+"s;"      +
+      "--rot:"  +(Math.random()*360)+"deg";
+    petals.appendChild(el);
+  }
+}
+
+/* ══════════════════════════════════════════
+   BOTÓN PORTADA
+══════════════════════════════════════════ */
+enterBtn.addEventListener("click", function(){
+  cover.classList.add("cover--exit");
+  setTimeout(function(){
+    cover.style.display = "none";
+    site.removeAttribute("hidden");
+    site.classList.add("site--in");
+    if(!built){ construir(); built=true; }
+  }, 860);
+});
+
+/* ══════════════════════════════════════════
+   CONSTRUIR SITE
+══════════════════════════════════════════ */
+function construir(){
+  PAISES.forEach(function(p,i){
+    tabsList.appendChild(crearTab(p,i));
+    main.appendChild(crearPanel(p));
+  });
+
+  /* reveal por scroll */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add("gitem--on"); io.unobserve(e.target); }
+    });
+  },{threshold:0.07});
+
+  var mo = new MutationObserver(function(ms){
+    ms.forEach(function(m){
+      if(m.attributeName==="hidden" && !m.target.hidden)
+        m.target.querySelectorAll(".gitem").forEach(function(el){ io.observe(el); });
+    });
+  });
+  main.querySelectorAll(".panel").forEach(function(p){ mo.observe(p,{attributes:true}); });
+
+  activar(PAISES[0].id);
+}
+
+/* ══════════════════════════════════════════
+   CREAR TAB
+══════════════════════════════════════════ */
+function crearTab(p,i){
+  var li  = document.createElement("li");
+  li.setAttribute("role","presentation");
+  li.style.setProperty("--i",i);
+  var btn = document.createElement("button");
+  btn.className="tab";
+  btn.id="tab-"+p.id;
+  btn.setAttribute("role","tab");
+  btn.setAttribute("aria-controls","panel-"+p.id);
+  btn.setAttribute("aria-selected","false");
+  btn.setAttribute("tabindex","-1");
+  btn.dataset.id=p.id;
+  btn.innerHTML='<span class="tab__flag">'+p.flag+'</span><span class="tab__name">'+p.name+'</span>';
+  btn.addEventListener("click",function(){ activar(p.id); cerrarNav(); });
+  li.appendChild(btn);
+  return li;
+}
+
+/* ══════════════════════════════════════════
+   CREAR PANEL
+══════════════════════════════════════════ */
+function crearPanel(p){
+  var sec = document.createElement("section");
+  sec.className="panel";
+  sec.id="panel-"+p.id;
+  sec.setAttribute("role","tabpanel");
+  sec.setAttribute("aria-labelledby","tab-"+p.id);
+  sec.hidden=true;
+  sec.style.setProperty("--accent",p.ac);
+  sec.style.setProperty("--bg-tone",p.bg);
+
+  var hdr = document.createElement("div");
+  hdr.className="panel__hdr";
+  hdr.innerHTML=
+    '<span class="panel__flag">'+p.flag+'</span>'+
+    '<h2 class="panel__name">'+p.name+'</h2>'+
+    '<p class="panel__tag">'+p.tag+'</p>'+
+    '<blockquote class="panel__quote">'+p.q+'</blockquote>';
+
+  var gw  = document.createElement("div");
+  gw.className="panel__gw";
+  gw.appendChild(crearUpload(p));
+  var g = document.createElement("div");
+  g.className="gallery";
+  g.id="gallery-"+p.id;
+  gw.appendChild(g);
+
+  sec.appendChild(hdr);
+  sec.appendChild(gw);
+  return sec;
+}
+
+/* ══════════════════════════════════════════
+   UPLOAD ZONE
+══════════════════════════════════════════ */
+function crearUpload(p){
+  var zone = document.createElement("div");
+  zone.className="upload-zone";
+  zone.id="zone-"+p.id;
+
+  var inputId = "inp-"+p.id;
+  zone.innerHTML=
+    '<div class="upload-zone__ico">📷</div>'+
+    '<p class="upload-zone__txt" id="ztxt-'+p.id+'">Añade tus fotos de <strong>'+p.name+'</strong></p>'+
+    '<p class="upload-zone__hint">Haz clic o arrastra aquí las imágenes.<br>Se muestran solo mientras la página está abierta.</p>'+
+    '<label class="upload-zone__lbl" for="'+inputId+'">Seleccionar fotos</label>'+
+    '<input class="upload-zone__input" type="file" id="'+inputId+'" multiple accept="image/*"/>';
+
+  /* drag */
+  zone.addEventListener("dragover",function(e){ e.preventDefault(); zone.classList.add("upload-zone--over"); });
+  zone.addEventListener("dragleave",function(){ zone.classList.remove("upload-zone--over"); });
+  zone.addEventListener("drop",function(e){
+    e.preventDefault(); zone.classList.remove("upload-zone--over");
+    procesarFotos(p, Array.from(e.dataTransfer.files).filter(function(f){ return f.type.startsWith("image/"); }));
+  });
+
+  /* input */
+  var inp = zone.querySelector("input");
+  inp.addEventListener("change",function(){
+    procesarFotos(p, Array.from(inp.files));
+    inp.value="";
+  });
+
+  return zone;
+}
+
+function procesarFotos(p, files){
+  if(!files.length) return;
+  files.forEach(function(f){
+    FOTOS[p.id].push({ url: URL.createObjectURL(f), name: f.name });
+  });
+  refrescarGaleria(p);
+}
+
+/* ══════════════════════════════════════════
+   REFRESCAR GALERÍA
+══════════════════════════════════════════ */
+function refrescarGaleria(p){
+  var g = document.getElementById("gallery-"+p.id);
+  if(!g) return;
+  g.innerHTML="";
+
+  var lista = FOTOS[p.id];
+  if(!lista.length) return;
+
+  /* actualizar texto zona */
+  var ztxt = document.getElementById("ztxt-"+p.id);
+  if(ztxt) ztxt.innerHTML = '<strong>'+lista.length+' foto'+(lista.length>1?"s":"")+'</strong> en '+p.name+' &nbsp;·&nbsp; <em style="font-size:.82em;color:var(--muted)">puedes añadir más</em>';
+
+  lista.forEach(function(foto, idx){
+    var item = document.createElement("div");
+    item.className="gitem";
+    item.style.setProperty("--i",idx);
+
+    var btn = document.createElement("button");
+    btn.className="gthumb-btn";
+    btn.setAttribute("aria-label","Ver foto "+(idx+1)+" de "+p.name);
+
+    var img = document.createElement("img");
+    img.className="gthumb";
+    img.src=foto.url;
+    img.alt=p.name+" – foto "+(idx+1);
+    img.loading="lazy";
+
+    btn.appendChild(img);
+    btn.addEventListener("click", (function(i){ return function(){ abrirLb(p,i); }; })(idx));
+    item.appendChild(btn);
+    g.appendChild(item);
+
+    /* animación de entrada */
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ item.classList.add("gitem--on"); });
+    });
+  });
+}
+
+/* ══════════════════════════════════════════
+   ACTIVAR TAB
+══════════════════════════════════════════ */
+function activar(id){
+  if(activoId===id) return;
+  if(activoId){
+    estadoTab(activoId,false);
+    var op=document.getElementById("panel-"+activoId);
+    if(op) op.hidden=true;
+  }
+  estadoTab(id,true);
+  var panel=document.getElementById("panel-"+id);
+  if(panel){
+    panel.hidden=false;
+    panel.classList.remove("panel--in");
+    void panel.offsetWidth;
+    panel.classList.add("panel--in");
+  }
+  var p=PAISES.find(function(x){ return x.id===id; });
+  if(p) document.body.style.backgroundColor=p.bg;
+  activoId=id;
+  if(window.innerWidth<900)
+    setTimeout(function(){ main.scrollIntoView({behavior:"smooth",block:"start"}); },75);
+}
+
+function estadoTab(id,on){
+  var b=document.getElementById("tab-"+id);
+  if(!b) return;
+  b.setAttribute("aria-selected",on?"true":"false");
+  b.setAttribute("tabindex",on?"0":"-1");
+  b.classList.toggle("tab--on",on);
+}
+
+/* teclas en tabs */
+tabsList.addEventListener("keydown",function(e){
+  var tabs=Array.from(tabsList.querySelectorAll(".tab"));
+  var cur=tabs.indexOf(document.activeElement);
+  if(cur===-1) return;
+  var next=-1;
+  if(e.key==="ArrowRight"||e.key==="ArrowDown") next=(cur+1)%tabs.length;
+  if(e.key==="ArrowLeft" ||e.key==="ArrowUp")   next=(cur-1+tabs.length)%tabs.length;
+  if(e.key==="Home") next=0;
+  if(e.key==="End")  next=tabs.length-1;
+  if(next!==-1){ e.preventDefault(); tabs[next].focus(); activar(tabs[next].dataset.id); }
+});
+
+/* ══════════════════════════════════════════
+   NAV MÓVIL
+══════════════════════════════════════════ */
+navToggle.addEventListener("click",function(){
+  var open=tabsList.classList.toggle("tabs-list--open");
+  navToggle.setAttribute("aria-expanded",String(open));
+});
+function cerrarNav(){
+  tabsList.classList.remove("tabs-list--open");
+  navToggle.setAttribute("aria-expanded","false");
+}
+document.addEventListener("click",function(e){
+  if(!navToggle.contains(e.target)&&!tabsList.contains(e.target)) cerrarNav();
+});
+
+/* ══════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════ */
+function abrirLb(p,idx){
+  lbFotos = FOTOS[p.id].map(function(f,i){
+    return { src:f.url, cap:p.name+" · "+(i+1)+" / "+FOTOS[p.id].length };
+  });
+  lbIdx=idx;
+  mostrarLb(true);
+  lb.removeAttribute("hidden");
+  lb.classList.add("lb--on");
+  document.body.classList.add("no-scroll");
+  lbClose.focus();
+}
+function cerrarLb(){
+  lb.classList.remove("lb--on");
+  setTimeout(function(){ lb.setAttribute("hidden",""); lbImg.src=""; },320);
+  document.body.classList.remove("no-scroll");
+}
+function mostrarLb(instant){
+  var f=lbFotos[lbIdx];
+  if(!instant){ lbImg.classList.remove("lb__img--on"); void lbImg.offsetWidth; }
+  lbImg.src=f.src; lbImg.alt=f.cap; lbCap.textContent=f.cap;
+  lbImg.classList.add("lb__img--on");
+  lbPrev.disabled=lbIdx===0;
+  lbNext.disabled=lbIdx===lbFotos.length-1;
+}
+lbClose.addEventListener("click",cerrarLb);
+lbPrev.addEventListener("click",function(){ if(lbIdx>0){ lbIdx--; mostrarLb(false); } });
+lbNext.addEventListener("click",function(){ if(lbIdx<lbFotos.length-1){ lbIdx++; mostrarLb(false); } });
+lb.addEventListener("click",function(e){ if(e.target===lb) cerrarLb(); });
+document.addEventListener("keydown",function(e){
+  if(lb.hasAttribute("hidden")) return;
+  if(e.key==="Escape") cerrarLb();
+  if(e.key==="ArrowLeft" &&lbIdx>0)              { lbIdx--; mostrarLb(false); }
+  if(e.key==="ArrowRight"&&lbIdx<lbFotos.length-1){ lbIdx++; mostrarLb(false); }
+});
+
+/* swipe */
+var tx=0;
+lb.addEventListener("touchstart",function(e){ tx=e.touches[0].clientX; },{passive:true});
+lb.addEventListener("touchend",function(e){
+  var dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)<38) return;
+  if(dx<0&&lbIdx<lbFotos.length-1){ lbIdx++; mostrarLb(false); }
+  if(dx>0&&lbIdx>0)                { lbIdx--; mostrarLb(false); }
+},{passive:true});
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+hacerPetalos();
+</script>
+
+<script>
+const stars=document.getElementById('starsBg');
+const ctx=stars.getContext('2d');
+function resize(){stars.width=innerWidth;stars.height=innerHeight;}
+resize();addEventListener('resize',resize);
+
+const particles=[];
+for(let i=0;i<260;i++){
+particles.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+r:Math.random()*2+0.6,
+vx:(Math.random()-0.5)*0.08,
+vy:Math.random()*0.15+0.03
+});
+}
+
+function animate(){
+ctx.clearRect(0,0,stars.width,stars.height);
+particles.forEach(p=>{
+p.x+=p.vx;p.y+=p.vy;
+if(p.y>innerHeight+20)p.y=-20;
+if(p.x>innerWidth+20)p.x=-20;
+if(p.x<-20)p.x=innerWidth+20;
+
+const glow=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*8);
+glow.addColorStop(0,'rgba(255,255,255,.95)');
+glow.addColorStop(1,'rgba(255,255,255,0)');
+
+ctx.fillStyle=glow;
+ctx.beginPath();ctx.arc(p.x,p.y,p.r*8,0,Math.PI*2);ctx.fill();
+
+ctx.fillStyle='rgba(255,255,255,.95)';
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+});
+requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>

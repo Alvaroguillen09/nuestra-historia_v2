@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Archivo del Tiempo - Pastel Aurora</title>
+<style>
+:root{
+--bg1:#f0e6ff;
+--bg2:#d8c6ff;
+--bg3:#c8b6ff;
+--gold:#d8ba78;
+}
+body{
+margin:0;
+font-family:Inter,sans-serif;
+overflow-x:hidden;
+background:linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg3));
+color:white;
+}
+#bg{position:fixed;inset:0;z-index:-3;}
+.aurora{
+position:fixed;
+width:1000px;height:1000px;
+border-radius:50%;
+filter:blur(140px);
+opacity:.35;
+z-index:-2;
+animation:drift 28s ease-in-out infinite alternate;
+}
+.a1{background:#ffd6f5;left:-250px;top:-250px;}
+.a2{background:#d7c2ff;right:-250px;top:10%;animation-duration:35s;}
+.a3{background:#c9e4ff;left:25%;bottom:-300px;animation-duration:30s;}
+@keyframes drift{
+from{transform:translate(0,0) scale(1);}
+to{transform:translate(180px,-100px) scale(1.25);}
+}
+#stars{
+position:fixed;
+inset:0;
+z-index:-1;
+pointer-events:none;
+}
+.hero{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+}
+.hero h1{
+font-size:5rem;
+color:#fff;
+text-shadow:0 2px 30px rgba(255,255,255,.3);
+}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+<canvas id="stars"></canvas>
+
+<div class="hero">
+<h1>Fondo Aurora Pastel</h1>
+</div>
+
+<script>
+const stars=document.getElementById('stars');
+const ctx=stars.getContext('2d');
+
+function resize(){
+ stars.width=innerWidth;
+ stars.height=innerHeight;
+}
+resize();
+addEventListener('resize',resize);
+
+const particles=[];
+
+for(let i=0;i<220;i++){
+ particles.push({
+   x:Math.random()*innerWidth,
+   y:Math.random()*innerHeight,
+   r:Math.random()*2+0.5,
+   vx:(Math.random()-0.5)*0.15,
+   vy:Math.random()*0.25+0.05
+ });
+}
+
+function animate(){
+ ctx.clearRect(0,0,stars.width,stars.height);
+
+ particles.forEach(p=>{
+   p.x+=p.vx;
+   p.y+=p.vy;
+
+   if(p.y>innerHeight+10) p.y=-10;
+   if(p.x>innerWidth+10) p.x=-10;
+   if(p.x<-10) p.x=innerWidth+10;
+
+   ctx.fillStyle='rgba(255,255,255,0.85)';
+   ctx.beginPath();
+   ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+   ctx.fill();
+ });
+
+ requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

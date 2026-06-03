@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Álvaro & Gabriela — Nuestro Viaje</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Great+Vibes&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+
+:root{
+    --cream:#faf7f2;
+    --gold:#b89b5e;
+    --text:#403b36;
+}
+
+body{
+    background:var(--cream);
+}
+
+.hero-journey{
+    min-height:70vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:4rem 2rem;
+}
+
+.hero-journey__inner{
+    max-width:900px;
+}
+
+.hero-journey h1{
+    font-family:"Great Vibes",cursive;
+    font-size:5rem;
+    font-weight:400;
+    color:var(--gold);
+    margin-bottom:1rem;
+}
+
+.hero-journey p{
+    font-family:"Cormorant Garamond",serif;
+    font-size:1.5rem;
+    color:var(--text);
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:2rem;
+    max-width:1100px;
+    margin:0 auto 5rem;
+    padding:0 2rem;
+}
+
+.stat{
+    background:white;
+    border-radius:24px;
+    padding:2rem;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.stat__number{
+    font-family:"Cormorant Garamond",serif;
+    font-size:3rem;
+    color:var(--gold);
+}
+
+.stat__label{
+    font-family:"Jost",sans-serif;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:3rem;
+}
+
+.section-title h2{
+    font-family:"Cormorant Garamond",serif;
+    font-size:3rem;
+    color:var(--text);
+}
+
+.countries-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:2rem;
+    max-width:1200px;
+    margin:auto;
+    padding:0 2rem 6rem;
+}
+
+.country-card{
+    background:white;
+    border-radius:30px;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    transition:.35s;
+    box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+.country-card:hover{
+    transform:translateY(-10px);
+}
+
+.country-card__top{
+    padding:2rem;
+    text-align:center;
+    background:linear-gradient(
+        135deg,
+        rgba(184,155,94,.12),
+        rgba(184,155,94,.02)
+    );
+}
+
+.country-card__flag{
+    font-size:4rem;
+}
+
+.country-card__name{
+    font-family:"Cormorant Garamond",serif;
+    font-size:2rem;
+    margin-top:.5rem;
+}
+
+.country-card__bottom{
+    padding:1.5rem;
+    text-align:center;
+    font-family:"Jost",sans-serif;
+    color:#666;
+}
+
+.timeline{
+    max-width:900px;
+    margin:auto;
+    padding:2rem 2rem 8rem;
+}
+
+.timeline-item{
+    display:flex;
+    gap:1rem;
+    margin-bottom:2rem;
+}
+
+.timeline-dot{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:var(--gold);
+    margin-top:.5rem;
+}
+
+.timeline-content h3{
+    font-family:"Cormorant Garamond",serif;
+    font-size:1.8rem;
+    margin-bottom:.2rem;
+}
+
+.timeline-content p{
+    font-family:"Jost",sans-serif;
+    color:#666;
+}
+
+footer{
+    text-align:center;
+    padding:4rem 2rem;
+}
+
+footer p:first-child{
+    font-family:"Great Vibes",cursive;
+    font-size:2rem;
+    color:var(--gold);
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero-journey">
+
+<div class="hero-journey__inner">
+
+<h1>Nuestro Viaje</h1>
+
+<p>
+Cada país es una historia.
+Cada fotografía es un recuerdo.
+Cada recuerdo tiene algo en común:
+tú.
+</p>
+
+</div>
+
+</section>
+
+<section class="stats">
+
+<div class="stat">
+<div class="stat__number">12</div>
+<div class="stat__label">Países visitados</div>
+</div>
+
+<div class="stat">
+<div class="stat__number">∞</div>
+<div class="stat__label">Recuerdos compartidos</div>
+</div>
+
+<div class="stat">
+<div class="stat__number">1</div>
+<div class="stat__label">Historia juntos</div>
+</div>
+
+</section>
+
+<div class="section-title">
+<h2>Destinos</h2>
+</div>
+
+<section class="countries-grid">
+
+<a href="espana.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇪🇸</div>
+<div class="country-card__name">España</div>
+</div>
+<div class="country-card__bottom">
+Donde todo empezó
+</div>
+</a>
+
+<a href="italia.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇮🇹</div>
+<div class="country-card__name">Italia</div>
+</div>
+<div class="country-card__bottom">
+La dolce vita contigo
+</div>
+</a>
+
+<a href="francia.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇫🇷</div>
+<div class="country-card__name">Francia</div>
+</div>
+<div class="country-card__bottom">
+París siempre es buena idea
+</div>
+</a>
+
+<a href="hungria.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇭🇺</div>
+<div class="country-card__name">Hungría</div>
+</div>
+<div class="country-card__bottom">
+Budapest nos esperaba
+</div>
+</a>
+
+<a href="austria.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇦🇹</div>
+<div class="country-card__name">Austria</div>
+</div>
+<div class="country-card__bottom">
+Valses y montañas
+</div>
+</a>
+
+<a href="albania.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇦🇱</div>
+<div class="country-card__name">Albania</div>
+</div>
+<div class="country-card__bottom">
+Nuestra aventura inesperada
+</div>
+</a>
+
+<a href="irlanda.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇮🇪</div>
+<div class="country-card__name">Irlanda</div>
+</div>
+<div class="country-card__bottom">
+Verde infinito
+</div>
+</a>
+
+<a href="alemania.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇩🇪</div>
+<div class="country-card__name">Alemania</div>
+</div>
+<div class="country-card__bottom">
+Cuentos y castillos
+</div>
+</a>
+
+<a href="eslovaquia.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇸🇰</div>
+<div class="country-card__name">Eslovaquia</div>
+</div>
+<div class="country-card__bottom">
+Bratislava y nosotros
+</div>
+</a>
+
+<a href="republica-checa.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇨🇿</div>
+<div class="country-card__name">República Checa</div>
+</div>
+<div class="country-card__bottom">
+La ciudad de las mil torres
+</div>
+</a>
+
+<a href="estonia.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇪🇪</div>
+<div class="country-card__name">Estonia</div>
+</div>
+<div class="country-card__bottom">
+Tallinn y sus historias
+</div>
+</a>
+
+<a href="finlandia.html" class="country-card">
+<div class="country-card__top">
+<div class="country-card__flag">🇫🇮</div>
+<div class="country-card__name">Finlandia</div>
+</div>
+<div class="country-card__bottom">
+Bajo las auroras
+</div>
+</a>
+
+</section>
+
+<div class="section-title">
+<h2>Nuestra ruta</h2>
+</div>
+
+<section class="timeline">
+
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h3>Primer viaje</h3>
+<p>La primera maleta compartida.</p>
+</div>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h3>Europa juntos</h3>
+<p>Ciudades, trenes, vuelos y muchas risas.</p>
+</div>
+</div>
+
+<div class="timeline-item">
+<div class="timeline-dot"></div>
+<div class="timeline-content">
+<h3>Lo mejor aún está por llegar</h3>
+<p>Porque todavía quedan muchos lugares por descubrir.</p>
+</div>
+</div>
+
+</section>
+
+<footer>
+<p>Álvaro & Gabriela</p>
+<p>Nuestro mapa favorito siempre será el que recorramos juntos.</p>
+</footer>
+
+</body>
+</html>

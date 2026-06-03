@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Álvaro & Gabriela — Nuestro Viaje</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&family=Great+Vibes&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#fdf8f2;--parchment:#f5ede0;--dusty-rose:#d4a5a5;--blush:#e8c5c5;
+  --wine:#7a3b3b;--ink:#2b2020;--soft-ink:#4a3535;--muted:#8a7070;
+  --gold:#c9a96e;--gold-light:#e8d5b0;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-script:'Great Vibes',cursive;
+  --font-body:'Jost',sans-serif;
+  --header-h:64px;
+  --ease-silk:cubic-bezier(.4,0,.2,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--cream);color:var(--ink);transition:background-color .8s var(--ease-silk);overflow-x:hidden}
+.no-scroll{overflow:hidden}
+img{display:block;max-width:100%}
+button{cursor:pointer;border:none;background:none;font:inherit}
+::selection{background:var(--blush);color:var(--wine)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--blush);border-radius:10px}
+
+/* ═══════════════════════════════════════
+   COVER
+═══════════════════════════════════════ */
+.cover{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#2b1a1a 0%,#4a2a2a 40%,#7a4545 70%,#a06060 100%);
+  overflow:hidden;
+  transition:opacity .9s var(--ease-silk),transform .9s var(--ease-silk);
+}
+.cover::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 60%,rgba(201,169,110,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cover--exit{opacity:0;transform:scale(1.04);pointer-events:none}
+.cover__petals{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.petal{
+  position:absolute;top:-20px;left:var(--x);
+  width:var(--size);height:var(--size);
+  background:radial-gradient(ellipse at 40% 40%,rgba(255,200,200,.9),rgba(200,130,130,.4));
+  border-radius:50% 0 50% 0;
+  animation:fall var(--dur) var(--delay) infinite linear;
+  transform:rotate(var(--rot));filter:blur(.5px);
+}
+@keyframes fall{
+  0%{top:-30px;transform:translateX(0) rotate(var(--rot)) scale(1);opacity:0}
+  5%{opacity:1}90%{opacity:.7}
+  100%{top:110vh;transform:translateX(var(--drift)) rotate(calc(var(--rot) + 540deg)) scale(.7);opacity:0}
+}
+.cover__content{position:relative;z-index:2;text-align:center;padding:2rem;animation:fadeUp 1.2s .3s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.cover__sub{font-family:var(--font-body);font-weight:200;font-size:clamp(.85rem,2vw,1rem);letter-spacing:.25em;text-transform:uppercase;color:var(--gold-light);margin-bottom:.5rem}
+.cover__title{font-family:var(--font-script);font-size:clamp(5rem,14vw,10rem);color:#fff;line-height:1;text-shadow:0 2px 40px rgba(201,169,110,.5);margin-bottom:.2em}
+.cover__script{font-family:var(--font-display);font-style:italic;font-size:clamp(1rem,2.5vw,1.4rem);color:var(--gold-light);margin-bottom:1.5rem}
+.cover__tagline{font-family:var(--font-display);font-size:clamp(.95rem,2vw,1.15rem);font-weight:300;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:2.5rem}
+.cover__btn{
+  display:inline-block;padding:.85rem 2.8rem;
+  border:1px solid var(--gold-light);color:var(--gold-light);
+  font-family:var(--font-body);font-weight:300;font-size:.85rem;
+  letter-spacing:.2em;text-transform:uppercase;border-radius:50px;
+  transition:background .3s,color .3s,transform .3s var(--ease-spring);
+  position:relative;overflow:hidden;
+}
+.cover__btn::before{content:"";position:absolute;inset:0;background:var(--gold-light);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease-silk);z-index:-1}
+.cover__btn:hover{color:var(--wine);transform:scale(1.05)}
+.cover__btn:hover::before{transform:scaleX(1)}
+.cover__scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.35);font-size:1.5rem;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ═══════════════════════════════════════
+   SITE
+═══════════════════════════════════════ */
+.site{display:none;min-height:100vh}
+.site[hidden]{display:none!important}
+.site:not([hidden]){display:block}
+.site--visible{animation:siteIn .8s var(--ease-silk) both}
+@keyframes siteIn{from{opacity:0}to{opacity:1}}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(253,248,242,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(212,165,165,.25);
+  display:flex;align-items:center;gap:1rem;padding:0 1.5rem;height:var(--header-h);
+}
+.header__logo{flex-shrink:0;padding-right:1.5rem;border-right:1px solid var(--blush)}
+.header__logo-script{font-family:var(--font-script);font-size:2rem;color:var(--wine);white-space:nowrap}
+.header__logo-script .amp{color:var(--gold);font-size:1.6rem}
+
+/* ═══════════════════════════════════════
+   TABS NAV
+═══════════════════════════════════════ */
+.tabs-nav{flex:1;min-width:0;position:relative}
+.tabs-nav__toggle{display:none;flex-direction:column;gap:5px;padding:8px;margin-left:auto}
+.tabs-nav__toggle span{display:block;width:22px;height:2px;background:var(--wine);border-radius:2px;transition:transform .3s,opacity .3s}
+.tabs-nav__list{list-style:none;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:0;scrollbar-width:none;-ms-overflow-style:none;padding:0}
+.tabs-nav__list::-webkit-scrollbar{display:none}
+.tab-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:.5rem 1rem;color:var(--muted);
+  font-family:var(--font-body);font-weight:300;font-size:.75rem;letter-spacing:.08em;
+  white-space:nowrap;border-bottom:2px solid transparent;
+  transition:color .25s,border-color .25s;position:relative;
+}
+.tab-btn__emoji{font-size:1.1rem;line-height:1}
+.tab-btn__name{text-transform:uppercase;font-size:.65rem;letter-spacing:.12em}
+.tab-btn:hover{color:var(--soft-ink)}
+.tab-btn--active{color:var(--wine);border-bottom-color:var(--wine);font-weight:400}
+.tab-btn--active::after{content:"";position:absolute;bottom:-2px;left:50%;width:6px;height:6px;background:var(--gold);border-radius:50%;transform:translateX(-50%)}
+
+/* ═══════════════════════════════════════
+   COUNTRY PANEL
+═══════════════════════════════════════ */
+.country-panel{min-height:calc(100vh - var(--header-h));background-color:var(--bg-tone,var(--cream));transition:background-color .6s var(--ease-silk);padding-bottom:5rem}
+.country-panel--in .country-panel__header{animation:panelHdrIn .7s var(--ease-silk) both}
+.country-panel--in .gallery-wrapper{animation:panelGalleryIn .7s .15s var(--ease-silk) both}
+@keyframes panelHdrIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes panelGalleryIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.country-panel__header{text-align:center;padding:clamp(3rem,8vw,6rem) 1.5rem 3rem;position:relative}
+.country-panel__header::after{content:"";display:block;width:60px;height:1px;background:linear-gradient(to right,transparent,var(--accent,var(--dusty-rose)),transparent);margin:2rem auto 0}
+.country-panel__flag-emoji{font-size:clamp(2.5rem,6vw,4rem);line-height:1;margin-bottom:1rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.12));display:block;animation:floatFlag 4s ease-in-out infinite}
+@keyframes floatFlag{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.country-panel__name{font-family:var(--font-display);font-size:clamp(2.8rem,8vw,6rem);font-weight:300;letter-spacing:.04em;color:var(--ink);line-height:1.1;margin-bottom:.3rem}
+.country-panel__tagline{font-family:var(--font-display);font-style:italic;font-size:clamp(1rem,2.5vw,1.35rem);color:var(--accent,var(--wine));font-weight:400;margin-bottom:1.5rem}
+.country-panel__quote{font-family:var(--font-display);font-style:italic;font-size:clamp(.95rem,2vw,1.1rem);color:var(--muted);max-width:520px;margin:0 auto;line-height:1.8;position:relative;padding:0 1rem}
+.country-panel__quote::before{content:"\201C";font-family:var(--font-script);font-size:3rem;color:var(--accent,var(--dusty-rose));opacity:.4;position:absolute;top:-.6rem;left:-.2rem;line-height:1}
+
+/* ═══════════════════════════════════════
+   UPLOAD ZONE
+═══════════════════════════════════════ */
+.upload-zone{
+  max-width:600px;margin:0 auto 2.5rem;
+  border:1.5px dashed var(--blush);border-radius:16px;
+  padding:2rem 1.5rem;text-align:center;
+  background:rgba(255,255,255,.5);
+  transition:border-color .25s,background .25s;
+  cursor:pointer;
+}
+.upload-zone:hover,.upload-zone--over{border-color:var(--dusty-rose);background:rgba(232,197,197,.12)}
+.upload-zone__icon{font-size:2.2rem;margin-bottom:.6rem;opacity:.6}
+.upload-zone__text{font-family:var(--font-display);font-size:1.05rem;color:var(--soft-ink);margin-bottom:.3rem}
+.upload-zone__hint{font-size:.8rem;color:var(--muted);line-height:1.6}
+.upload-zone__input{display:none}
+.upload-zone__btn{
+  display:inline-block;margin-top:1rem;padding:.5rem 1.6rem;
+  border:1px solid var(--dusty-rose);border-radius:50px;
+  color:var(--wine);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+  font-family:var(--font-body);font-weight:300;
+  transition:background .25s,color .25s;
+}
+.upload-zone__btn:hover{background:var(--wine);color:#fff}
+
+/* ═══════════════════════════════════════
+   GALLERY
+═══════════════════════════════════════ */
+.gallery-wrapper{max-width:1400px;margin:0 auto;padding:0 clamp(1rem,4vw,3rem)}
+.gallery{columns:4;column-gap:12px}
+@media(max-width:1100px){.gallery{columns:3}}
+@media(max-width:700px){.gallery{columns:2}}
+@media(max-width:420px){.gallery{columns:1}}
+.gallery__item{break-inside:avoid;margin-bottom:12px;opacity:0;transform:translateY(20px) scale(.97);transition:opacity .55s calc(var(--i,0)*.04s) var(--ease-silk),transform .55s calc(var(--i,0)*.04s) var(--ease-silk)}
+.gallery__item--visible{opacity:1;transform:translateY(0) scale(1)}
+.gallery__thumb-btn{display:block;width:100%;border-radius:6px;overflow:hidden;position:relative}
+.gallery__thumb-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.3));opacity:0;transition:opacity .3s;border-radius:6px}
+.gallery__thumb-btn:hover::after{opacity:1}
+.gallery__thumb-btn:hover .gallery__thumb{transform:scale(1.04)}
+.gallery__thumb{width:100%;height:auto;display:block;border-radius:6px;transition:transform .5s var(--ease-silk);background:var(--parchment)}
+.gallery__count{text-align:center;font-family:var(--font-display);font-style:italic;font-size:.9rem;color:var(--muted);margin-bottom:1.5rem}
+
+/* ═══════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════ */
+.lightbox{position:fixed;inset:0;z-index:500;background:rgba(20,10,10,0);display:flex;align-items:center;justify-content:center;transition:background .35s var(--ease-silk);padding:1rem}
+.lightbox--visible{background:rgba(20,10,10,.92)}
+.lightbox__stage{position:relative;max-width:min(90vw,1200px);max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:.75rem}
+.lightbox__img{max-width:100%;max-height:calc(90vh - 60px);border-radius:4px;object-fit:contain;opacity:0;transition:opacity .3s var(--ease-silk),transform .3s var(--ease-silk);transform:scale(.97);box-shadow:0 20px 80px rgba(0,0,0,.6)}
+.lightbox__img--in{opacity:1;transform:scale(1)}
+.lightbox__caption{font-family:var(--font-display);font-style:italic;font-size:.9rem;color:rgba(255,255,255,.5);letter-spacing:.05em}
+.lightbox__close,.lightbox__prev,.lightbox__next{position:fixed;z-index:10;color:rgba(255,255,255,.7);font-size:2rem;padding:.5rem;transition:color .2s,transform .2s var(--ease-spring);line-height:1}
+.lightbox__close{top:1.25rem;right:1.5rem;font-size:2.5rem}
+.lightbox__prev{left:1rem;top:50%;transform:translateY(-50%)}
+.lightbox__next{right:1rem;top:50%;transform:translateY(-50%)}
+.lightbox__close:hover{color:#fff;transform:scale(1.1) rotate(90deg)}
+.lightbox__prev:hover{color:#fff;transform:translateY(-50%) translateX(-3px)}
+.lightbox__next:hover{color:#fff;transform:translateY(-50%) translateX(3px)}
+.lightbox__prev:disabled,.lightbox__next:disabled{opacity:.2;pointer-events:none}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+.footer{text-align:center;padding:3rem 1.5rem 4rem;background:var(--parchment);border-top:1px solid rgba(212,165,165,.2)}
+.footer__text{font-family:var(--font-script);font-size:1.8rem;color:var(--wine);margin-bottom:.5rem}
+.footer__text .heart{color:var(--dusty-rose);animation:heartbeat 1.5s ease-in-out infinite;display:inline-block}
+@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+.footer__sub{font-family:var(--font-display);font-style:italic;font-size:.95rem;color:var(--muted)}
+
+/* ═══════════════════════════════════════
+   OFFLINE BANNER
+═══════════════════════════════════════ */
+.offline-banner{
+  display:none;
+  background:rgba(122,59,59,.08);
+  border-bottom:1px solid rgba(212,165,165,.4);
+  padding:.5rem 1.5rem;
+  text-align:center;
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:.9rem;
+  color:var(--wine);
+}
+.offline-banner--show{display:block}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE MOBILE
+═══════════════════════════════════════ */
+@media(max-width:767px){
+  :root{--header-h:56px}
+  .header{padding:0 1rem}
+  .tabs-nav__toggle{display:flex;margin-left:auto}
+  .tabs-nav__list{
+    display:none;position:absolute;
+    top:calc(var(--header-h) - 8px);
+    left:50%;transform:translateX(-50%);
+    width:min(92vw,360px);flex-direction:column;
+    background:rgba(253,248,242,.98);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border:1px solid var(--blush);border-radius:12px;
+    box-shadow:0 8px 40px rgba(0,0,0,.12);
+    padding:.5rem;max-height:70vh;overflow-y:auto;z-index:200;
+  }
+  .tabs-nav__list--open{display:flex;animation:dropIn .3s var(--ease-spring) both}
+  @keyframes dropIn{from{opacity:0;transform:translateX(-50%) translateY(-10px) scale(.97)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+  .tab-btn{flex-direction:row;padding:.75rem 1rem;border-bottom:none;border-radius:8px;gap:.75rem;font-size:.8rem;width:100%;justify-content:flex-start;border-left:3px solid transparent}
+  .tab-btn__name{font-size:.75rem}
+  .tab-btn__emoji{font-size:1.3rem}
+  .tab-btn--active{background:rgba(122,59,59,.06);border-left-color:var(--wine);color:var(--wine)}
+  .tab-btn--active::after{display:none}
+  .lightbox__prev{left:.25rem}
+  .lightbox__next{right:.25rem}
+  .lightbox__prev,.lightbox__next{font-size:2.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover" id="cover">
+  <div class="cover__petals" aria-hidden="true" id="petals"></div>
+  <div class="cover__content">
+    <p class="cover__sub">un regalo para ti,</p>
+    <h1 class="cover__title">Gabriela</h1>
+    <p class="cover__script">de Álvaro, con todo mi amor</p>
+    <p class="cover__tagline">Cada país guarda un recuerdo nuestro.<br>Este es nuestro viaje.</p>
+    <button class="cover__btn" id="enterBtn">Comenzar el viaje</button>
+  </div>
+  <div class="cover__scroll-hint" aria-hidden="true">↓</div>
+</div>
+
+<!-- AVISO FUENTES OFFLINE -->
+<div class="offline-banner" id="offlineBanner">
+  ✦ Sin conexión a internet las tipografías románticas no cargarán, pero todo lo demás funciona perfectamente ✦
+</div>
+
+<!-- SITE -->
+<div class="site" id="site" hidden>
+  <header class="header">
+    <div class="header__logo">
+      <span class="header__logo-script">A <span class="amp">&</span> G</span>
+    </div>
+    <nav class="tabs-nav" id="tabsNav" aria-label="Países">
+      <button class="tabs-nav__toggle" id="navToggle" aria-expanded="false" aria-controls="tabsList">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="tabs-nav__list" id="tabsList" role="tablist"></ul>
+    </nav>
+  </header>
+  <main class="main" id="mainContent"></main>
+  <footer class="footer">
+    <p class="footer__text">Hecho con <span class="heart">♡</span> por Álvaro</p>
+    <p class="footer__sub">Cada foto, un momento. Cada país, un capítulo de nuestra historia.</p>
+  </footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada" hidden>
+  <button class="lightbox__close" id="lbClose" aria-label="Cerrar">×</button>
+  <button class="lightbox__prev" id="lbPrev" aria-label="Anterior">‹</button>
+  <button class="lightbox__next" id="lbNext" aria-label="Siguiente">›</button>
+  <div class="lightbox__stage">
+    <img class="lightbox__img" id="lbImg" src="" alt=""/>
+    <p class="lightbox__caption" id="lbCaption"></p>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   DATOS DE PAÍSES
+════════════════════════════════════════════════ */
+const COUNTRIES = [
+  { id:"espana",         name:"España",           emoji:"🇪🇸", tagline:"Donde todo empezó",                    quote:"El hogar siempre huele a ti.",                                             accentColor:"#b03030", bgTone:"#fff9f5" },
+  { id:"italia",         name:"Italia",            emoji:"🇮🇹", tagline:"La dolce vita contigo",               quote:"Roma no se construyó en un día, pero en un día contigo ya era eterna.",    accentColor:"#1e7a40", bgTone:"#f7fbf5" },
+  { id:"francia",        name:"Francia",           emoji:"🇫🇷", tagline:"París siempre es buena idea",        quote:"La ciudad de la luz, más brillante aún a tu lado.",                        accentColor:"#2c3e8a", bgTone:"#f5f7fc" },
+  { id:"hungria",        name:"Hungría",           emoji:"🇭🇺", tagline:"Budapest, la perla del Danubio",     quote:"El Danubio nos unió bajo la misma luz dorada.",                            accentColor:"#8e3a2e", bgTone:"#fdf8f5" },
+  { id:"austria",        name:"Austria",           emoji:"🇦🇹", tagline:"Valses y montañas",                  quote:"Viena suena como tú cuando ríes.",                                         accentColor:"#5c3d28", bgTone:"#faf8f5" },
+  { id:"albania",        name:"Albania",           emoji:"🇦🇱", tagline:"El secreto mejor guardado de Europa",quote:"Descubrimos juntos lo que pocos conocen.",                                 accentColor:"#8b0000", bgTone:"#fdf5f5" },
+  { id:"irlanda",        name:"Irlanda",           emoji:"🇮🇪", tagline:"Verde infinito",                     quote:"La lluvia irlandesa era solo lluvia hasta que la compartí contigo.",       accentColor:"#1a6b3e", bgTone:"#f4fbf6" },
+  { id:"alemania",       name:"Alemania",          emoji:"🇩🇪", tagline:"Cuentos y castillos",               quote:"Somos el cuento de hadas que nadie escribió todavía.",                     accentColor:"#3a3a3a", bgTone:"#f8f8f8" },
+  { id:"eslovaquia",     name:"Eslovaquia",        emoji:"🇸🇰", tagline:"El corazón de los Cárpatos",        quote:"Bratislava guarda nuestras huellas en sus adoquines.",                     accentColor:"#1a5276", bgTone:"#f5f9fd" },
+  { id:"republica-checa",name:"República Checa",   emoji:"🇨🇿", tagline:"Praga, la ciudad de oro",           quote:"Mil torres y una sola mirada: la tuya.",                                   accentColor:"#6c3483", bgTone:"#faf5fd" },
+  { id:"estonia",        name:"Estonia",           emoji:"🇪🇪", tagline:"Noches blancas del norte",          quote:"Tallinn nos contó sus siglos y nosotros le contamos el nuestro.",          accentColor:"#154360", bgTone:"#f5f8fc" },
+  { id:"finlandia",      name:"Finlandia",         emoji:"🇫🇮", tagline:"Auroras y silencio",               quote:"Las auroras boreales son hermosas, pero no tanto como tú bajo su luz.",    accentColor:"#1a5276", bgTone:"#f5f9ff" }
+];
+
+/* ════════════════════════════════════════════════
+   ESTADO DE FOTOS: countryId → [objectURL, ...]
+════════════════════════════════════════════════ */
+const photoStore = {};
+COUNTRIES.forEach(c => { photoStore[c.id] = []; });
+
+/* ════════════════════════════════════════════════
+   APP
+════════════════════════════════════════════════ */
+(function(){
+  "use strict";
+
+  const cover       = document.getElementById("cover");
+  const site        = document.getElementById("site");
+  const enterBtn    = document.getElementById("enterBtn");
+  const tabsList    = document.getElementById("tabsList");
+  const mainContent = document.getElementById("mainContent");
+  const navToggle   = document.getElementById("navToggle");
+  const lightbox    = document.getElementById("lightbox");
+  const lbImg       = document.getElementById("lbImg");
+  const lbCaption   = document.getElementById("lbCaption");
+  const lbClose     = document.getElementById("lbClose");
+  const lbPrev      = document.getElementById("lbPrev");
+  const lbNext      = document.getElementById("lbNext");
+  const petalsWrap  = document.getElementById("petals");
+  const offlineBanner = document.getElementById("offlineBanner");
+
+  let activeId  = null;
+  let lbImages  = [];
+  let lbIndex   = 0;
+  let siteBuilt = false;
+
+  /* ── Detectar si hay conexión para las fuentes ── */
+  if (!navigator.onLine) offlineBanner.classList.add("offline-banner--show");
+  window.addEventListener("offline", () => offlineBanner.classList.add("offline-banner--show"));
+  window.addEventListener("online",  () => offlineBanner.classList.remove("offline-banner--show"));
+
+  /* ── Pétalos ── */
+  function spawnPetals(){
+    const n = window.innerWidth < 600 ? 20 : 35;
+    for(let i=0;i<n;i++){
+      const el = document.createElement("div");
+      el.className = "petal";
+      el.style.cssText = [
+        "--x:"+(Math.random()*110-5)+"vw",
+        "--delay:"+(Math.random()*10)+"s",
+        "--size:"+(Math.random()*14+7)+"px",
+        "--drift:"+(Math.random()*80-40)+"px",
+        "--dur:"+(Math.random()*7+7)+"s",
+        "--rot:"+(Math.random()*360)+"deg"
+      ].join(";");
+      petalsWrap.appendChild(el);
+    }
+  }
+
+  /* ── Portada → Site ── */
+  enterBtn.addEventListener("click", function(){
+    cover.classList.add("cover--exit");
+    setTimeout(function(){
+      cover.hidden = true;
+      site.removeAttribute("hidden");
+      site.classList.add("site--visible");
+      if(!siteBuilt){ buildSite(); siteBuilt=true; }
+    }, 900);
+  });
+
+  /* ── Construir site ── */
+  function buildSite(){
+    COUNTRIES.forEach(function(c,i){
+      tabsList.appendChild(makeTab(c,i));
+      mainContent.appendChild(makePanel(c));
+    });
+
+    /* IntersectionObserver para revelar fotos al hacer scroll */
+    const io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add("gallery__item--visible"); io.unobserve(e.target); }
+      });
+    }, {threshold:0.08});
+
+    const mo = new MutationObserver(function(mutations){
+      mutations.forEach(function(m){
+        if(m.attributeName==="hidden" && !m.target.hidden){
+          m.target.querySelectorAll(".gallery__item").forEach(el => io.observe(el));
+        }
+      });
+    });
+    mainContent.querySelectorAll(".country-panel").forEach(p => mo.observe(p,{attributes:true}));
+
+    activateTab(COUNTRIES[0].id);
+  }
+
+  /* ── Tab button ── */
+  function makeTab(c,i){
+    const li  = document.createElement("li");
+    li.setAttribute("role","presentation");
+    li.style.setProperty("--i",i);
+    const btn = document.createElement("button");
+    btn.className="tab-btn";
+    btn.id="tab-"+c.id;
+    btn.setAttribute("role","tab");
+    btn.setAttribute("aria-controls","panel-"+c.id);
+    btn.setAttribute("aria-selected","false");
+    btn.setAttribute("tabindex","-1");
+    btn.dataset.country=c.id;
+    btn.innerHTML=`<span class="tab-btn__emoji">${c.emoji}</span><span class="tab-btn__name">${c.name}</span>`;
+    btn.addEventListener("click",function(){ activateTab(c.id); closeMobileNav(); });
+    li.appendChild(btn);
+    return li;
+  }
+
+  /* ── Panel de país ── */
+  function makePanel(c){
+    const section = document.createElement("section");
+    section.className="country-panel";
+    section.id="panel-"+c.id;
+    section.setAttribute("role","tabpanel");
+    section.setAttribute("aria-labelledby","tab-"+c.id);
+    section.hidden=true;
+    section.style.setProperty("--accent",c.accentColor);
+    section.style.setProperty("--bg-tone",c.bgTone);
+
+    const hdr = document.createElement("div");
+    hdr.className="country-panel__header";
+    hdr.innerHTML=`<span class="country-panel__flag-emoji" aria-hidden="true">${c.emoji}</span>`
+      +`<h2 class="country-panel__name">${c.name}</h2>`
+      +`<p class="country-panel__tagline">${c.tagline}</p>`
+      +`<blockquote class="country-panel__quote">${c.quote}</blockquote>`;
+
+    const gw = document.createElement("div");
+    gw.className="gallery-wrapper";
+    gw.id="gw-"+c.id;
+
+    /* Zona de carga */
+    const uz = makeUploadZone(c);
+    /* Galería */
+    const galleryEl = document.createElement("div");
+    galleryEl.className="gallery";
+    galleryEl.id="gallery-"+c.id;
+
+    gw.appendChild(uz);
+    gw.appendChild(galleryEl);
+    section.appendChild(hdr);
+    section.appendChild(gw);
+    return section;
+  }
+
+  /* ── Zona de carga de fotos ── */
+  function makeUploadZone(c){
+    const zone = document.createElement("div");
+    zone.className="upload-zone";
+    zone.id="zone-"+c.id;
+
+    const input = document.createElement("input");
+    input.type="file";
+    input.multiple=true;
+    input.accept="image/*";
+    input.className="upload-zone__input";
+    input.id="input-"+c.id;
+
+    zone.innerHTML=`
+      <div class="upload-zone__icon">📷</div>
+      <p class="upload-zone__text">Añade tus fotos de <strong>${c.name}</strong></p>
+      <p class="upload-zone__hint">Haz clic o arrastra aquí las imágenes de este país.<br>Se guardan solo mientras la página está abierta.</p>
+    `;
+    const btn = document.createElement("label");
+    btn.className="upload-zone__btn";
+    btn.htmlFor="input-"+c.id;
+    btn.textContent="Seleccionar fotos";
+    zone.appendChild(btn);
+    zone.appendChild(input);
+
+    /* Clic en zona → abre selector */
+    zone.addEventListener("click", function(e){
+      if(e.target === zone || e.target.classList.contains("upload-zone__icon") ||
+         e.target.classList.contains("upload-zone__text") ||
+         e.target.classList.contains("upload-zone__hint")){
+        input.click();
+      }
+    });
+
+    /* Drag & Drop */
+    zone.addEventListener("dragover", function(e){ e.preventDefault(); zone.classList.add("upload-zone--over"); });
+    zone.addEventListener("dragleave", function(){ zone.classList.remove("upload-zone--over"); });
+    zone.addEventListener("drop", function(e){
+      e.preventDefault();
+      zone.classList.remove("upload-zone--over");
+      handleFiles(c, Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/")));
+    });
+
+    /* Selector de archivos */
+    input.addEventListener("change", function(){
+      handleFiles(c, Array.from(input.files));
+      input.value=""; /* reset para poder añadir más */
+    });
+
+    return zone;
+  }
+
+  /* ── Procesar archivos seleccionados ── */
+  function handleFiles(c, files){
+    if(!files.length) return;
+    files.forEach(function(file){
+      const url = URL.createObjectURL(file);
+      photoStore[c.id].push({ url: url, name: file.name });
+    });
+    refreshGallery(c);
+  }
+
+  /* ── Reconstruir galería de un país ── */
+  function refreshGallery(c){
+    const galleryEl = document.getElementById("gallery-"+c.id);
+    if(!galleryEl) return;
+
+    /* Revocar URLs antiguas para liberar memoria */
+    galleryEl.querySelectorAll(".gallery__thumb").forEach(function(img){
+      // No revocar aún, la imagen puede estar en el lightbox
+    });
+    galleryEl.innerHTML="";
+
+    const photos = photoStore[c.id];
+    if(!photos.length) return;
+
+    /* Actualizar texto de la zona de carga */
+    const zone = document.getElementById("zone-"+c.id);
+    if(zone){
+      const txt = zone.querySelector(".upload-zone__text");
+      if(txt) txt.innerHTML=`<strong>${photos.length} foto${photos.length>1?"s":""}</strong> cargada${photos.length>1?"s":""} en ${c.name} · <em style="font-size:.85em;color:var(--muted)">puedes añadir más</em>`;
+    }
+
+    photos.forEach(function(photo, idx){
+      const item = document.createElement("div");
+      item.className="gallery__item";
+      item.style.setProperty("--i", idx);
+
+      const btn = document.createElement("button");
+      btn.className="gallery__thumb-btn";
+      btn.setAttribute("aria-label","Ver foto "+(idx+1)+" de "+c.name);
+
+      const img = document.createElement("img");
+      img.className="gallery__thumb";
+      img.src=photo.url;
+      img.alt=c.name+" — "+photo.name;
+      img.loading="lazy";
+      img.decoding="async";
+
+      btn.appendChild(img);
+      btn.addEventListener("click", function(){ openLightbox(c, idx); });
+      item.appendChild(btn);
+      galleryEl.appendChild(item);
+
+      /* Animar entrada */
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          item.classList.add("gallery__item--visible");
+        });
+      });
+    });
+  }
+
+  /* ── Activar pestaña ── */
+  function activateTab(id){
+    if(activeId===id) return;
+    if(activeId){
+      setTabState(activeId,false);
+      const op=document.getElementById("panel-"+activeId);
+      if(op) op.hidden=true;
+    }
+    setTabState(id,true);
+    const panel=document.getElementById("panel-"+id);
+    if(panel){
+      panel.hidden=false;
+      panel.classList.remove("country-panel--in");
+      void panel.offsetWidth;
+      panel.classList.add("country-panel--in");
+    }
+    const c=COUNTRIES.find(x=>x.id===id);
+    if(c) document.body.style.backgroundColor=c.bgTone;
+    activeId=id;
+    if(window.innerWidth<900){
+      setTimeout(function(){ mainContent.scrollIntoView({behavior:"smooth",block:"start"}); },80);
+    }
+  }
+
+  function setTabState(id,active){
+    const btn=document.getElementById("tab-"+id);
+    if(!btn) return;
+    btn.setAttribute("aria-selected",active?"true":"false");
+    btn.setAttribute("tabindex",active?"0":"-1");
+    btn.classList.toggle("tab-btn--active",active);
+  }
+
+  /* ── Teclado en tabs ── */
+  tabsList.addEventListener("keydown",function(e){
+    const tabs=Array.from(tabsList.querySelectorAll(".tab-btn"));
+    const cur=tabs.indexOf(document.activeElement);
+    if(cur===-1) return;
+    let next=-1;
+    if(e.key==="ArrowRight"||e.key==="ArrowDown") next=(cur+1)%tabs.length;
+    if(e.key==="ArrowLeft"||e.key==="ArrowUp")    next=(cur-1+tabs.length)%tabs.length;
+    if(e.key==="Home") next=0;
+    if(e.key==="End")  next=tabs.length-1;
+    if(next!==-1){ e.preventDefault(); tabs[next].focus(); activateTab(tabs[next].dataset.country); }
+  });
+
+  /* ── Nav móvil ── */
+  navToggle.addEventListener("click",function(){
+    const open=tabsList.classList.toggle("tabs-nav__list--open");
+    navToggle.setAttribute("aria-expanded",String(open));
+  });
+  function closeMobileNav(){
+    tabsList.classList.remove("tabs-nav__list--open");
+    navToggle.setAttribute("aria-expanded","false");
+  }
+  document.addEventListener("click",function(e){
+    if(!navToggle.contains(e.target)&&!tabsList.contains(e.target)) closeMobileNav();
+  });
+
+  /* ── Lightbox ── */
+  function openLightbox(c,startIdx){
+    lbImages=photoStore[c.id].map(function(p,i){
+      return { src:p.url, caption:c.name+" · "+(i+1)+" / "+photoStore[c.id].length };
+    });
+    lbIndex=startIdx;
+    renderLbImage(true);
+    lightbox.removeAttribute("hidden");
+    lightbox.classList.add("lightbox--visible");
+    document.body.classList.add("no-scroll");
+    lbClose.focus();
+  }
+  function closeLightbox(){
+    lightbox.classList.remove("lightbox--visible");
+    setTimeout(function(){ lightbox.setAttribute("hidden",""); lbImg.src=""; },350);
+    document.body.classList.remove("no-scroll");
+  }
+  function renderLbImage(instant){
+    const item=lbImages[lbIndex];
+    if(!instant){ lbImg.classList.remove("lightbox__img--in"); void lbImg.offsetWidth; }
+    lbImg.src=item.src; lbImg.alt=item.caption;
+    lbCaption.textContent=item.caption;
+    lbImg.classList.add("lightbox__img--in");
+    lbPrev.disabled=lbIndex===0;
+    lbNext.disabled=lbIndex===lbImages.length-1;
+  }
+  lbClose.addEventListener("click",closeLightbox);
+  lbPrev.addEventListener("click",function(){ if(lbIndex>0){ lbIndex--; renderLbImage(false); } });
+  lbNext.addEventListener("click",function(){ if(lbIndex<lbImages.length-1){ lbIndex++; renderLbImage(false); } });
+  lightbox.addEventListener("click",function(e){ if(e.target===lightbox) closeLightbox(); });
+  document.addEventListener("keydown",function(e){
+    if(lightbox.hasAttribute("hidden")) return;
+    if(e.key==="Escape") closeLightbox();
+    if(e.key==="ArrowLeft"&&lbIndex>0){ lbIndex--; renderLbImage(false); }
+    if(e.key==="ArrowRight"&&lbIndex<lbImages.length-1){ lbIndex++; renderLbImage(false); }
+  });
+
+  /* ── Swipe táctil ── */
+  let touchStartX=0;
+  lightbox.addEventListener("touchstart",function(e){ touchStartX=e.touches[0].clientX; },{passive:true});
+  lightbox.addEventListener("touchend",function(e){
+    const dx=e.changedTouches[0].clientX-touchStartX;
+    if(Math.abs(dx)<40) return;
+    if(dx<0&&lbIndex<lbImages.length-1){ lbIndex++; renderLbImage(false); }
+    if(dx>0&&lbIndex>0){ lbIndex--; renderLbImage(false); }
+  },{passive:true});
+
+  /* ── Init ── */
+  spawnPetals();
+})();
+</script>
+</body>
+</html>

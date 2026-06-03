@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas de Recuerdos — Camino de Vida</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--gold:#e2c27a;
+--paper:#efe2bd;
+--night:#06101d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+font-family:Outfit,sans-serif;
+background:radial-gradient(circle at top,#10213d,#050a13 60%);
+color:white;
+overflow-x:hidden;
+}
+#stars,#pathCanvas{
+position:fixed;
+inset:0;
+pointer-events:none;
+}
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+position:relative;
+}
+.hero h1{
+font-family:Cinzel,serif;
+font-size:clamp(3rem,8vw,7rem);
+letter-spacing:.08em;
+}
+.hero p{opacity:.8;letter-spacing:.3em}
+.scrollHint{
+position:absolute;bottom:40px;
+animation:float 2s infinite ease-in-out;
+}
+@keyframes float{
+50%{transform:translateY(10px)}
+}
+
+.timeline{
+width:min(1000px,92vw);
+margin:0 auto;
+position:relative;
+padding-bottom:200px;
+}
+
+.timeline::before{
+content:'';
+position:absolute;
+left:50%;
+top:0;
+transform:translateX(-50%);
+width:8px;
+height:100%;
+background:linear-gradient(var(--gold),transparent);
+box-shadow:0 0 30px rgba(226,194,122,.6);
+}
+
+.stop{
+position:relative;
+min-height:80vh;
+display:flex;
+align-items:center;
+opacity:.15;
+transform:translateY(120px) scale(.9);
+transition:1s ease;
+}
+.stop.visible{
+opacity:1;
+transform:translateY(0) scale(1);
+}
+
+.stop:nth-child(even){justify-content:flex-start}
+.stop:nth-child(odd){justify-content:flex-end}
+
+.card{
+width:min(420px,85vw);
+padding:28px;
+backdrop-filter:blur(18px);
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.12);
+border-radius:28px;
+position:relative;
+overflow:hidden;
+}
+
+.card::before{
+content:'';
+position:absolute;
+inset:0;
+background:
+linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+transform:translateX(-100%);
+transition:1s;
+}
+.stop.visible .card::before{transform:translateX(100%)}
+
+.country{
+font-family:Cinzel,serif;
+font-size:2rem;
+color:var(--paper);
+}
+.subtitle{
+margin:10px 0 18px;
+opacity:.8;
+}
+.openBtn{
+display:inline-block;
+margin-top:12px;
+padding:12px 18px;
+border-radius:999px;
+text-decoration:none;
+color:#08111e;
+background:var(--gold);
+font-weight:700;
+}
+
+.marker{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:26px;height:26px;
+border-radius:50%;
+background:var(--gold);
+box-shadow:0 0 25px var(--gold);
+z-index:5;
+}
+
+.year{
+position:fixed;
+right:30px;
+bottom:20px;
+font-size:6rem;
+opacity:.08;
+font-weight:700;
+}
+
+.mapTexture{
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 30%,rgba(226,194,122,.08),transparent 30%),
+radial-gradient(circle at 80% 70%,rgba(90,140,255,.08),transparent 35%);
+mix-blend-mode:screen;
+pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<audio id="music" loop autoplay>
+<source src="audio/tema.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="stars"></canvas>
+<canvas id="pathCanvas"></canvas>
+<div class="mapTexture"></div>
+
+<section class="hero">
+<h1>Atlas de Recuerdos</h1>
+<p>UN CAMINO DE VIDA · DESLIZA PARA CONTINUAR</p>
+<div class="scrollHint">↓</div>
+</section>
+
+<div class="timeline" id="timeline"></div>
+<div class="year">2021 → ∞</div>
+
+<script>
+const places=[
+["España","espana.html","El comienzo"],
+["Hungría","hungria.html","Un recuerdo especial"],
+["Austria","austria.html","Elegancia y música"],
+["Irlanda","irlanda.html","Verde infinito"],
+["Finlandia","finlandia.html","Mirando al norte"],
+["Estonia","estonia.html","Nuevos horizontes"],
+["Italia","italia.html","Arte y nosotros"],
+["Alemania","alemania.html","Aventuras inesperadas"],
+["Francia","francia.html","Momentos inolvidables"],
+["Escocia","escocia.html","Paisajes legendarios"],
+["Vaticano","vaticano.html","Un rincón eterno"],
+["Eslovaquia","eslovaquia.html","Descubriendo juntos"],
+["República Checa","republica-checa.html","Calles mágicas"]
+];
+
+const timeline=document.getElementById("timeline");
+
+places.forEach((p,i)=>{
+const stop=document.createElement("section");
+stop.className="stop";
+stop.innerHTML=`
+<div class="marker"></div>
+<div class="card">
+<div class="country">${i+1}. ${p[0]}</div>
+<div class="subtitle">${p[2]}</div>
+<p>Un capítulo más dentro de este atlas vivo. Cada parada aparece al descubrirla, como si emergiera desde un mapa antiguo conectado a una red del futuro.</p>
+<a class="openBtn" href="${p[1]}">Entrar al recuerdo</a>
+</div>`;
+timeline.appendChild(stop);
+});
+
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting)e.target.classList.add("visible");
+});
+},{threshold:.35});
+
+document.querySelectorAll(".stop").forEach(el=>observer.observe(el));
+
+const stars=document.getElementById('stars');
+const sctx=stars.getContext('2d');
+function resize(){
+stars.width=innerWidth;
+stars.height=innerHeight;
+pathCanvas.width=innerWidth;
+pathCanvas.height=innerHeight;
+}
+resize();
+addEventListener('resize',resize);
+
+const pts=Array.from({length:180},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2}));
+function anim(){
+sctx.clearRect(0,0,stars.width,stars.height);
+pts.forEach(p=>{
+p.y+=0.15;
+if(p.y>innerHeight)p.y=0;
+sctx.beginPath();
+sctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+sctx.fillStyle='white';
+sctx.fill();
+});
+requestAnimationFrame(anim);
+}
+anim();
+
+document.addEventListener("click",()=>{
+music.play().catch(()=>{});
+},{once:true});
+</script>
+</body>
+</html>

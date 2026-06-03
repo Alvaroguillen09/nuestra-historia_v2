@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Álvaro & Gabriela — Escocia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="country" data-country="escocia">
+
+  <div class="site site--country" id="site">
+    <header class="header">
+      <div class="header__logo">
+        <a class="header__logo-link" href="index.html" aria-label="Volver al inicio">
+          <span class="header__logo-script">A <span class="amp">&</span> G</span>
+        </a>
+      </div>
+      <nav class="tabs-nav" id="tabsNav" aria-label="Países">
+        <button class="tabs-nav__toggle" id="navToggle" aria-expanded="false" aria-controls="tabsList">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="tabs-nav__list" id="tabsList" role="list"></ul>
+      </nav>
+    </header>
+
+    <main class="main" id="mainContent"></main>
+
+    <footer class="footer">
+      <p class="footer__text">Hecho con <span class="heart">♡</span> por Álvaro</p>
+      <p class="footer__sub">Cada foto, un momento. Cada país, un capítulo de nuestra historia.</p>
+    </footer>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada" hidden>
+    <button class="lightbox__close" id="lbClose" aria-label="Cerrar">×</button>
+    <button class="lightbox__prev" id="lbPrev" aria-label="Anterior">‹</button>
+    <button class="lightbox__next" id="lbNext" aria-label="Siguiente">›</button>
+    <div class="lightbox__stage">
+      <img class="lightbox__img" id="lbImg" src="" alt="" />
+      <p class="lightbox__caption" id="lbCaption"></p>
+    </div>
+  </div>
+
+  <script src="js/countries.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

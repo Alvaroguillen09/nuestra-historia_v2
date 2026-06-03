@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>El Archivo del Tiempo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--gold:#d8ba78;
+--glass:rgba(255,255,255,.06);
+--line:rgba(255,255,255,.08);
+}
+
+body{
+font-family:Inter,sans-serif;
+background:#04070d;
+color:white;
+overflow-x:hidden;
+}
+
+#bg{
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%,rgba(216,186,120,.12),transparent 30%),
+radial-gradient(circle at 80% 70%,rgba(80,120,255,.12),transparent 30%),
+linear-gradient(#050812,#020305);
+z-index:-2;
+}
+
+#grid{
+position:fixed;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:40px 40px;
+mask-image:radial-gradient(circle at center,black 20%,transparent 90%);
+z-index:-1;
+}
+
+.hero{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:40px;
+}
+
+.hero h1{
+font-family:"Cormorant Garamond",serif;
+font-size:min(11vw,8rem);
+font-weight:600;
+}
+
+.hero p{
+margin-top:20px;
+opacity:.7;
+letter-spacing:.3em;
+}
+
+.archive{
+width:min(1400px,95vw);
+margin:auto;
+padding-bottom:200px;
+}
+
+.record{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+position:sticky;
+top:0;
+}
+
+.card{
+width:min(1000px,92vw);
+height:min(650px,80vh);
+background:rgba(7,10,18,.78);
+backdrop-filter:blur(24px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:32px;
+overflow:hidden;
+display:grid;
+grid-template-columns:1.2fr 1fr;
+box-shadow:0 30px 120px rgba(0,0,0,.5);
+}
+
+.left{
+padding:60px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.code{
+color:var(--gold);
+letter-spacing:.4em;
+font-size:.8rem;
+margin-bottom:20px;
+}
+
+.country{
+font-family:"Cormorant Garamond",serif;
+font-size:5rem;
+line-height:.9;
+}
+
+.desc{
+margin-top:25px;
+opacity:.75;
+line-height:1.9;
+max-width:500px;
+}
+
+.enter{
+margin-top:35px;
+display:inline-block;
+align-self:flex-start;
+text-decoration:none;
+background:var(--gold);
+color:#111;
+padding:14px 24px;
+border-radius:999px;
+font-weight:700;
+}
+
+.right{
+border-left:1px solid var(--line);
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
+}
+
+.year{
+font-size:min(18vw,10rem);
+font-weight:700;
+opacity:.08;
+position:absolute;
+}
+
+.ring{
+width:280px;
+height:280px;
+border-radius:50%;
+border:1px solid rgba(216,186,120,.3);
+position:absolute;
+animation:spin 30s linear infinite;
+}
+
+.ring:nth-child(2){
+width:360px;
+height:360px;
+animation-direction:reverse;
+animation-duration:40s;
+}
+
+.dot{
+width:10px;
+height:10px;
+background:var(--gold);
+border-radius:50%;
+position:absolute;
+top:-5px;
+left:50%;
+transform:translateX(-50%);
+box-shadow:0 0 20px var(--gold);
+}
+
+@keyframes spin{
+from{transform:rotate(0)}
+to{transform:rotate(360deg)}
+}
+
+.final{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.final h2{
+font-family:"Cormorant Garamond",serif;
+font-size:min(9vw,6rem);
+}
+
+.final p{
+margin-top:20px;
+opacity:.7;
+font-size:1.2rem;
+}
+
+.progress{
+position:fixed;
+top:0;
+left:0;
+height:2px;
+background:var(--gold);
+width:0;
+z-index:999;
+}
+
+@media(max-width:900px){
+.card{grid-template-columns:1fr;height:auto}
+.right{min-height:300px;border-left:none;border-top:1px solid var(--line)}
+.country{font-size:3.5rem}
+.record{height:auto;padding:60px 0;position:relative}
+}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="grid"></div>
+<div class="progress" id="progress"></div>
+
+<section class="hero">
+<div>
+<h1>El Archivo del Tiempo</h1>
+<p>TODOS LOS MOMENTOS QUE MERECEN SER CONSERVADOS</p>
+</div>
+</section>
+
+<div class="archive" id="archive"></div>
+
+<section class="final">
+<div>
+<h2>Clasificación incompleta.</h2>
+<p>Se siguen registrando nuevos recuerdos...</p>
+</div>
+</section>
+
+<script>
+const places=[
+["AR-001","España","espana.html","El comienzo"],
+["AR-002","Hungría","hungria.html","Un recuerdo especial"],
+["AR-003","Austria","austria.html","Elegancia y música"],
+["AR-004","Irlanda","irlanda.html","Verde infinito"],
+["AR-005","Finlandia","finlandia.html","Mirando al norte"],
+["AR-006","Estonia","estonia.html","Nuevos horizontes"],
+["AR-007","Italia","italia.html","Arte y nosotros"],
+["AR-008","Alemania","alemania.html","Aventuras inesperadas"],
+["AR-009","Francia","francia.html","Momentos inolvidables"],
+["AR-010","Escocia","escocia.html","Paisajes legendarios"],
+["AR-011","Vaticano","vaticano.html","Un rincón eterno"],
+["AR-012","Eslovaquia","eslovaquia.html","Descubriendo juntos"],
+["AR-013","República Checa","republica-checa.html","Calles mágicas"]
+];
+
+const archive=document.getElementById('archive');
+
+places.forEach((p,i)=>{
+const el=document.createElement('section');
+el.className='record';
+el.innerHTML=`
+<div class="card">
+<div class="left">
+<div class="code">${p[0]}</div>
+<div class="country">${p[1]}</div>
+<div class="desc">${p[3]}. Este recuerdo ha sido preservado dentro del archivo permanente de nuestra historia.</div>
+<a class="enter" href="${p[2]}">Abrir recuerdo</a>
+</div>
+<div class="right">
+<div class="year">${String(i+1).padStart(2,'0')}</div>
+<div class="ring"><div class="dot"></div></div>
+<div class="ring"><div class="dot"></div></div>
+</div>
+</div>`;
+archive.appendChild(el);
+});
+
+addEventListener('scroll',()=>{
+const max=document.documentElement.scrollHeight-innerHeight;
+document.getElementById('progress').style.width=(scrollY/max*100)+'%';
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas de Recuerdos</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--gold:#e3c27a;
+--glass:rgba(255,255,255,.06);
+--line:rgba(255,255,255,.15);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:Outfit,sans-serif;
+background:#080b14;
+overflow:hidden;
+color:white;
+}
+
+#bg{
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%, rgba(214,120,120,.15), transparent 30%),
+radial-gradient(circle at 80% 30%, rgba(227,194,122,.15), transparent 25%),
+radial-gradient(circle at 50% 80%, rgba(100,120,255,.12), transparent 30%),
+#080b14;
+}
+
+#grid{
+position:absolute;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:50px 50px;
+}
+
+header{
+position:absolute;
+top:40px;
+left:50%;
+transform:translateX(-50%);
+text-align:center;
+z-index:10;
+}
+
+header h1{
+font-family:"Cormorant Garamond",serif;
+font-size:4.5rem;
+font-weight:300;
+}
+
+header p{
+opacity:.7;
+letter-spacing:4px;
+}
+
+#viewport{
+position:absolute;
+inset:0;
+overflow:auto;
+scroll-behavior:smooth;
+padding:180px 10vw;
+}
+
+.path{
+position:relative;
+width:3000px;
+height:1800px;
+}
+
+.route{
+position:absolute;
+left:0;
+top:0;
+width:100%;
+height:100%;
+}
+
+.node{
+position:absolute;
+width:90px;
+height:90px;
+border-radius:50%;
+background:var(--glass);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+transition:.4s;
+}
+
+.node:hover{
+transform:scale(1.15);
+box-shadow:0 0 40px rgba(227,194,122,.4);
+}
+
+.node::before{
+content:'';
+position:absolute;
+width:12px;
+height:12px;
+border-radius:50%;
+background:var(--gold);
+}
+
+.label{
+position:absolute;
+top:105px;
+white-space:nowrap;
+font-size:.9rem;
+opacity:.9;
+}
+
+#panel{
+position:fixed;
+right:40px;
+top:50%;
+transform:translateY(-50%);
+width:320px;
+padding:25px;
+background:rgba(10,12,18,.8);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.1);
+border-radius:24px;
+z-index:20;
+}
+
+#panel h2{
+font-family:"Cormorant Garamond",serif;
+font-size:2.2rem;
+font-weight:400;
+margin-bottom:10px;
+}
+
+#panel p{
+opacity:.8;
+line-height:1.6;
+}
+
+#go{
+margin-top:20px;
+width:100%;
+padding:14px;
+background:var(--gold);
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:600;
+}
+
+#year{
+position:fixed;
+left:40px;
+bottom:40px;
+font-size:5rem;
+font-weight:700;
+opacity:.08;
+pointer-events:none;
+}
+
+canvas{
+position:absolute;
+inset:0;
+}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="grid"></div>
+
+<header>
+<h1>Atlas de Recuerdos</h1>
+<p>UNA HISTORIA QUE SIGUE CRECIENDO</p>
+</header>
+
+<div id="panel">
+<h2 id="title">Selecciona un destino</h2>
+<p id="text">Cada nuevo lugar se convertirá en un nuevo capítulo. Este mapa está pensado para crecer con vosotros año tras año.</p>
+<button id="go">Abrir destino</button>
+</div>
+
+<div id="year">2021 → ∞</div>
+
+<div id="viewport">
+<div class="path">
+<canvas id="canvas" width="3000" height="1800"></canvas>
+</div>
+</div>
+
+<script>
+const places=[
+["España","espana.html","Donde comenzó todo",250,1000],
+["Italia","italia.html","Arte, comida y nosotros",600,800],
+["Francia","francia.html","Momentos inolvidables",900,900],
+["Hungría","hungria.html","Una sorpresa maravillosa",1250,650],
+["Austria","austria.html","Elegancia y música",1550,850],
+["Alemania","alemania.html","Nuevas aventuras",1850,600],
+["Irlanda","irlanda.html","Verde infinito",2150,900],
+["Finlandia","finlandia.html","Mirando al norte",2450,700]
+];
+
+let selected=null;
+
+const path=document.querySelector(".path");
+
+places.forEach(p=>{
+const n=document.createElement("div");
+n.className="node";
+n.style.left=p[3]+"px";
+n.style.top=p[4]+"px";
+
+const l=document.createElement("div");
+l.className="label";
+l.textContent=p[0];
+n.appendChild(l);
+
+n.onclick=()=>{
+selected=p;
+document.getElementById("title").textContent=p[0];
+document.getElementById("text").textContent=p[2];
+};
+
+path.appendChild(n);
+});
+
+document.getElementById("go").onclick=()=>{
+if(selected) location.href=selected[1];
+};
+
+const c=document.getElementById("canvas");
+const ctx=c.getContext("2d");
+
+ctx.strokeStyle="rgba(227,194,122,.4)";
+ctx.lineWidth=4;
+
+ctx.beginPath();
+ctx.moveTo(250,1045);
+
+for(let i=1;i<places.length;i++){
+ctx.lineTo(places[i][3]+45,places[i][4]+45);
+}
+
+ctx.stroke();
+
+for(let i=0;i<1200;i++){
+ctx.fillStyle="rgba(255,255,255,"+(Math.random()*0.8)+")";
+ctx.fillRect(Math.random()*3000,Math.random()*1800,2,2);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas de Recuerdos</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--gold:#e3c27a;
+--glass:rgba(255,255,255,.06);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Outfit,sans-serif;
+background:#080b14;
+overflow:hidden;
+color:white;
+}
+
+#bg{
+position:fixed;
+inset:0;
+overflow:hidden;
+background:#080b14;
+}
+
+.orb{
+position:absolute;
+border-radius:50%;
+filter:blur(80px);
+animation:float 20s infinite ease-in-out alternate;
+}
+
+.orb:nth-child(1){
+width:500px;height:500px;
+background:rgba(227,194,122,.15);
+left:-100px;top:-100px;
+}
+.orb:nth-child(2){
+width:700px;height:700px;
+background:rgba(110,120,255,.12);
+right:-200px;top:20%;
+animation-duration:28s;
+}
+.orb:nth-child(3){
+width:600px;height:600px;
+background:rgba(220,90,120,.10);
+left:30%;bottom:-250px;
+animation-duration:24s;
+}
+
+@keyframes float{
+from{transform:translate(0,0) scale(1)}
+to{transform:translate(120px,-60px) scale(1.2)}
+}
+
+#stars{
+position:absolute;
+inset:0;
+}
+
+#grid{
+position:absolute;
+inset:0;
+background-image:
+linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+background-size:60px 60px;
+}
+
+header{
+position:absolute;
+top:40px;
+left:50%;
+transform:translateX(-50%);
+text-align:center;
+z-index:10;
+}
+
+header h1{
+font-family:"Cormorant Garamond",serif;
+font-size:4.5rem;
+font-weight:300;
+}
+
+header p{
+opacity:.7;
+letter-spacing:4px;
+}
+
+#viewport{
+position:absolute;
+inset:0;
+overflow:auto;
+padding:180px 10vw;
+scroll-behavior:smooth;
+}
+
+.path{
+position:relative;
+width:5000px;
+height:1800px;
+}
+
+.node{
+position:absolute;
+width:90px;
+height:90px;
+border-radius:50%;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);
+display:flex;
+justify-content:center;
+align-items:center;
+cursor:pointer;
+transition:.35s;
+}
+
+.node:hover{
+transform:scale(1.15);
+box-shadow:0 0 40px rgba(227,194,122,.5);
+}
+
+.node::before{
+content:'';
+width:12px;height:12px;
+border-radius:50%;
+background:var(--gold);
+box-shadow:0 0 20px var(--gold);
+}
+
+.label{
+position:absolute;
+top:105px;
+white-space:nowrap;
+}
+
+#panel{
+position:fixed;
+right:40px;
+top:50%;
+transform:translateY(-50%);
+width:340px;
+padding:25px;
+background:rgba(10,12,18,.75);
+backdrop-filter:blur(30px);
+border-radius:24px;
+border:1px solid rgba(255,255,255,.08);
+z-index:20;
+}
+
+#panel h2{
+font-family:"Cormorant Garamond",serif;
+font-size:2.2rem;
+margin-bottom:10px;
+}
+
+#panel p{
+line-height:1.6;
+opacity:.8;
+}
+
+#go{
+margin-top:20px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:var(--gold);
+font-weight:700;
+cursor:pointer;
+}
+
+#audioBadge{
+margin-top:15px;
+font-size:.8rem;
+opacity:.6;
+}
+
+#year{
+position:fixed;
+left:40px;
+bottom:30px;
+font-size:5rem;
+font-weight:700;
+opacity:.07;
+}
+
+canvas.route{
+position:absolute;
+inset:0;
+}
+</style>
+</head>
+<body>
+
+<!-- AUDIO -->
+<!-- Sustituye "audio/tema.mp3" por tu archivo -->
+<audio id="music" loop autoplay>
+    <source src="audio/tema.mp3" type="audio/mpeg">
+</audio>
+
+<div id="bg">
+<div class="orb"></div>
+<div class="orb"></div>
+<div class="orb"></div>
+<canvas id="stars"></canvas>
+<div id="grid"></div>
+</div>
+
+<header>
+<h1>Atlas de Recuerdos</h1>
+<p>NUESTRA HISTORIA SIGUE CRECIENDO</p>
+</header>
+
+<div id="panel">
+<h2 id="title">Selecciona un destino</h2>
+<p id="text">Cada punto del camino representa un recuerdo compartido.</p>
+<button id="go">Abrir destino</button>
+<div id="audioBadge">🎵 Preparado para música de fondo</div>
+</div>
+
+<div id="year">2021 → ∞</div>
+
+<div id="viewport">
+<div class="path">
+<canvas class="route" id="route" width="5000" height="1800"></canvas>
+</div>
+</div>
+
+<script>
+const places=[
+["España","espana.html","El comienzo",250,900],
+["Hungría","hungria.html","Un recuerdo especial",600,650],
+["Austria","austria.html","Elegancia y música",950,950],
+["Irlanda","irlanda.html","Verde infinito",1300,700],
+["Finlandia","finlandia.html","Mirando al norte",1650,500],
+["Estonia","estonia.html","Nuevos horizontes",2000,850],
+["Italia","italia.html","Arte y nosotros",2350,650],
+["Alemania","alemania.html","Aventuras inesperadas",2700,950],
+["Francia","francia.html","Momentos inolvidables",3050,700],
+["Escocia","escocia.html","Paisajes legendarios",3400,500],
+["Vaticano","vaticano.html","Un rincón eterno",3750,850],
+["Eslovaquia","eslovaquia.html","Descubriendo juntos",4100,650],
+["República Checa","republica-checa.html","Calles mágicas",4450,900]
+];
+
+const path=document.querySelector(".path");
+let selected=null;
+
+places.forEach(p=>{
+const n=document.createElement("div");
+n.className="node";
+n.style.left=p[3]+"px";
+n.style.top=p[4]+"px";
+
+const l=document.createElement("div");
+l.className="label";
+l.textContent=p[0];
+n.appendChild(l);
+
+n.onclick=()=>{
+selected=p;
+title.textContent=p[0];
+text.textContent=p[2];
+};
+
+path.appendChild(n);
+});
+
+go.onclick=()=>{
+if(selected) location.href=selected[1];
+};
+
+const c=document.getElementById("route");
+const ctx=c.getContext("2d");
+
+ctx.strokeStyle="rgba(227,194,122,.35)";
+ctx.lineWidth=4;
+ctx.beginPath();
+ctx.moveTo(places[0][3]+45,places[0][4]+45);
+
+for(let i=1;i<places.length;i++){
+ctx.lineTo(places[i][3]+45,places[i][4]+45);
+}
+ctx.stroke();
+
+// estrellas animadas
+const stars=document.getElementById("stars");
+const sctx=stars.getContext("2d");
+stars.width=innerWidth;
+stars.height=innerHeight;
+
+const particles=[];
+for(let i=0;i<220;i++){
+particles.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+r:Math.random()*2,
+v:Math.random()*0.3+0.05
+});
+}
+
+function animateStars(){
+sctx.clearRect(0,0,stars.width,stars.height);
+for(const p of particles){
+p.y+=p.v;
+if(p.y>innerHeight) p.y=0;
+sctx.fillStyle="rgba(255,255,255,.8)";
+sctx.beginPath();
+sctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+sctx.fill();
+}
+requestAnimationFrame(animateStars);
+}
+animateStars();
+
+// ayuda para autoplay en navegadores
+document.addEventListener("click",()=>{
+const music=document.getElementById("music");
+music.play().catch(()=>{});
+},{once:true});
+</script>
+
+</body>
+</html>
