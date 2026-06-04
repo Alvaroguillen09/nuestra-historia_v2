@@ -316,6 +316,9 @@ font-size:3.5rem;
 }
 </style>
 <script src="js/auth.js"></script>
+<script src="js/confetti.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/special-mode.js"></script>
 </head>
 <body>
 
@@ -328,11 +331,67 @@ font-size:3.5rem;
 
 <div class="progress" id="progress"></div>
 
+<style>
+/* ── Archive nav ── */
+.arch-nav{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;padding:1.2rem 1rem 0}
+.arch-nav a{
+  display:inline-flex;align-items:center;gap:.45rem;
+  padding:.55rem 1.2rem;
+  border-radius:999px;
+  border:1px solid rgba(214,217,255,.35);
+  background:rgba(58,58,152,.35);
+  backdrop-filter:blur(8px);
+  color:rgba(240,224,255,.9);
+  font-family:Inter,sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  text-decoration:none;
+  transition:background .25s,border-color .25s,transform .2s;
+}
+.arch-nav a:hover{background:rgba(107,107,230,.55);border-color:rgba(214,217,255,.65);transform:translateY(-2px)}
+/* ── Stats ── */
+.stats-bar{
+  display:flex;justify-content:center;align-items:stretch;
+  gap:1px;flex-wrap:wrap;
+  max-width:700px;margin:2.5rem auto 0;
+  border:1px solid rgba(214,217,255,.15);border-radius:20px;
+  overflow:hidden;background:rgba(58,58,152,.28);backdrop-filter:blur(16px);
+}
+.stat{
+  flex:1;min-width:130px;
+  padding:1.4rem 1rem;text-align:center;
+  border-right:1px solid rgba(214,217,255,.1);
+}
+.stat:last-child{border-right:none}
+.stat__num{
+  font-family:"Cormorant Garamond",serif;
+  font-size:2.6rem;font-weight:600;
+  color:rgb(240,224,255);line-height:1;
+  display:block;
+}
+.stat__label{
+  font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(214,217,255,.65);margin-top:.4rem;display:block;
+}
+@media(max-width:500px){.stats-bar{flex-direction:column;border-radius:16px}.stat{border-right:none;border-bottom:1px solid rgba(214,217,255,.1)}.stat:last-child{border-bottom:none}}
+</style>
+
 <section class="hero">
 <div>
 <h1>El Archivo del Tiempo</h1>
 <p>TODOS LOS MOMENTOS QUE MERECEN SER CONSERVADOS</p>
-<p>¡Desliza para verlos!</p>
+
+<nav class="arch-nav">
+  <a href="mapa.html">🗺 Mapa interactivo</a>
+  <a href="bucket-list.html">🔒 Bucket list</a>
+</nav>
+
+<div class="stats-bar">
+  <div class="stat"><span class="stat__num" id="statCountries">0</span><span class="stat__label">países visitados</span></div>
+  <div class="stat"><span class="stat__num" id="statPhotos">0</span><span class="stat__label">fotos capturadas</span></div>
+  <div class="stat"><span class="stat__num" id="statKm">0</span><span class="stat__label">km recorridos</span></div>
+  <div class="stat"><span class="stat__num">∞</span><span class="stat__label">recuerdos</span></div>
+</div>
+
+<p style="margin-top:1.8rem;opacity:.55;font-size:.8rem;letter-spacing:.15em">¡Desliza para verlos!</p>
 </div>
 </section>
 
@@ -346,6 +405,38 @@ font-size:3.5rem;
 </section>
 
 <script src="js/countries.js"></script>
+<script src="js/music.js"></script>
+<script>
+/* Stats counter */
+(function(){
+  var targets = { statCountries: 13, statPhotos: 457, statKm: 28000 };
+  var animated = false;
+  function animate(){
+    if(animated) return; animated = true;
+    Object.keys(targets).forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var target = targets[id];
+      var dur = 1800;
+      var start = null;
+      function step(ts){
+        if(!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * ease).toLocaleString('es');
+        if(p < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString('es') + (id === 'statKm' ? '' : '');
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  var bar = document.querySelector('.stats-bar');
+  if(bar && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(e){ if(e[0].isIntersecting){ animate(); io.disconnect(); } }, { threshold: 0.3 });
+    io.observe(bar);
+  } else { animate(); }
+})();
+</script>
 <script>
 
 const archive=document.getElementById('archive');

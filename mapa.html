@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<title>Álvaro & Gabriela — Nuestro mapa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:rgb(159,161,255);color:#fff;min-height:100vh;overflow-x:hidden}
+
+.aurora{position:fixed;width:800px;height:800px;border-radius:50%;filter:blur(120px);opacity:.4;animation:float 18s infinite alternate ease-in-out;z-index:0}
+.a1{background:#c78cff;left:-200px;top:-200px}
+.a2{background:#8e7bff;right:-200px;top:15%;animation-duration:24s}
+.a3{background:#ff9ee8;left:25%;bottom:-250px;animation-duration:20s}
+@keyframes float{from{transform:translate(0,0) scale(1)}to{transform:translate(80px,-60px) scale(1.2)}}
+
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* Header */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.15)}
+.hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:rgb(240,224,255);text-decoration:none}
+.hdr__back{
+  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(214,217,255,.75);text-decoration:none;
+  padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(214,217,255,.25);
+  transition:background .2s,color .2s;
+}
+.hdr__back:hover{background:rgba(214,217,255,.12);color:rgba(240,224,255,1)}
+
+/* Hero */
+.hero{text-align:center;padding:2.5rem 1rem 1.5rem}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:300;color:rgb(240,224,255)}
+.hero p{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.6);margin-top:.5rem}
+
+/* Map container */
+.map-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:1rem 1rem 3rem;
+}
+.map-container{
+  position:relative;
+  width:min(900px,95vw);
+  aspect-ratio:3/2;
+  border-radius:24px;
+  overflow:hidden;
+  background:radial-gradient(ellipse at 40% 55%, rgba(30,30,100,.95) 0%, rgba(10,10,50,.98) 100%);
+  border:1px solid rgba(214,217,255,.15);
+  box-shadow:0 30px 100px rgba(10,10,50,.6);
+}
+
+/* Ocean gradient overlay */
+.map-container::before{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(100,120,200,.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 40%, rgba(80,100,180,.05) 0%, transparent 45%);
+  pointer-events:none;z-index:1;
+}
+
+/* Grid lines */
+.map-grid{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.map-grid line{stroke:rgba(214,217,255,.06);stroke-width:1}
+
+/* Continent blob */
+.map-land{position:absolute;inset:0;z-index:3;pointer-events:none}
+
+/* Country markers */
+.marker{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  z-index:10;
+  cursor:pointer;
+  text-align:center;
+}
+.marker__pin{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;line-height:1;
+  background:rgba(58,58,152,.8);
+  border:2px solid rgba(214,217,255,.5);
+  box-shadow:0 0 16px rgba(107,107,230,.6),0 0 0 4px rgba(107,107,230,.12);
+  transition:transform .22s ease, box-shadow .22s ease;
+  position:relative;z-index:2;
+}
+.marker:hover .marker__pin{
+  transform:scale(1.25);
+  box-shadow:0 0 28px rgba(199,140,255,.9),0 0 0 8px rgba(199,140,255,.15);
+}
+.marker__label{
+  position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(240,224,255,.85);white-space:nowrap;
+  text-shadow:0 1px 4px rgba(0,0,0,.8);
+  pointer-events:none;
+  opacity:0;transition:opacity .2s;
+}
+.marker:hover .marker__label{opacity:1}
+
+/* Pulse ring */
+.marker__pulse{
+  position:absolute;top:50%;left:50%;
+  width:36px;height:36px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:2px solid rgba(199,140,255,.5);
+  animation:pulse 2.5s ease-out infinite;
+  z-index:1;
+}
+@keyframes pulse{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:.7}
+  100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}
+}
+
+/* Tooltip on hover */
+.map-tooltip{
+  position:fixed;z-index:200;
+  background:rgba(30,30,90,.95);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(214,217,255,.2);
+  border-radius:12px;
+  padding:.6rem 1rem;
+  pointer-events:none;
+  opacity:0;transition:opacity .15s;
+  font-size:.8rem;color:rgba(240,224,255,.9);
+  white-space:nowrap;
+}
+.map-tooltip.visible{opacity:1}
+.map-tooltip strong{display:block;font-size:.95rem;margin-bottom:.15rem}
+
+/* Legend */
+.legend{
+  position:absolute;bottom:1rem;left:1rem;z-index:20;
+  display:flex;align-items:center;gap:.6rem;
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(214,217,255,.5);
+}
+.legend__dot{width:10px;height:10px;border-radius:50%;background:rgba(107,107,230,.8);border:1px solid rgba(214,217,255,.4)}
+
+@media(max-width:600px){
+  .marker__pin{width:28px;height:28px;font-size:1rem}
+  .marker__label{display:none}
+  .hdr{padding:.75rem 1rem}
+}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+
+<div class="page">
+  <header class="hdr">
+    <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
+    <a class="hdr__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+  </header>
+
+  <div class="hero">
+    <h1>Nuestro mapa</h1>
+    <p>Cada punto, un capítulo de nuestra historia</p>
+  </div>
+
+  <div class="map-wrap">
+    <div class="map-container" id="mapContainer">
+
+      <!-- Grid SVG -->
+      <svg class="map-grid" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="150" y1="0" x2="150" y2="600"/>
+        <line x1="300" y1="0" x2="300" y2="600"/>
+        <line x1="450" y1="0" x2="450" y2="600"/>
+        <line x1="600" y1="0" x2="600" y2="600"/>
+        <line x1="750" y1="0" x2="750" y2="600"/>
+        <line x1="0" y1="100" x2="900" y2="100"/>
+        <line x1="0" y1="200" x2="900" y2="200"/>
+        <line x1="0" y1="300" x2="900" y2="300"/>
+        <line x1="0" y1="400" x2="900" y2="400"/>
+        <line x1="0" y1="500" x2="900" y2="500"/>
+      </svg>
+
+      <!-- Simplified Europe landmass hint -->
+      <svg class="map-land" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="landGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(90,95,200,.12)"/>
+            <stop offset="100%" stop-color="rgba(60,65,160,.04)"/>
+          </radialGradient>
+        </defs>
+        <!-- Rough European landmass polygon -->
+        <path d="M 160 130 L 200 100 L 240 95 L 280 105 L 310 95 L 360 88 L 410 90
+                 L 460 88 L 510 82 L 560 85 L 610 80 L 660 88 L 700 82 L 730 95
+                 L 740 120 L 730 155 L 720 195 L 710 230 L 700 265 L 685 300
+                 L 670 330 L 655 360 L 640 385 L 625 410 L 605 435 L 585 460
+                 L 560 485 L 535 505 L 510 518 L 490 522 L 470 515 L 450 505
+                 L 430 498 L 410 495 L 390 490 L 370 492 L 350 488 L 330 480
+                 L 310 475 L 290 478 L 270 472 L 250 462 L 230 455 L 210 460
+                 L 190 468 L 170 462 L 150 450 L 135 435 L 120 415 L 112 390
+                 L 110 360 L 115 330 L 120 300 L 122 270 L 118 240 L 122 210
+                 L 130 180 L 145 155 Z"
+              fill="url(#landGrad)" stroke="rgba(180,190,255,.08)" stroke-width="1"/>
+        <!-- Scandinavian peninsula hint -->
+        <path d="M 570 85 L 590 70 L 620 60 L 650 55 L 680 60 L 700 82 L 680 90
+                 L 650 88 L 620 82 L 590 85 Z"
+              fill="rgba(90,95,200,.08)" stroke="rgba(180,190,255,.06)" stroke-width="1"/>
+        <!-- Iberian peninsula -->
+        <path d="M 155 385 L 170 380 L 190 375 L 210 372 L 230 378 L 245 395
+                 L 248 420 L 240 450 L 225 475 L 200 490 L 175 485 L 155 468
+                 L 140 448 L 138 420 L 142 400 Z"
+              fill="rgba(90,95,200,.08)" stroke="rgba(180,190,255,.06)" stroke-width="1"/>
+        <!-- Italian boot hint -->
+        <path d="M 450 410 L 465 430 L 472 460 L 478 490 L 480 520 L 475 545
+                 L 465 555 L 455 548 L 448 525 L 445 495 L 440 465 L 438 438 Z"
+              fill="rgba(90,95,200,.08)" stroke="rgba(180,190,255,.06)" stroke-width="1"/>
+      </svg>
+
+      <!-- Country markers injected by JS -->
+      <div id="markers"></div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend__dot"></div>
+        <span>Países visitados</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div class="map-tooltip" id="mapTooltip"></div>
+
+<script src="js/countries.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script src="js/confetti.js"></script>
+<script src="js/special-mode.js"></script>
+<script>
+/* Map marker positions (% of 900×600 viewport, based on geographic coordinates) */
+var MAP_POSITIONS = {
+  'espana':        { x: 31.4, y: 79.0 },
+  'francia':       { x: 39.9, y: 57.8 },
+  'italia':        { x: 54.2, y: 75.8 },
+  'hungria':       { x: 63.3, y: 61.3 },
+  'austria':       { x: 59.7, y: 59.5 },
+  'albania':       { x: 64.4, y: 77.0 },
+  'irlanda':       { x: 27.8, y: 46.7 },
+  'alemania':      { x: 51.7, y: 53.8 },
+  'eslovaquia':    { x: 64.1, y: 58.0 },
+  'republica-checa': { x: 58.6, y: 55.8 },
+  'estonia':       { x: 71.4, y: 31.5 },
+  'finlandia':     { x: 73.3, y: 26.3 },
+  'escocia':       { x: 32.1, y: 38.8 },
+  'vaticano':      { x: 56.7, y: 78.0 }
+};
+
+var tooltip = document.getElementById('mapTooltip');
+var markersEl = document.getElementById('markers');
+
+COUNTRIES.forEach(function(c){
+  var pos = MAP_POSITIONS[c.id];
+  if(!pos) return;
+
+  var m = document.createElement('a');
+  m.className = 'marker';
+  m.href = c.id + '.html';
+  m.setAttribute('aria-label', c.name);
+  m.style.left = pos.x + '%';
+  m.style.top  = pos.y + '%';
+
+  m.innerHTML =
+    '<div class="marker__pulse"></div>' +
+    '<div class="marker__pin">' + c.emoji + '</div>' +
+    '<div class="marker__label">' + c.name + '</div>';
+
+  /* Tooltip */
+  m.addEventListener('mouseenter', function(e){
+    tooltip.innerHTML = '<strong>' + c.emoji + ' ' + c.name + '</strong>' + c.tagline;
+    tooltip.classList.add('visible');
+  });
+  m.addEventListener('mousemove', function(e){
+    var x = e.clientX + 14, y = e.clientY - 10;
+    if(x + 200 > innerWidth) x = e.clientX - 204;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top  = y + 'px';
+  });
+  m.addEventListener('mouseleave', function(){
+    tooltip.classList.remove('visible');
+  });
+
+  markersEl.appendChild(m);
+});
+</script>
+</body>
+</html>
