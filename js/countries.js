@@ -87,7 +87,7 @@ const COUNTRIES = [
     quote:       "Descubrimos juntos lo que pocos conocen.",
     accentColor: "#8b0000",
     bgTone:      "#fdf5f5",
-    flag:        null,
+    flag:        "flags/al.png",
     images: ["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"]
   },
   {

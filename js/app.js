@@ -169,11 +169,11 @@
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
-          e.target.classList.add("gallery__item--visible");
+          revealGalleryItem(e.target);
           io.unobserve(e.target);
         }
       });
-    }, { threshold: IO_THRESHOLD });
+    }, { threshold: 0, rootMargin: "400px 0px" });
     items.forEach(function (el) { io.observe(el); });
   }
 
@@ -190,11 +190,11 @@
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
-          e.target.classList.add("gallery__item--visible");
+          revealGalleryItem(e.target);
           io.unobserve(e.target);
         }
       });
-    }, { threshold: IO_THRESHOLD });
+    }, { threshold: 0, rootMargin: "400px 0px" });
 
     const mo = new MutationObserver(function (mutations) {
       mutations.forEach(function (m) {
@@ -324,9 +324,8 @@
 
       const img = document.createElement("img");
       img.className   = "gallery__thumb";
-      img.src         = src;
+      img.dataset.src = src;   // deferred: src set by IO when near viewport
       img.alt         = c.name + " — foto " + (idx + 1);
-      img.loading     = "lazy";
       img.decoding    = "async";
 
       img.addEventListener("error", function () {
@@ -343,6 +342,16 @@
     });
 
     return grid;
+  }
+
+  /* Load image src when its gallery item is near the viewport */
+  function revealGalleryItem(el) {
+    const img = el.querySelector("img[data-src]");
+    if (img) {
+      img.src = img.dataset.src;
+      img.removeAttribute("data-src");
+    }
+    el.classList.add("gallery__item--visible");
   }
 
   /* ═══════════════════════════════════════════
