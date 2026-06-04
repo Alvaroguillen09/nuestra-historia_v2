@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
 <title>El Archivo del Tiempo - Aurora Edition</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -340,39 +343,29 @@ font-size:3.5rem;
 </div>
 </section>
 
+<script src="js/countries.js"></script>
 <script>
-const places=[
-["AR-001","España","espana.html","El comienzo","flags/es.png"],
-["AR-002","Hungría","hungria.html","Un recuerdo especial","flags/hu.png"],
-["AR-003","Austria","austria.html","Elegancia y música","flags/at.png"],
-["AR-004","Irlanda","irlanda.html","Verde infinito","flags/ie.png"],
-["AR-005","Finlandia","finlandia.html","Mirando al norte","flags/fi.png"],
-["AR-006","Estonia","estonia.html","Nuevos horizontes","flags/ee.png"],
-["AR-007","Italia","italia.html","Arte y nosotros","flags/it.png"],
-["AR-008","Alemania","alemania.html","Aventuras inesperadas","flags/de.png"],
-["AR-009","Francia","francia.html","Momentos inolvidables","flags/fr.png"],
-["AR-010","Escocia","escocia.html","Paisajes legendarios","flags/scotland.png"],
-["AR-011","Vaticano","vaticano.html","Un rincón eterno","flags/vatican.png"],
-["AR-012","Eslovaquia","eslovaquia.html","Descubriendo juntos","flags/sk.png"],
-["AR-013","República Checa","republica-checa.html","Calles mágicas","flags/cz.png"]
-];
 
 const archive=document.getElementById('archive');
 
-places.forEach((p,i)=>{
+COUNTRIES.forEach(function(c,i){
 const el=document.createElement('section');
 el.className='record';
+const code="AR-"+String(i+1).padStart(3,"0");
+const flagHtml=c.flag
+  ?`<img class="flag" src="${c.flag}" alt="${c.name}">`
+  :`<span style="font-size:4rem;display:flex;align-items:center;justify-content:center;height:100%;">${c.emoji}</span>`;
 
 el.innerHTML=`
 <div class="card">
 <div class="left">
-<div class="code">${p[0]}</div>
-<div class="country">${p[1]}</div>
-<div class="desc">${p[3]}. Este recuerdo ha sido preservado dentro del archivo permanente de nuestra historia.</div>
-<a href="${p[2]}" class="enter">Abrir recuerdo</a>
+<div class="code">${code}</div>
+<div class="country">${c.name}</div>
+<div class="desc">${c.tagline}. Este recuerdo ha sido preservado dentro del archivo permanente de nuestra historia.</div>
+<a href="${c.id}.html" class="enter">Abrir recuerdo</a>
 </div>
 <div class="right">
-<div class="flag-container"><img class="flag" src="${p[4]}" alt="${p[1]}"></div>
+<div class="flag-container">${flagHtml}</div>
 <div class="ring"><div class="dot"></div></div>
 <div class="ring"><div class="dot"></div></div>
 </div>
@@ -407,6 +400,8 @@ v:Math.random()*0.3+0.05
 });
 }
 
+let animating=true;
+
 function animateStars(){
 sctx.clearRect(0,0,stars.width,stars.height);
 
@@ -433,8 +428,13 @@ sctx.arc(p.x,p.y,p.r,0,Math.PI*2);
 sctx.fill();
 }
 
-requestAnimationFrame(animateStars);
+if(animating) requestAnimationFrame(animateStars);
 }
+
+document.addEventListener('visibilitychange',function(){
+if(document.hidden){animating=false;}
+else{animating=true;animateStars();}
+});
 
 animateStars();
 

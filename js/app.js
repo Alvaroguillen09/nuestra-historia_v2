@@ -6,6 +6,14 @@
 (function () {
   "use strict";
 
+  /* ═══════════════════════════════════════════
+     CONSTANTS
+  ═══════════════════════════════════════════ */
+  const IO_THRESHOLD    = 0.08; // visibility fraction before gallery items animate in
+  const SWIPE_MIN_PX    = 40;   // minimum horizontal swipe distance to change image
+  const MOBILE_BREAKPX  = 900;  // breakpoint for mobile scroll-to-content behaviour
+  const SCROLL_DELAY_MS = 80;   // delay before scrolling to content on mobile tab switch
+
   const pageType  = document.body && document.body.dataset.page ? document.body.dataset.page : "full";
   const countryId = document.body && document.body.dataset.country ? document.body.dataset.country : null;
 
@@ -84,11 +92,29 @@
     link.className = "country-card";
     link.href = c.id + ".html";
     link.style.setProperty("--accent", c.accentColor);
-    link.innerHTML =
-      `<span class="country-card__emoji">${c.emoji}</span>`
-    + `<span class="country-card__name">${c.name}</span>`
-    + `<span class="country-card__tagline">${c.tagline}</span>`
-    + `<span class="country-card__arrow" aria-hidden="true">→</span>`;
+
+    const emoji = document.createElement("span");
+    emoji.className = "country-card__emoji";
+    emoji.setAttribute("aria-hidden", "true");
+    emoji.textContent = c.emoji;
+
+    const name = document.createElement("span");
+    name.className = "country-card__name";
+    name.textContent = c.name;
+
+    const tagline = document.createElement("span");
+    tagline.className = "country-card__tagline";
+    tagline.textContent = c.tagline;
+
+    const arrow = document.createElement("span");
+    arrow.className = "country-card__arrow";
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+
+    link.appendChild(emoji);
+    link.appendChild(name);
+    link.appendChild(tagline);
+    link.appendChild(arrow);
     return link;
   }
 
@@ -119,8 +145,18 @@
       link.className = "tab-btn tab-link";
       link.href = c.id + ".html";
       if (c.id === countryId) link.classList.add("tab-btn--active");
-      link.innerHTML = `<span class="tab-btn__emoji">${c.emoji}</span>`
-                   + `<span class="tab-btn__name">${c.name}</span>`;
+
+      const emoji = document.createElement("span");
+      emoji.className = "tab-btn__emoji";
+      emoji.setAttribute("aria-hidden", "true");
+      emoji.textContent = c.emoji;
+
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "tab-btn__name";
+      nameSpan.textContent = c.name;
+
+      link.appendChild(emoji);
+      link.appendChild(nameSpan);
       li.appendChild(link);
       tabsList.appendChild(li);
     });
@@ -137,7 +173,7 @@
           io.unobserve(e.target);
         }
       });
-    }, { threshold: 0.08 });
+    }, { threshold: IO_THRESHOLD });
     items.forEach(function (el) { io.observe(el); });
   }
 
@@ -151,7 +187,6 @@
       mainContent.appendChild(makePanel(c));
     });
 
-    // IntersectionObserver for gallery items lazy-reveal
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) {
@@ -159,9 +194,8 @@
           io.unobserve(e.target);
         }
       });
-    }, { threshold: 0.08 });
+    }, { threshold: IO_THRESHOLD });
 
-    // Watch panels becoming visible → start observing their items
     const mo = new MutationObserver(function (mutations) {
       mutations.forEach(function (m) {
         if (m.attributeName === "hidden" && !m.target.hidden) {
@@ -194,8 +228,18 @@
     btn.setAttribute("aria-selected", "false");
     btn.setAttribute("tabindex",      "-1");
     btn.dataset.country = c.id;
-    btn.innerHTML = `<span class="tab-btn__emoji">${c.emoji}</span>`
-                  + `<span class="tab-btn__name">${c.name}</span>`;
+
+    const emoji = document.createElement("span");
+    emoji.className = "tab-btn__emoji";
+    emoji.setAttribute("aria-hidden", "true");
+    emoji.textContent = c.emoji;
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "tab-btn__name";
+    nameSpan.textContent = c.name;
+
+    btn.appendChild(emoji);
+    btn.appendChild(nameSpan);
 
     btn.addEventListener("click", function () {
       activateTab(c.id);
@@ -222,11 +266,28 @@
     /* ── Header ── */
     const hdr = document.createElement("div");
     hdr.className = "country-panel__header";
-    hdr.innerHTML =
-      `<span class="country-panel__flag-emoji" aria-hidden="true">${c.emoji}</span>`
-    + `<h2 class="country-panel__name">${c.name}</h2>`
-    + `<p class="country-panel__tagline">${c.tagline}</p>`
-    + `<blockquote class="country-panel__quote">${c.quote}</blockquote>`;
+
+    const flagEmoji = document.createElement("span");
+    flagEmoji.className = "country-panel__flag-emoji";
+    flagEmoji.setAttribute("aria-hidden", "true");
+    flagEmoji.textContent = c.emoji;
+
+    const h2 = document.createElement("h2");
+    h2.className = "country-panel__name";
+    h2.textContent = c.name;
+
+    const taglineEl = document.createElement("p");
+    taglineEl.className = "country-panel__tagline";
+    taglineEl.textContent = c.tagline;
+
+    const quoteEl = document.createElement("blockquote");
+    quoteEl.className = "country-panel__quote";
+    quoteEl.textContent = c.quote;
+
+    hdr.appendChild(flagEmoji);
+    hdr.appendChild(h2);
+    hdr.appendChild(taglineEl);
+    hdr.appendChild(quoteEl);
 
     /* ── Gallery wrapper ── */
     const gw = document.createElement("div");
@@ -235,7 +296,7 @@
     if (c.images && c.images.length > 0) {
       gw.appendChild(makeGallery(c));
     } else {
-      gw.innerHTML = emptyState(c);
+      gw.appendChild(emptyState(c));
     }
 
     section.appendChild(hdr);
@@ -289,15 +350,42 @@
   ═══════════════════════════════════════════ */
   function emptyState(c) {
     const folder = c.folder.split("/").pop();
-    return `<div class="gallery-empty">
-      <div class="gallery-empty__icon">📷</div>
-      <p class="gallery-empty__text">Tus fotos de <strong>${c.name}</strong> irán aquí.</p>
-      <p class="gallery-empty__hint">
-        Copia tus imágenes a <code>fotos/${folder}/</code>
-        y añade sus nombres al array <code>images</code>
-        en <code>js/countries.js</code>.
-      </p>
-    </div>`;
+
+    const div = document.createElement("div");
+    div.className = "gallery-empty";
+
+    const icon = document.createElement("div");
+    icon.className = "gallery-empty__icon";
+    icon.textContent = "📷";
+
+    const text = document.createElement("p");
+    text.className = "gallery-empty__text";
+    text.appendChild(document.createTextNode("Tus fotos de "));
+    const strong = document.createElement("strong");
+    strong.textContent = c.name;
+    text.appendChild(strong);
+    text.appendChild(document.createTextNode(" irán aquí."));
+
+    const hint = document.createElement("p");
+    hint.className = "gallery-empty__hint";
+    hint.appendChild(document.createTextNode("Copia tus imágenes a "));
+    const code1 = document.createElement("code");
+    code1.textContent = "fotos/" + folder + "/";
+    hint.appendChild(code1);
+    hint.appendChild(document.createTextNode(" y añade sus nombres al array "));
+    const code2 = document.createElement("code");
+    code2.textContent = "images";
+    hint.appendChild(code2);
+    hint.appendChild(document.createTextNode(" en "));
+    const code3 = document.createElement("code");
+    code3.textContent = "js/countries.js";
+    hint.appendChild(code3);
+    hint.appendChild(document.createTextNode("."));
+
+    div.appendChild(icon);
+    div.appendChild(text);
+    div.appendChild(hint);
+    return div;
   }
 
   /* ═══════════════════════════════════════════
@@ -331,10 +419,10 @@
     activeId = id;
 
     // Scroll to content on mobile
-    if (window.innerWidth < 900) {
+    if (window.innerWidth < MOBILE_BREAKPX) {
       setTimeout(function () {
-        mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 80);
+        if (mainContent) mainContent.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, SCROLL_DELAY_MS);
     }
   }
 
@@ -466,7 +554,7 @@
     }, { passive: true });
     lightbox.addEventListener("touchend", function (e) {
       const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) < 40) return;
+      if (Math.abs(dx) < SWIPE_MIN_PX) return;
       if (dx < 0 && lbIndex < lbImages.length - 1) { lbIndex++; renderLbImage(false); }
       if (dx > 0 && lbIndex > 0)                   { lbIndex--; renderLbImage(false); }
     }, { passive: true });

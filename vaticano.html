@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self';">
   <title>Álvaro & Gabriela — Vaticano</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,7 +20,7 @@
         </a>
       </div>
       <nav class="tabs-nav" id="tabsNav" aria-label="Países">
-        <button class="tabs-nav__toggle" id="navToggle" aria-expanded="false" aria-controls="tabsList">
+        <button class="tabs-nav__toggle" id="navToggle" aria-expanded="false" aria-controls="tabsList" aria-label="Abrir menú de países">
           <span></span><span></span><span></span>
         </button>
         <ul class="tabs-nav__list" id="tabsList" role="list"></ul>
@@ -41,6 +42,7 @@
     <div class="lightbox__stage">
       <img class="lightbox__img" id="lbImg" src="" alt="" />
       <p class="lightbox__caption" id="lbCaption"></p>
+      <p class="lightbox__swipe-hint" aria-hidden="true">← desliza →</p>
     </div>
   </div>
 

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
 <title>Álvaro & Gabriela — Nuestra aventura</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -19,7 +20,6 @@
 
     border:1.5px solid rgb(107, 107, 230);
     border-radius:999px;
-    /* background:transparent; */
     background:rgb(240, 224, 255);
     color:rgb(107, 107, 230);
 
@@ -52,7 +52,7 @@
   --spring:cubic-bezier(.34,1.56,.64,1);
 }
 html{scroll-behavior:smooth}
-body{font-family:var(--ff-body);background:var(--cream);color:var(--ink);overflow-x:hidden;transition:background-color .7s var(--ease)}
+body{font-family:var(--ff-body);background:rgb(159,161,255);color:#fff;overflow-x:hidden;transition:background-color .7s var(--ease)}
 img{display:block;max-width:100%}
 button{cursor:pointer;border:none;background:none;font:inherit}
 .no-scroll{overflow:hidden}
@@ -60,7 +60,7 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--blush);border-radius:10px}
 
-
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none;}
 
 /* ────────────────────────────────────────
    PORTADA
@@ -68,19 +68,13 @@ button{cursor:pointer;border:none;background:none;font:inherit}
 .cover{
   position:fixed;inset:0;z-index:100;
   display:flex;align-items:center;justify-content:center;
-  /* background:linear-gradient(160deg,#2b1a1a 0%,#4a2a2a 45%,#7a4545 75%,#a06060 100%); */
-  /* background-color: rgb(159, 161, 255); */
   overflow:hidden;
   transition:opacity .85s var(--ease),transform .85s var(--ease);
 }
-/* pétalos detrás de todo */
-/* .cover__petals{position:absolute;inset:0;pointer-events:none;z-index:0} */
-/* resplandor decorativo — pointer-events:none obligatorio */
 .cover__glow{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse at 50% 55%,rgba(201,169,110,.2) 0%,transparent 65%);
 }
-/* contenido encima de todo */
 .cover__content{
   position:relative;z-index:2;
   text-align:center;padding:2rem;
@@ -106,25 +100,15 @@ animation:float 18s infinite alternate ease-in-out;
 z-index:-2;
 }
 
-.a1{
-background:#c78cff;
-left:-250px;
-top:-250px;
+.a1{background:#c78cff;left:-250px;top:-250px;}
+.a2{background:#8e7bff;right:-250px;top:20%;animation-duration:24s;}
+.a3{background:#ff9ee8;left:30%;bottom:-300px;animation-duration:20s;}
+
+@keyframes float{
+from{transform:translate(0,0) scale(1)}
+to{transform:translate(120px,-80px) scale(1.25)}
 }
 
-.a2{
-background:#8e7bff;
-right:-250px;
-top:20%;
-animation-duration:24s;
-}
-
-.a3{
-background:#ff9ee8;
-left:30%;
-bottom:-300px;
-animation-duration:20s;
-}
 /* ────────────────────────────────────────
    MOBILE NAV
 ──────────────────────────────────────── */
@@ -150,315 +134,12 @@ animation-duration:20s;
   .lb__prev{left:.2rem}.lb__next{right:.2rem}
 }
 
-
-:root{
---gold:#d8ba78;
---line:rgba(255,255,255,.08);
-}
-
-body{
-font-family:Inter,sans-serif;
-background-color: rgb(159, 161, 255);
-color:white;
-overflow-x:hidden;
-}
-
-/* NUEVO FONDO AURORA */
-
-#bg{
-position:fixed;
-inset:0;
-z-index:-3;
-background-color: rgb(159, 161, 255);
-}
-
-.aurora{
-position:fixed;
-width:900px;
-height:900px;
-border-radius:50%;
-filter:blur(120px);
-opacity:.45;
-animation:float 18s infinite alternate ease-in-out;
-z-index:-2;
-}
-
-.a1{
-background-color: rgb(159, 161, 255);
-left:-250px;
-top:-250px;
-}
-
-.a2{
-background-color: rgb(159, 161, 255);
-right:-250px;
-top:20%;
-animation-duration:24s;
-}
-
-.a3{
-background-color: rgb(159, 161, 255);
-left:30%;
-bottom:-300px;
-animation-duration:20s;
-}
-
-@keyframes float{
-from{transform:translate(0,0) scale(1)}
-to{transform:translate(120px,-80px) scale(1.25)}
-}
-
-#stars{
-position:fixed;
-inset:0;
-z-index:-1;
-pointer-events:none;
-}
-
-.progress{
-position:fixed;
-top:0;
-left:0;
-height:2px;
-width:0;
-background:linear-gradient(90deg,rgb(159, 161, 255),rgb(214, 217, 255));
-z-index:999;
-box-shadow:0 0 20px #fff;
-}
-
-.hero{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:40px;
-}
-
-.hero h1{
-font-family:"Cormorant Garamond",serif;
-font-size:min(11vw,8rem);
-font-weight:600;
-text-shadow:0 0 30px rgb(214, 217, 255);
-}
-
-.hero p{
-margin-top:20px;
-opacity:.75;
-letter-spacing:.3em;
-}
-
-.archive{
-width:min(1400px,95vw);
-margin:auto;
-padding-bottom:200px;
-}
-
-.record{
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-position:sticky;
-top:0;
-}
-
-.card{
-width:min(1000px,92vw);
-height:min(650px,80vh);
-background:rgb(159, 161, 255);
-backdrop-filter:blur(30px);
-border:1px solid rgba(255,255,255,.08);
-border-radius:32px;
-overflow:hidden;
-display:grid;
-grid-template-columns:1.2fr 1fr;
-box-shadow:
-0 0 0 1px rgb(159, 161, 255),
-0 30px 120px rgb(159, 161, 255);
-}
-
-.left{
-padding:60px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-}
-
-.code{
-color:var(--gold);
-letter-spacing:.4em;
-font-size:.8rem;
-margin-bottom:20px;
-}
-
-.country{
-font-family:"Cormorant Garamond",serif;
-font-size:5rem;
-line-height:.9;
-}
-
-.desc{
-margin-top:25px;
-opacity:.78;
-line-height:1.9;
-max-width:500px;
-}
-
-.enter{
-margin-top:35px;
-display:inline-block;
-text-decoration:none;
-background:var(--gold);
-color:#111;
-padding:14px 24px;
-border-radius:999px;
-font-weight:700;
-align-self:flex-start;
-}
-
-.right{
-border-left:1px solid var(--line);
-display:flex;
-justify-content:center;
-align-items:center;
-position:relative;
-}
-
-.year{
-font-size:min(18vw,10rem);
-font-weight:700;
-opacity:.08;
-position:absolute;
-}
-
-.ring{
-width:280px;
-height:280px;
-border-radius:50%;
-border:1px solid rgba(216,186,120,.35);
-position:absolute;
-animation:spin 30s linear infinite;
-}
-
-.ring:nth-child(2){
-width:360px;
-height:360px;
-animation-duration:42s;
-animation-direction:reverse;
-}
-
-.dot{
-width:10px;
-height:10px;
-background:rgb(159, 161, 255);
-border-radius:50%;
-position:absolute;
-top:-5px;
-left:50%;
-transform:translateX(-50%);
-box-shadow:0 0 20px rgb(226, 184, 145);
-}
-
-@keyframes spin{
-from{transform:rotate(0)}
-to{transform:rotate(360deg)}
-}
-
-.flag-container{
-position:absolute;
-width:190px;
-height:190px;
-border-radius:50%;
-overflow:hidden;
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(16px);
--webkit-backdrop-filter:blur(16px);
-border:2px solid rgba(255,255,255,.18);
-box-shadow:0 0 60px rgba(216,186,120,.15), inset 0 1px 10px rgba(255,255,255,.15);
-animation:flagSpin 28s linear infinite;
-z-index:2;
-}
-
-.flag{
-width:100%;
-height:100%;
-object-fit:cover;
-border-radius:50%;
-}
-
-.flag-container::before{
-content:'';
-position:absolute;
-top:0;
-left:-120%;
-width:60%;
-height:100%;
-background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
-transform:skewX(-20deg);
-animation:shine 6s infinite;
-}
-
-@keyframes flagSpin{
-from{transform:rotate(0deg)}
-to{transform:rotate(360deg)}
-}
-
-@keyframes shine{
-from{left:-120%}
-to{left:180%}
-}
-
-
-.final{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-}
-
-.final h2{
-font-family:"Cormorant Garamond",serif;
-font-size:min(9vw,6rem);
-}
-
-.final p{
-margin-top:20px;
-opacity:.75;
-}
-
-@media(max-width:900px){
-.card{
-grid-template-columns:1fr;
-height:auto;
-}
-.right{
-min-height:300px;
-border-left:none;
-border-top:1px solid var(--line);
-}
-.record{
-height:auto;
-padding:60px 0;
-position:relative;
-}
-.country{
-font-size:3.5rem;
-}
-}
-
 </style>
 </head>
 <body>
-<!-- <div class="aurora a1"></div>
-<div class="aurora a2"></div>
-<div class="aurora a3"></div> -->
 <canvas id="stars"></canvas>
 
 <div class="cover" id="cover">
-  <!-- <div class="cover__petals" id="petals"></div>
-  <div class="cover__glow"></div> -->
   <div class="cover__content">
     <p class="cover__sub">un regalo para ti,</p>
     <h1 class="cover__title">Gabriela</h1>
@@ -468,28 +149,9 @@ font-size:3.5rem;
   </div>
 </div>
 
-<div class="site" id="site" hidden>
-  <header class="hdr">
-    <div class="hdr__logo">
-      <span class="hdr__ag">A <span class="amp">&amp;</span> G</span>
-    </div>
-    <nav class="tabs-nav" aria-label="Países">
-      <button class="tabs-toggle" id="navToggle" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="tabs-list" id="tabsList" role="tablist"></ul>
-    </nav>
-  </header>
-
-  <main id="main"></main>
-
-  <footer class="ftr">
-    <p class="ftr__txt">Hecho con <span class="h">♡</span> por Álvaro</p>
-    <p class="ftr__sub">Cada foto, un momento. Cada país, un capítulo de nuestra historia.</p>
-  </footer>
-</div>
-
 <script>
+
+const PARTICLE_COUNT = 220;
 
 const stars=document.getElementById("stars");
 const sctx=stars.getContext("2d");
@@ -502,7 +164,7 @@ resizeStars();
 window.addEventListener('resize',resizeStars);
 
 const particles=[];
-for(let i=0;i<220;i++){
+for(let i=0;i<PARTICLE_COUNT;i++){
 particles.push({
 x:Math.random()*innerWidth,
 y:Math.random()*innerHeight,
@@ -510,6 +172,8 @@ r:Math.random()*2,
 v:Math.random()*0.3+0.05
 });
 }
+
+let animating=true;
 
 function animateStars(){
 sctx.clearRect(0,0,stars.width,stars.height);
@@ -537,8 +201,17 @@ sctx.arc(p.x,p.y,p.r,0,Math.PI*2);
 sctx.fill();
 }
 
-requestAnimationFrame(animateStars);
+if(animating) requestAnimationFrame(animateStars);
 }
+
+document.addEventListener('visibilitychange',function(){
+if(document.hidden){
+  animating=false;
+}else{
+  animating=true;
+  animateStars();
+}
+});
 
 animateStars();
 

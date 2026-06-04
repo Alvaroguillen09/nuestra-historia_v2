@@ -199,14 +199,6 @@ a { color: inherit; }
 .site[hidden] { display: none !important; }
 .site:not([hidden]) { display: block; }
 
-.site--visible {
-  animation: siteIn 0.8s var(--ease-silk) both;
-}
-
-@keyframes siteIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
 
 /* ─── INDEX GRID ─── */
 .country-index {
@@ -707,6 +699,19 @@ a { color: inherit; }
 
 .lightbox__prev:disabled,
 .lightbox__next:disabled { opacity: 0.2; pointer-events: none; }
+
+.lightbox__swipe-hint {
+  display: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 767px) {
+  .lightbox__swipe-hint { display: block; }
+}
 
 /* ─── FOOTER ─── */
 .footer {
