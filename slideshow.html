@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<title>Álvaro & Gabriela — Slideshow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Jost:wght@300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#050314;font-family:'Jost',sans-serif}
+.stage{position:fixed;inset:0}
+.simg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity 1.1s ease}
+.simg.in{opacity:1}
+.vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 60%,rgba(5,3,20,.55) 100%)}
+.otop{position:fixed;top:0;left:0;right:0;z-index:10;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;justify-content:space-between;background:linear-gradient(to bottom,rgba(5,3,20,.85) 0%,transparent 100%);pointer-events:none}
+.ometa{pointer-events:none}
+.ocountry{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;font-weight:300;color:rgba(240,224,255,.92);letter-spacing:.04em}
+.octr{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,180,255,.45);margin-top:.2rem}
+.btnback{pointer-events:all;background:rgba(30,20,80,.55);border:1px solid rgba(200,180,255,.18);border-radius:999px;color:rgba(214,217,255,.7);font-family:'Jost',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;padding:.4rem .9rem;cursor:pointer;text-decoration:none;transition:background .2s,color .2s;display:inline-block}
+.btnback:hover{background:rgba(80,60,180,.55);color:#fff}
+.obot{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:1.5rem;display:flex;align-items:center;justify-content:center;gap:.75rem;background:linear-gradient(to top,rgba(5,3,20,.85) 0%,transparent 100%)}
+.ctrl{width:44px;height:44px;border-radius:50%;border:1px solid rgba(200,180,255,.2);background:rgba(15,10,50,.6);backdrop-filter:blur(10px);color:rgba(240,224,255,.8);font-size:1.15rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.ctrl:hover{border-color:rgba(200,180,255,.5);color:#fff;background:rgba(55,35,130,.6)}
+.ctrl--play{width:52px;height:52px;font-size:1.3rem}
+.ctrl--speed{font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.1em;width:auto;padding:0 1rem;border-radius:999px;min-width:52px}
+/* Speed panel */
+.speed-panel{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);z-index:12;background:rgba(15,10,50,.92);border:1px solid rgba(200,180,255,.18);border-radius:14px;padding:.5rem .6rem;display:flex;gap:.4rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.speed-panel.open{opacity:1;pointer-events:all}
+.sp-opt{font-family:'Jost',sans-serif;font-size:.65rem;letter-spacing:.1em;padding:.38rem .7rem;border-radius:8px;border:1px solid rgba(200,180,255,.15);background:transparent;color:rgba(214,217,255,.65);cursor:pointer;transition:all .2s;white-space:nowrap}
+.sp-opt:hover{background:rgba(80,60,180,.45);color:#fff;border-color:rgba(200,180,255,.4)}
+.sp-opt.on{background:rgba(80,60,180,.55);color:#fff;border-color:rgba(200,180,255,.6)}
+.prog{position:fixed;bottom:0;left:0;right:0;height:2px;background:rgba(200,180,255,.1);z-index:11}
+.bar{height:100%;background:linear-gradient(to right,rgba(140,110,255,.6),rgba(210,190,255,.95));transform-origin:left center;transform:scaleX(0)}
+.bar.run{animation:fill var(--dur,5s) linear forwards}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.shuffle-hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(240,224,255,.5);pointer-events:none;text-align:center;letter-spacing:.05em}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="stage">
+  <img class="simg" id="imgA" src="" alt="">
+  <img class="simg" id="imgB" src="" alt="">
+</div>
+<div class="vignette"></div>
+<div class="otop">
+  <div class="ometa">
+    <div class="ocountry" id="ocountry"></div>
+    <div class="octr" id="octr"></div>
+  </div>
+  <a class="btnback" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+</div>
+<div class="speed-panel" id="speedPanel"></div>
+<div class="obot">
+  <button class="ctrl" id="btnPrev" aria-label="Anterior">‹</button>
+  <button class="ctrl ctrl--play" id="btnPlay" aria-label="Pausa">⏸</button>
+  <button class="ctrl" id="btnNext" aria-label="Siguiente">›</button>
+  <button class="ctrl ctrl--speed" id="btnSpeed" aria-label="Velocidad">5s ⏱</button>
+</div>
+<div class="prog"><div class="bar" id="bar"></div></div>
+
+<script src="js/countries.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var SPEEDS=[2000,5000,10000,20000];
+  var SPEED_LABELS=['2s','5s','10s','20s'];
+  var speedIdx=1;
+  var DUR=SPEEDS[speedIdx];
+  var all=[];
+  COUNTRIES.forEach(function(c){
+    c.images.forEach(function(img){all.push({src:c.folder+'/'+img,country:c.name,emoji:c.emoji});});
+  });
+  for(var i=all.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=all[i];all[i]=all[j];all[j]=t;}
+
+  var idx=0,playing=true,slot='a',timer=null;
+  var imgA=document.getElementById('imgA'),imgB=document.getElementById('imgB');
+  var bar=document.getElementById('bar'),ocountry=document.getElementById('ocountry'),octr=document.getElementById('octr');
+  var btnPlay=document.getElementById('btnPlay');
+
+  function show(i){
+    idx=((i%all.length)+all.length)%all.length;
+    var p=all[idx];
+    var inc=slot==='a'?imgA:imgB, out=slot==='a'?imgB:imgA;
+    inc.src=p.src;
+    inc.classList.add('in');
+    out.classList.remove('in');
+    slot=slot==='a'?'b':'a';
+    ocountry.textContent=p.emoji+'  '+p.country;
+    octr.textContent=(idx+1)+' / '+all.length;
+    var nx=new Image(); nx.src=all[(idx+1)%all.length].src;
+    restartBar();
+  }
+  function restartBar(){
+    bar.className='bar';
+    bar.style.setProperty('--dur',(DUR/1000)+'s');
+    void bar.offsetWidth;
+    if(playing) bar.className='bar run';
+  }
+  function tick(){
+    if(timer) clearTimeout(timer);
+    timer=setTimeout(function(){ show(idx+1); if(playing) tick(); },DUR);
+  }
+  function manual(d){
+    if(timer){clearTimeout(timer);timer=null;}
+    show(idx+d);
+    if(playing) tick();
+  }
+  function togglePlay(){
+    if(playing){
+      playing=false; btnPlay.textContent='▶';
+      if(timer){clearTimeout(timer);timer=null;}
+      bar.className='bar';
+    } else {
+      playing=true; btnPlay.textContent='⏸';
+      restartBar(); tick();
+    }
+  }
+  // Speed panel
+  var speedPanel=document.getElementById('speedPanel');
+  var btnSpeed=document.getElementById('btnSpeed');
+  SPEEDS.forEach(function(s,i){
+    var opt=document.createElement('button');
+    opt.className='sp-opt'+(i===speedIdx?' on':'');
+    opt.textContent=SPEED_LABELS[i];
+    opt.addEventListener('click',function(){
+      speedIdx=i; DUR=SPEEDS[i];
+      speedPanel.querySelectorAll('.sp-opt').forEach(function(b){b.classList.remove('on');});
+      opt.classList.add('on');
+      btnSpeed.textContent=SPEED_LABELS[i]+' ⏱';
+      speedPanel.classList.remove('open');
+      if(playing){if(timer){clearTimeout(timer);timer=null;}restartBar();tick();}
+    });
+    speedPanel.appendChild(opt);
+  });
+  btnSpeed.addEventListener('click',function(e){e.stopPropagation();speedPanel.classList.toggle('open');});
+  document.addEventListener('click',function(){speedPanel.classList.remove('open');});
+
+  document.getElementById('btnPrev').addEventListener('click',function(){manual(-1);});
+  document.getElementById('btnNext').addEventListener('click',function(){manual(1);});
+  btnPlay.addEventListener('click',togglePlay);
+  document.addEventListener('keydown',function(e){
+    if(e.key===' '){e.preventDefault();togglePlay();}
+    if(e.key==='ArrowLeft') manual(-1);
+    if(e.key==='ArrowRight') manual(1);
+    if(e.key==='Escape') window.location.href='el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html';
+  });
+  var tx=0;
+  document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+  document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)manual(dx<0?1:-1);},{passive:true});
+  show(0); tick();
+})();
+</script>
+</body>
+</html>

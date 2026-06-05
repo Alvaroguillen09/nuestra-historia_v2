@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<title>Álvaro & Gabriela — Próximos Destinos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,400&family=Great+Vibes&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;border-radius:50%;filter:blur(120px);opacity:.22;animation:af 18s infinite alternate ease-in-out;z-index:0;pointer-events:none}
+.a1{width:700px;height:700px;background:#c78cff;left:-200px;top:-200px}
+.a2{width:600px;height:600px;background:#8e7bff;right:-150px;top:20%;animation-duration:24s}
+.a3{width:600px;height:600px;background:#ff9ee8;left:20%;bottom:-200px;animation-duration:20s}
+@keyframes af{from{transform:translate(0,0) scale(1)}to{transform:translate(80px,-60px) scale(1.2)}}
+.page{position:relative;z-index:1;min-height:100vh}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.1)}
+.hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:rgb(240,224,255);text-decoration:none}
+.hdr__back{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);text-decoration:none;padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);transition:background .2s,color .2s}
+.hdr__back:hover{background:rgba(214,217,255,.1);color:#fff}
+.hero{text-align:center;padding:3rem 1rem 1.5rem}
+.hero__script{font-family:'Great Vibes',cursive;font-size:clamp(3rem,8vw,5rem);color:rgb(240,224,255);line-height:1;text-shadow:0 2px 30px rgba(58,58,152,.6)}
+.hero__sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.25rem);color:rgba(214,217,255,.65);margin-top:.5rem}
+.hero__count{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.38);margin-top:.6rem}
+
+/* Cards grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;max-width:1100px;margin:2rem auto 0;padding:0 1.5rem 5rem}
+.dcard{border-radius:18px;padding:1.8rem 1.5rem;text-align:center;border:1px solid rgba(220,170,60,.35);background:rgba(60,45,10,.45);backdrop-filter:blur(16px);transition:transform .28s,box-shadow .28s;position:relative;overflow:hidden}
+.dcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,215,100,.06) 0%,transparent 60%);pointer-events:none;border-radius:18px}
+.dcard:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.dcard__emoji{font-size:3rem;line-height:1;display:block;margin-bottom:.8rem;filter:drop-shadow(0 2px 8px rgba(220,170,60,.3))}
+.dcard__name{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:300;color:rgb(240,224,255)}
+.dcard__tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:rgba(220,190,100,.72);margin-top:.35rem}
+.dcard__extra{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.35);margin-top:.8rem}
+.dcard__star{position:absolute;top:.7rem;right:.75rem;font-size:.95rem;color:rgba(220,180,60,.75)}
+.dcard__badge{display:inline-block;margin-top:.7rem;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;background:rgba(220,170,60,.18);border:1px solid rgba(220,170,60,.3);border-radius:999px;padding:.25rem .65rem;color:rgba(220,190,100,.75)}
+
+/* Empty state */
+.empty{text-align:center;padding:5rem 2rem;max-width:480px;margin:0 auto}
+.empty__icon{font-size:4rem;margin-bottom:1.2rem;opacity:.5}
+.empty__title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:rgb(240,224,255);margin-bottom:.6rem}
+.empty__text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(214,217,255,.55);line-height:1.75;margin-bottom:1.5rem}
+.empty__link{display:inline-block;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);padding:.5rem 1.2rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);text-decoration:none;transition:background .2s,color .2s}
+.empty__link:hover{background:rgba(214,217,255,.1);color:#fff}
+
+@media(max-width:500px){.grid{grid-template-columns:repeat(2,1fr);padding:0 1rem 4rem}}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+<div class="page">
+  <header class="hdr">
+    <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
+    <a class="hdr__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+  </header>
+  <div class="hero">
+    <div class="hero__script">Próximos Destinos</div>
+    <p class="hero__sub">Los lugares que esperan nuestros pasos</p>
+    <p class="hero__count" id="heroCount"></p>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var WL_KEY='ag_wishlist_v1';
+  var wishlist=[];
+  try{wishlist=JSON.parse(localStorage.getItem(WL_KEY)||'[]');}catch(e){}
+
+  var EUROPE=[
+    {name:'Portugal',emoji:'🇵🇹',tagline:'Fado y océano',extra:'Europa'},
+    {name:'Grecia',emoji:'🇬🇷',tagline:'Islas y azul infinito',extra:'Europa'},
+    {name:'Croacia',emoji:'🇭🇷',tagline:'Muros de Dubrovnik',extra:'Europa'},
+    {name:'Países Bajos',emoji:'🇳🇱',tagline:'Tulipanes y canales',extra:'Europa'},
+    {name:'Noruega',emoji:'🇳🇴',tagline:'Fiordos eternos',extra:'Europa'},
+    {name:'Suiza',emoji:'🇨🇭',tagline:'Alpes y chocolate',extra:'Europa'},
+    {name:'Islandia',emoji:'🇮🇸',tagline:'Auroras boreales',extra:'Europa'},
+    {name:'Suecia',emoji:'🇸🇪',tagline:'Norte mágico',extra:'Europa'},
+    {name:'Bélgica',emoji:'🇧🇪',tagline:'Chocolate y cervezas',extra:'Europa'},
+    {name:'Polonia',emoji:'🇵🇱',tagline:'Historia y resiliencia',extra:'Europa'},
+    {name:'Dinamarca',emoji:'🇩🇰',tagline:'Hygge y diseño',extra:'Europa'},
+    {name:'Rumanía',emoji:'🇷🇴',tagline:'Castillos y Drácula',extra:'Europa'},
+    {name:'Bulgaria',emoji:'🇧🇬',tagline:'Historia eslava',extra:'Europa'},
+    {name:'Serbia',emoji:'🇷🇸',tagline:'Balcanes con alma',extra:'Europa'},
+    {name:'Eslovenia',emoji:'🇸🇮',tagline:'Lago Bled',extra:'Europa'},
+    {name:'Montenegro',emoji:'🇲🇪',tagline:'Bahía de Kotor',extra:'Europa'},
+    {name:'Bosnia',emoji:'🇧🇦',tagline:'Puente de Mostar',extra:'Europa'},
+    {name:'Macedonia del Norte',emoji:'🇲🇰',tagline:'Ohrid y sus lagos',extra:'Europa'},
+    {name:'Turquía',emoji:'🇹🇷',tagline:'Capadocia y Estambul',extra:'Europa'},
+    {name:'Luxemburgo',emoji:'🇱🇺',tagline:'El Gran Ducado',extra:'Europa'},
+    {name:'Malta',emoji:'🇲🇹',tagline:'Historia milenaria',extra:'Europa'},
+    {name:'Chipre',emoji:'🇨🇾',tagline:'Isla del amor',extra:'Europa'},
+    {name:'Lituania',emoji:'🇱🇹',tagline:'Vilna en otoño',extra:'Europa'},
+    {name:'Letonia',emoji:'🇱🇻',tagline:'Riga art nouveau',extra:'Europa'},
+    {name:'Bielorrusia',emoji:'🇧🇾',tagline:'Europa desconocida',extra:'Europa'},
+    {name:'Ucrania',emoji:'🇺🇦',tagline:'Kiev y sus cúpulas doradas',extra:'Europa'},
+    {name:'Moldavia',emoji:'🇲🇩',tagline:'Viñedos y tradición',extra:'Europa'},
+    {name:'Kosovo',emoji:'🇽🇰',tagline:'El joven país',extra:'Europa'}
+  ];
+  var INTL=[
+    {name:'Japón',emoji:'🇯🇵',tagline:'Cerezos en flor',extra:'Asia'},
+    {name:'EEUU',emoji:'🇺🇸',tagline:'De costa a costa',extra:'América del Norte'},
+    {name:'México',emoji:'🇲🇽',tagline:'Pirámides y tacos',extra:'América Central'},
+    {name:'Marruecos',emoji:'🇲🇦',tagline:'Especias y medinas',extra:'África del Norte'},
+    {name:'Tailandia',emoji:'🇹🇭',tagline:'Templos y playas de ensueño',extra:'Asia'},
+    {name:'Cuba',emoji:'🇨🇺',tagline:'Habana y son cubano',extra:'Caribe'},
+    {name:'Brasil',emoji:'🇧🇷',tagline:'Carnaval y Amazonas',extra:'América del Sur'},
+    {name:'Perú',emoji:'🇵🇪',tagline:'Machu Picchu',extra:'América del Sur'},
+    {name:'Argentina',emoji:'🇦🇷',tagline:'Patagonia infinita',extra:'América del Sur'},
+    {name:'India',emoji:'🇮🇳',tagline:'Colores y espiritualidad',extra:'Asia'},
+    {name:'Vietnam',emoji:'🇻🇳',tagline:'Bahía de Ha Long',extra:'Asia'},
+    {name:'Maldivas',emoji:'🇲🇻',tagline:'Paraíso en el océano',extra:'Océano Índico'},
+    {name:'Sudáfrica',emoji:'🇿🇦',tagline:'Safari y Cabo de Buena Esperanza',extra:'África'},
+    {name:'Australia',emoji:'🇦🇺',tagline:'Outback y Ópera de Sydney',extra:'Oceanía'},
+    {name:'Nueva Zelanda',emoji:'🇳🇿',tagline:'El Señor de los Anillos',extra:'Oceanía'},
+    {name:'Canadá',emoji:'🇨🇦',tagline:'Montañas Rocosas y auroras',extra:'América del Norte'},
+    {name:'Jordania',emoji:'🇯🇴',tagline:'Petra y el Mar Muerto',extra:'Oriente Medio'},
+    {name:'Tanzania',emoji:'🇹🇿',tagline:'Kilimanjaro y serengeti',extra:'África'},
+    {name:'Colombia',emoji:'🇨🇴',tagline:'Cartagena de Indias',extra:'América del Sur'},
+    {name:'Nepal',emoji:'🇳🇵',tagline:'El Himalaya te espera',extra:'Asia'}
+  ];
+
+  var all=EUROPE.concat(INTL);
+  var wished=all.filter(function(d){return wishlist.indexOf(d.name)!==-1;});
+
+  var content=document.getElementById('content');
+
+  if(wished.length===0){
+    document.getElementById('heroCount').textContent='Wishlist vacía';
+    content.innerHTML='<div class="empty"><div class="empty__icon">🌍</div><h2 class="empty__title">El mundo espera</h2><p class="empty__text">Aún no habéis añadido destinos a vuestra wishlist. Visitad el Bucket List para marcar los lugares que queréis visitar juntos.</p><a class="empty__link" href="bucket-list.html">→ Ir al Bucket List</a></div>';
+    return;
+  }
+
+  document.getElementById('heroCount').textContent=wished.length+' destino'+(wished.length!==1?'s':'')+' en la wishlist';
+
+  var grid=document.createElement('div'); grid.className='grid';
+  wished.forEach(function(d){
+    var card=document.createElement('div'); card.className='dcard';
+    var star=document.createElement('div'); star.className='dcard__star'; star.textContent='★';
+    var em=document.createElement('span'); em.className='dcard__emoji'; em.textContent=d.emoji;
+    var nm=document.createElement('div'); nm.className='dcard__name'; nm.textContent=d.name;
+    var tg=document.createElement('div'); tg.className='dcard__tagline'; tg.textContent=d.tagline;
+    var ex=document.createElement('div'); ex.className='dcard__extra'; ex.textContent=d.extra;
+    var badge=document.createElement('div'); badge.className='dcard__badge'; badge.textContent='En wishlist';
+    card.appendChild(star);card.appendChild(em);card.appendChild(nm);card.appendChild(tg);card.appendChild(ex);card.appendChild(badge);
+    grid.appendChild(card);
+  });
+  content.appendChild(grid);
+})();
+</script>
+</body>
+</html>

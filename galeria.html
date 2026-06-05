@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<title>Álvaro & Gabriela — Galería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;border-radius:50%;filter:blur(120px);opacity:.2;animation:af 18s infinite alternate ease-in-out;z-index:0;pointer-events:none}
+.a1{width:700px;height:700px;background:#9f9fff;left:-200px;top:-200px}
+.a2{width:600px;height:600px;background:#7b6fff;right:-150px;top:30%;animation-duration:24s}
+.a3{width:600px;height:600px;background:#c08fff;left:20%;bottom:-200px;animation-duration:21s}
+@keyframes af{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-50px) scale(1.12)}}
+.page{position:relative;z-index:1}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.1);position:sticky;top:0;z-index:100;background:rgba(15,12,50,.92);backdrop-filter:blur(12px)}
+.hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:rgb(240,224,255);text-decoration:none}
+.hdr__back{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);text-decoration:none;padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);transition:background .2s,color .2s}
+.hdr__back:hover{background:rgba(214,217,255,.1);color:#fff}
+.hero{text-align:center;padding:3rem 1rem 1.5rem}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,7vw,4.5rem);font-weight:300;color:rgb(240,224,255)}
+.hero p{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(214,217,255,.5);margin-top:.5rem}
+.hero__count{font-size:.78rem;color:rgba(214,217,255,.4);margin-top:.3rem;letter-spacing:.12em}
+.filters{display:flex;flex-wrap:wrap;gap:.42rem;justify-content:center;padding:.9rem 1.5rem;position:sticky;top:57px;z-index:99;background:rgba(15,12,50,.82);backdrop-filter:blur(8px);border-bottom:1px solid rgba(214,217,255,.06)}
+.fbtn{border:1px solid rgba(214,217,255,.16);background:rgba(30,30,90,.32);color:rgba(214,217,255,.62);padding:.32rem .82rem;border-radius:999px;font-family:'Jost',sans-serif;font-size:.67rem;letter-spacing:.1em;cursor:pointer;transition:all .2s}
+.fbtn:hover{background:rgba(107,107,230,.4);border-color:rgba(214,217,255,.42);color:#fff}
+.fbtn.on{background:rgba(107,107,230,.58);border-color:rgba(214,217,255,.62);color:#fff}
+.gwrap{padding:1rem 1rem 6rem;max-width:1600px;margin:0 auto}
+.masonry{columns:4 200px;column-gap:9px}
+.mitem{break-inside:avoid;margin-bottom:9px;border-radius:10px;overflow:hidden;cursor:pointer;position:relative;transition:transform .22s,box-shadow .22s}
+.mitem:hover{transform:scale(1.025);box-shadow:0 10px 30px rgba(0,0,0,.55)}
+.mitem img{width:100%;display:block;border-radius:10px;background:rgba(30,30,90,.25);min-height:60px}
+.mitem.hide{display:none}
+.mlabel{position:absolute;bottom:0;left:0;right:0;padding:.42rem .72rem;background:linear-gradient(transparent,rgba(8,6,36,.9));font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(214,217,255,.88);opacity:0;transition:opacity .22s;pointer-events:none;border-radius:0 0 10px 10px}
+.mitem:hover .mlabel{opacity:1}
+/* Lightbox */
+.lb{position:fixed;inset:0;z-index:1000;background:rgba(4,2,20,.96);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
+.lb.open{opacity:1;pointer-events:all}
+.lb__img{max-width:90vw;max-height:86vh;border-radius:6px;box-shadow:0 0 60px rgba(115,80,210,.3)}
+.lb__close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;color:rgba(255,255,255,.6);font-size:2.2rem;cursor:pointer;line-height:1;transition:color .2s,transform .2s}
+.lb__close:hover{color:#fff;transform:scale(1.1)}
+.lb__nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;font-size:2rem;cursor:pointer;padding:.4rem .9rem;transition:background .2s}
+.lb__nav:hover{background:rgba(255,255,255,.18)}
+.lb__prev{left:.8rem}
+.lb__next{right:.8rem}
+.lb__info{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.58);white-space:nowrap}
+.empty{text-align:center;padding:5rem 1rem;color:rgba(214,217,255,.32);font-size:.82rem;letter-spacing:.1em;display:none}
+@media(max-width:600px){.masonry{columns:2}.hdr{padding:.8rem 1rem}}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="aurora a3"></div>
+<div class="page">
+  <header class="hdr">
+    <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
+    <a class="hdr__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+  </header>
+  <div class="hero">
+    <h1>Galería Completa</h1>
+    <p>El álbum completo de nuestra historia</p>
+    <p class="hero__count" id="cnt"></p>
+  </div>
+  <div class="filters" id="fbar"></div>
+  <div class="gwrap">
+    <div class="masonry" id="grid"></div>
+    <div class="empty" id="empty">Sin fotos para este filtro.</div>
+  </div>
+</div>
+
+<div class="lb" id="lb">
+  <button class="lb__close" id="lbc">×</button>
+  <button class="lb__nav lb__prev" id="lbp">‹</button>
+  <img class="lb__img" id="lbi" src="" alt="">
+  <button class="lb__nav lb__next" id="lbn">›</button>
+  <div class="lb__info" id="lbinfo"></div>
+</div>
+
+<script src="js/countries.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var all=[];
+  COUNTRIES.forEach(function(c){
+    c.images.forEach(function(img){ all.push({src:c.folder+'/'+img,country:c.name,emoji:c.emoji,id:c.id}); });
+  });
+
+  document.getElementById('cnt').textContent=all.length+' fotos · '+COUNTRIES.length+' países';
+
+  var fbar=document.getElementById('fbar'), activeF='all';
+  function mkf(label,val){
+    var b=document.createElement('button');
+    b.className='fbtn'+(val==='all'?' on':'');
+    b.textContent=label;
+    b.addEventListener('click',function(){
+      activeF=val;
+      fbar.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      applyF();
+    });
+    fbar.appendChild(b);
+  }
+  mkf('Todas ('+all.length+')','all');
+  COUNTRIES.forEach(function(c){mkf(c.emoji+' '+c.name+' ('+c.images.length+')',c.id);});
+
+  var grid=document.getElementById('grid');
+  var lbData=[], lbIdx=0;
+
+  all.forEach(function(p,i){
+    var item=document.createElement('div');
+    item.className='mitem';
+    item.dataset.cid=p.id;
+    item.dataset.ai=i;
+    var img=document.createElement('img');
+    img.dataset.src=p.src;
+    img.alt=p.country;
+    var lbl=document.createElement('div');
+    lbl.className='mlabel';
+    lbl.textContent=p.emoji+' '+p.country;
+    item.appendChild(img);
+    item.appendChild(lbl);
+    item.addEventListener('click',function(){ openLb(parseInt(item.dataset.vi||0)); });
+    grid.appendChild(item);
+  });
+
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          var i=e.target.querySelector('img[data-src]');
+          if(i){i.src=i.dataset.src;i.removeAttribute('data-src');}
+          io.unobserve(e.target);
+        }
+      });
+    },{rootMargin:'500px 0px'});
+    grid.querySelectorAll('.mitem').forEach(function(el){io.observe(el);});
+  } else {
+    grid.querySelectorAll('img[data-src]').forEach(function(i){i.src=i.dataset.src;i.removeAttribute('data-src');});
+  }
+
+  function applyF(){
+    lbData=[];
+    var vi=0;
+    grid.querySelectorAll('.mitem').forEach(function(item){
+      var show=activeF==='all'||item.dataset.cid===activeF;
+      item.classList.toggle('hide',!show);
+      if(show){
+        item.dataset.vi=vi;
+        var p=all[parseInt(item.dataset.ai)];
+        lbData.push({src:p.src,lbl:p.emoji+' '+p.country});
+        vi++;
+      }
+    });
+    document.getElementById('empty').style.display=lbData.length?'none':'block';
+  }
+  applyF();
+
+  var lb=document.getElementById('lb'),lbi=document.getElementById('lbi'),lbinfo=document.getElementById('lbinfo');
+  function openLb(i){
+    lbIdx=i;
+    lbi.src=lbData[lbIdx].src;
+    lbinfo.textContent=lbData[lbIdx].lbl+' · '+(lbIdx+1)+' / '+lbData.length;
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeLb(){
+    lb.classList.remove('open');
+    document.body.style.overflow='';
+    setTimeout(function(){lbi.src='';},300);
+  }
+  function navLb(d){
+    lbIdx=(lbIdx+d+lbData.length)%lbData.length;
+    lbi.src=lbData[lbIdx].src;
+    lbinfo.textContent=lbData[lbIdx].lbl+' · '+(lbIdx+1)+' / '+lbData.length;
+  }
+  document.getElementById('lbc').addEventListener('click',closeLb);
+  document.getElementById('lbp').addEventListener('click',function(){navLb(-1);});
+  document.getElementById('lbn').addEventListener('click',function(){navLb(1);});
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open'))return;
+    if(e.key==='Escape')closeLb();
+    if(e.key==='ArrowLeft')navLb(-1);
+    if(e.key==='ArrowRight')navLb(1);
+  });
+  var tx=0;
+  lb.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)navLb(dx<0?1:-1);},{passive:true});
+})();
+</script>
+</body>
+</html>

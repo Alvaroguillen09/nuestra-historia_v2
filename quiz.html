@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;">
+<title>Álvaro & Gabriela — Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;border-radius:50%;filter:blur(120px);opacity:.2;animation:af 18s infinite alternate ease-in-out;z-index:0;pointer-events:none}
+.a1{width:700px;height:700px;background:#9f9fff;left:-200px;top:-200px}
+.a2{width:600px;height:600px;background:#7b6fff;right:-150px;top:30%;animation-duration:24s}
+@keyframes af{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-50px) scale(1.12)}}
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+/* Header */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.1)}
+.hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:rgb(240,224,255);text-decoration:none}
+.hdr__right{display:flex;align-items:center;gap:.6rem}
+.hdr__btn{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.65);padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);cursor:pointer;transition:background .2s,color .2s;background:transparent;text-decoration:none;display:inline-block}
+.hdr__btn:hover{background:rgba(214,217,255,.1);color:#fff}
+/* Quiz wrapper */
+.qwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem 4rem;max-width:680px;margin:0 auto;width:100%}
+/* Score bar */
+.sbar{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:.9rem;gap:.8rem}
+.sbar span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.52);white-space:nowrap}
+.sprog{height:3px;flex:1;background:rgba(214,217,255,.1);border-radius:999px;overflow:hidden}
+.spfill{height:100%;background:linear-gradient(to right,rgba(140,110,255,.7),rgba(210,190,255,.95));border-radius:999px;transition:width .4s ease}
+/* Timer row */
+.timer-row{display:flex;align-items:center;gap:.7rem;width:100%;margin-bottom:1rem}
+.timer-num{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:rgba(240,224,255,.72);width:2.4rem;text-align:center;transition:color .3s;flex-shrink:0;line-height:1}
+.timer-num.warn{color:rgba(220,80,80,.9)}
+.timer-bar{flex:1;height:4px;background:rgba(214,217,255,.1);border-radius:999px;overflow:hidden}
+.timer-fill{height:100%;background:linear-gradient(to right,rgba(140,110,255,.7),rgba(210,190,255,.95));border-radius:999px;transition:width 1s linear,background .4s}
+.timer-fill.warn{background:linear-gradient(to right,rgba(220,80,80,.75),rgba(255,120,120,.9))}
+/* Photo */
+.qphoto{width:100%;max-height:340px;object-fit:contain;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.55);margin-bottom:1.2rem;background:rgba(30,30,90,.25);min-height:120px;transition:opacity .32s}
+.qphoto.fade{opacity:0}
+.qtext{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:rgba(240,224,255,.82);text-align:center;margin-bottom:1rem;letter-spacing:.03em}
+/* Options */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;width:100%}
+.opt{background:rgba(30,30,90,.42);border:1px solid rgba(214,217,255,.14);border-radius:12px;padding:.9rem 1rem;font-family:'Jost',sans-serif;font-size:.88rem;color:rgba(240,224,255,.82);cursor:pointer;transition:all .2s;text-align:center}
+.opt:hover:not(:disabled){background:rgba(80,60,180,.42);border-color:rgba(214,217,255,.38);color:#fff;transform:translateY(-2px)}
+.opt.correct{background:rgba(18,110,55,.52);border-color:rgba(80,220,120,.48);color:#fff;pointer-events:none}
+.opt.wrong{background:rgba(110,18,28,.42);border-color:rgba(220,80,80,.38);color:rgba(255,190,190,.75);pointer-events:none}
+.opt:disabled:not(.correct):not(.wrong){opacity:.38;pointer-events:none}
+/* Feedback */
+.fb{text-align:center;margin-top:1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;min-height:1.6rem;transition:opacity .28s;opacity:0}
+.fb.show{opacity:1}
+/* Next button */
+.btnnext{display:block;margin:1rem auto 0;background:rgba(107,107,230,.52);border:1px solid rgba(214,217,255,.28);border-radius:999px;color:#fff;font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.58rem 1.8rem;cursor:pointer;transition:all .22s;opacity:0;pointer-events:none}
+.btnnext.show{opacity:1;pointer-events:all}
+.btnnext:hover{background:rgba(140,140,255,.68);transform:translateY(-2px)}
+/* End screen */
+.end{text-align:center;padding:1rem;width:100%}
+.end h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:300;color:rgb(240,224,255);margin-bottom:.4rem}
+.end__score{font-family:'Cormorant Garamond',serif;font-size:clamp(4.5rem,12vw,7rem);font-weight:300;color:rgb(240,224,255);line-height:1}
+.end__total{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.45);margin-bottom:1rem}
+.end__msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(214,217,255,.7);margin-bottom:1.8rem;line-height:1.75;max-width:360px;margin-left:auto;margin-right:auto}
+.btnr{background:rgba(107,107,230,.52);border:1px solid rgba(214,217,255,.28);border-radius:999px;color:#fff;font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.68rem 2rem;cursor:pointer;transition:all .22s;margin:.35rem}
+.btnr:hover{background:rgba(140,140,255,.68);transform:translateY(-2px)}
+/* Leaderboard section */
+.lb-section{margin-top:1.8rem;width:100%;max-width:480px;margin-left:auto;margin-right:auto}
+.lb-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:rgb(240,224,255);text-align:center;margin-bottom:1rem;letter-spacing:.04em}
+.name-form{display:flex;gap:.5rem;margin-bottom:1.5rem}
+.name-input{flex:1;background:rgba(30,30,90,.45);border:1px solid rgba(214,217,255,.2);border-radius:10px;color:#fff;font-family:'Jost',sans-serif;font-size:.88rem;padding:.6rem .9rem;outline:none;transition:border-color .2s}
+.name-input::placeholder{color:rgba(214,217,255,.3)}
+.name-input:focus{border-color:rgba(214,217,255,.5)}
+.name-submit{background:rgba(107,107,230,.52);border:1px solid rgba(214,217,255,.28);border-radius:10px;color:#fff;font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.6rem 1.1rem;cursor:pointer;white-space:nowrap;transition:all .22s}
+.name-submit:hover{background:rgba(140,140,255,.68)}
+.lb-table{width:100%;border-collapse:collapse;text-align:left}
+.lb-table th{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(214,217,255,.35);padding:.5rem .6rem;border-bottom:1px solid rgba(214,217,255,.1)}
+.lb-table td{font-size:.82rem;padding:.55rem .6rem;border-bottom:1px solid rgba(214,217,255,.06);color:rgba(240,224,255,.78)}
+.lb-table td.tc{text-align:center}
+.lb-table td.tscore{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(240,224,255,.92);text-align:center}
+.lb-table td.tpos{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:rgba(214,217,255,.4);text-align:center;width:2.5rem}
+.lb-table td.gold{color:rgba(220,180,60,.85)}
+.lb-table td.silver{color:rgba(180,180,210,.75)}
+.lb-table td.bronze{color:rgba(190,130,80,.75)}
+.lb-table tr.me td{color:#fff;background:rgba(107,107,230,.14)}
+.lb-table td.tdate{font-size:.65rem;color:rgba(214,217,255,.35);white-space:nowrap}
+.lb-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(214,217,255,.38);text-align:center;padding:1rem;font-size:.95rem}
+@media(max-width:480px){.opts{grid-template-columns:1fr}.name-form{flex-direction:column}}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="page">
+  <header class="hdr">
+    <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
+    <div class="hdr__right">
+      <button class="hdr__btn" id="btnRestart">↺ Reiniciar</button>
+      <a class="hdr__btn" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+    </div>
+  </header>
+  <div class="qwrap" id="qwrap"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/quiz-db.js"></script>
+<script src="js/countries.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var TOTAL = 10;
+  var QUESTION_TIME = 15;
+
+  var all = [];
+  COUNTRIES.forEach(function(c){
+    c.images.forEach(function(img){ all.push({src: c.folder+'/'+img, country: c}); });
+  });
+
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+  var questions, qIdx, score, answered;
+  var imgEl, optWrap, fbEl, btnNext, sLeft, sFill, sScore;
+  var timerNumEl, timerFillEl, timerInterval, timerLeft;
+
+  function init(){
+    questions = shuffle(all.slice()).slice(0, TOTAL);
+    qIdx = 0; score = 0; answered = false;
+    stopTimer();
+    buildUI();
+    showQ();
+  }
+
+  document.getElementById('btnRestart').addEventListener('click', function(){ stopTimer(); init(); });
+
+  function buildUI(){
+    var wrap = document.getElementById('qwrap');
+    wrap.innerHTML = '';
+
+    // Score bar
+    var sb = document.createElement('div'); sb.className = 'sbar';
+    sLeft = document.createElement('span'); sLeft.textContent = '1 / '+TOTAL;
+    var sp = document.createElement('div'); sp.className = 'sprog';
+    sFill = document.createElement('div'); sFill.className = 'spfill'; sFill.style.width = '0%';
+    sp.appendChild(sFill); sb.appendChild(sLeft); sb.appendChild(sp);
+    sScore = document.createElement('span'); sScore.textContent = '✓ 0';
+    sb.appendChild(sScore); wrap.appendChild(sb);
+
+    // Timer row
+    var tr = document.createElement('div'); tr.className = 'timer-row';
+    timerNumEl = document.createElement('div'); timerNumEl.className = 'timer-num'; timerNumEl.textContent = QUESTION_TIME;
+    var tb = document.createElement('div'); tb.className = 'timer-bar';
+    timerFillEl = document.createElement('div'); timerFillEl.className = 'timer-fill'; timerFillEl.style.width = '100%';
+    tb.appendChild(timerFillEl); tr.appendChild(timerNumEl); tr.appendChild(tb);
+    wrap.appendChild(tr);
+
+    // Photo
+    imgEl = document.createElement('img'); imgEl.className = 'qphoto'; imgEl.alt = '¿De qué país es esta foto?';
+    wrap.appendChild(imgEl);
+
+    var qt = document.createElement('p'); qt.className = 'qtext'; qt.textContent = '¿De qué país es esta foto?';
+    wrap.appendChild(qt);
+
+    optWrap = document.createElement('div'); optWrap.className = 'opts';
+    wrap.appendChild(optWrap);
+
+    fbEl = document.createElement('p'); fbEl.className = 'fb';
+    wrap.appendChild(fbEl);
+
+    btnNext = document.createElement('button'); btnNext.className = 'btnnext'; btnNext.textContent = 'Siguiente →';
+    btnNext.addEventListener('click', nextQ);
+    wrap.appendChild(btnNext);
+  }
+
+  function showQ(){
+    answered = false;
+    btnNext.classList.remove('show');
+    fbEl.className = 'fb'; fbEl.textContent = '';
+
+    var q = questions[qIdx];
+    imgEl.classList.add('fade');
+    setTimeout(function(){ imgEl.src = q.src; imgEl.classList.remove('fade'); }, 320);
+
+    sLeft.textContent = (qIdx+1)+' / '+TOTAL;
+    sFill.style.width = (qIdx/TOTAL*100)+'%';
+
+    var correct = q.country;
+    var others = COUNTRIES.filter(function(c){ return c.id !== correct.id; });
+    shuffle(others);
+    var opts = shuffle([correct].concat(others.slice(0,3)));
+
+    optWrap.innerHTML = '';
+    opts.forEach(function(c){
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.textContent = c.emoji+' '+c.name;
+      btn.dataset.cid = c.id;
+      btn.addEventListener('click', function(){ answer(c.id === correct.id, btn, correct); });
+      optWrap.appendChild(btn);
+    });
+
+    startTimer();
+  }
+
+  /* ─── Timer ─── */
+  function startTimer(){
+    stopTimer();
+    timerLeft = QUESTION_TIME;
+    updateTimerUI();
+    timerInterval = setInterval(function(){
+      timerLeft--;
+      updateTimerUI();
+      if(timerLeft <= 0){ stopTimer(); autoFail(); }
+    }, 1000);
+  }
+
+  function stopTimer(){
+    if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  function updateTimerUI(){
+    if(!timerNumEl) return;
+    timerNumEl.textContent = timerLeft;
+    timerFillEl.style.width = (timerLeft / QUESTION_TIME * 100)+'%';
+    var warn = timerLeft <= 5;
+    timerNumEl.classList.toggle('warn', warn);
+    timerFillEl.classList.toggle('warn', warn);
+  }
+
+  function autoFail(){
+    if(answered) return;
+    answered = true;
+    fbEl.textContent = '¡Tiempo! Era '+questions[qIdx].country.name+'  '+questions[qIdx].country.emoji;
+    fbEl.style.color = 'rgba(255,140,140,.85)';
+    fbEl.className = 'fb show';
+    optWrap.querySelectorAll('.opt').forEach(function(b){
+      if(b.dataset.cid === questions[qIdx].country.id) b.classList.add('correct');
+      else b.disabled = true;
+    });
+    btnNext.classList.add('show');
+    if(qIdx === TOTAL-1) btnNext.textContent = 'Ver resultado';
+  }
+
+  function answer(isCorrect, clickedBtn, correctCountry){
+    if(answered) return;
+    answered = true;
+    stopTimer();
+    if(isCorrect){
+      score++;
+      clickedBtn.classList.add('correct');
+      fbEl.textContent = '¡Correcto!  '+questions[qIdx].country.emoji;
+      fbEl.style.color = 'rgba(90,220,120,.92)';
+    } else {
+      clickedBtn.classList.add('wrong');
+      fbEl.textContent = 'Era '+correctCountry.name+'  '+correctCountry.emoji;
+      fbEl.style.color = 'rgba(255,140,140,.85)';
+      optWrap.querySelectorAll('.opt').forEach(function(b){
+        if(b.dataset.cid === correctCountry.id) b.classList.add('correct');
+        else if(!b.classList.contains('wrong')) b.disabled = true;
+      });
+    }
+    fbEl.className = 'fb show';
+    sScore.textContent = '✓ '+score;
+    btnNext.classList.add('show');
+    if(qIdx === TOTAL-1) btnNext.textContent = 'Ver resultado';
+  }
+
+  function nextQ(){
+    qIdx++;
+    if(qIdx >= TOTAL){ showEnd(); return; }
+    showQ();
+  }
+
+  /* ─── End screen ─── */
+  function showEnd(){
+    stopTimer();
+    var wrap = document.getElementById('qwrap');
+    var pct = score/TOTAL;
+    var msgs = [
+      'Todavía hay momentos por recordar... ¡a viajar más!',
+      'Bien, pero aún queda historia por vivir juntos.',
+      '¡Muy bien! Recordáis vuestros viajes a la perfección.',
+      '¡Perfecto! Cada foto grabada en el corazón.'
+    ];
+    var mi = pct<.4?0:pct<.7?1:pct<1?2:3;
+
+    var html = '<div class="end">'
+      +'<h2>Resultado</h2>'
+      +'<div class="end__score">'+score+'/'+TOTAL+'</div>'
+      +'<div class="end__total">respuestas correctas</div>'
+      +'<p class="end__msg">'+msgs[mi]+'</p>'
+      +'<button class="btnr" id="restart">↺ Jugar de nuevo</button>'
+      +'<button class="btnr" id="btnLB">🔄 Actualizar clasificación</button>'
+      +'</div>'
+      +'<div class="lb-section" id="lbSection"></div>';
+
+    wrap.innerHTML = html;
+    document.getElementById('restart').addEventListener('click', init);
+    document.getElementById('btnLB').addEventListener('click', function(){
+      var lbRows = document.getElementById('lbRows');
+      if(lbRows) lbRows.innerHTML = '<p class="lb-empty">Cargando...</p>';
+      quizDB.load(function(scores){ renderLeaderboard(scores, null); });
+    });
+
+    renderNameForm(score);
+  }
+
+  function renderNameForm(finalScore){
+    var sec = document.getElementById('lbSection');
+    sec.innerHTML = '';
+    var t = document.createElement('p'); t.className = 'lb-title'; t.textContent = 'Clasificación global';
+    var form = document.createElement('div'); form.className = 'name-form';
+    var inp = document.createElement('input');
+    inp.className = 'name-input'; inp.type = 'text'; inp.placeholder = '¿Cuál es tu nombre?'; inp.maxLength = 24;
+    var sub = document.createElement('button'); sub.className = 'name-submit'; sub.textContent = 'Guardar';
+    form.appendChild(inp); form.appendChild(sub);
+    sec.appendChild(t); sec.appendChild(form);
+
+    var lbWrap = document.createElement('div'); lbWrap.id = 'lbRows';
+    lbWrap.innerHTML = '<p class="lb-empty">Cargando...</p>';
+    sec.appendChild(lbWrap);
+
+    // Fetch from Firestore on open
+    quizDB.load(function(scores){ renderLeaderboard(scores, null); });
+
+    sub.addEventListener('click', function(){
+      var name = inp.value.trim();
+      if(!name) return;
+      sub.disabled = true; inp.disabled = true;
+      var entry = { name: name, score: finalScore, total: TOTAL, date: new Date().toISOString() };
+      lbWrap.innerHTML = '<p class="lb-empty">Guardando...</p>';
+      quizDB.save(entry, function(scores){
+        renderLeaderboard(scores, entry);
+        form.innerHTML = '<p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;color:rgba(200,180,255,.7);font-size:.95rem">Guardado en la clasificación global ✓</p>';
+      });
+    });
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter') sub.click(); });
+  }
+
+  function renderLeaderboard(scores, highlightEntry){
+    var wrap = document.getElementById('lbRows');
+    if(!wrap) return;
+    if(!scores || !scores.length){
+      wrap.innerHTML = '<p class="lb-empty">Aún no hay resultados guardados.</p>';
+      return;
+    }
+    var t = document.createElement('table'); t.className = 'lb-table';
+    t.innerHTML = '<thead><tr><th class="tc">#</th><th>Nombre</th><th class="tc">Puntos</th><th class="tc">Fecha</th></tr></thead>';
+    var tb = document.createElement('tbody');
+    scores.forEach(function(e, i){
+      var tr = document.createElement('tr');
+      var isMe = highlightEntry && e.name===highlightEntry.name && e.score===highlightEntry.score && e.date===highlightEntry.date;
+      if(isMe) tr.className = 'me';
+      var posClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      var posText = i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);
+      tr.innerHTML = '<td class="tpos tc '+posClass+'">'+posText+'</td>'
+        +'<td>'+escHtml(e.name)+'</td>'
+        +'<td class="tscore">'+e.score+'/'+e.total+'</td>'
+        +'<td class="tdate">'+fmtDate(e.date)+'</td>';
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); wrap.innerHTML = ''; wrap.appendChild(t);
+  }
+
+  function escHtml(s){ return s.replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmtDate(iso){ var d=new Date(iso); return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear(); }
+
+  init();
+})();
+</script>
+</body>
+</html>

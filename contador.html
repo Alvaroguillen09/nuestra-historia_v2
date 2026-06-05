@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<title>Álvaro & Gabriela — Contador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Great+Vibes&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:'Jost',sans-serif}
+body{background:rgb(10,8,38);color:#fff}
+/* Animated background */
+.bg{position:fixed;inset:0;overflow:hidden}
+.bg-circle{position:absolute;border-radius:50%;filter:blur(100px);animation:bgpulse var(--dur,14s) infinite alternate ease-in-out}
+.bg-c1{width:600px;height:600px;background:rgba(115,70,220,.25);left:-150px;top:-100px;--dur:14s}
+.bg-c2{width:500px;height:500px;background:rgba(80,50,180,.2);right:-100px;bottom:-100px;--dur:18s}
+.bg-c3{width:400px;height:400px;background:rgba(160,80,255,.15);left:30%;top:20%;--dur:22s}
+@keyframes bgpulse{from{transform:translate(0,0) scale(1)}to{transform:translate(40px,-30px) scale(1.15)}}
+/* Stars */
+.stars{position:fixed;inset:0;pointer-events:none}
+/* Page */
+.page{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+/* Header */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;position:absolute;top:0;left:0;right:0;z-index:10}
+.topbar__logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:rgba(240,224,255,.75);text-decoration:none}
+.topbar__back{font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.6);text-decoration:none;padding:.42rem .88rem;border-radius:999px;border:1px solid rgba(214,217,255,.18);transition:background .2s,color .2s}
+.topbar__back:hover{background:rgba(214,217,255,.1);color:#fff}
+/* Main counter area */
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;text-align:center}
+/* Script label */
+.label-top{font-family:'Great Vibes',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:rgba(214,217,255,.55);margin-bottom:-.5rem;line-height:1}
+/* Big number */
+.big-num{font-family:'Cormorant Garamond',serif;font-size:clamp(5rem,18vw,12rem);font-weight:300;color:rgb(240,224,255);line-height:1;letter-spacing:-.02em;text-shadow:0 0 80px rgba(140,110,255,.35),0 2px 40px rgba(5,3,20,.5)}
+.big-unit{font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(214,217,255,.45);margin-top:.2rem;margin-bottom:2rem}
+/* Breakdown */
+.breakdown{display:flex;gap:2.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem}
+.bk-item{text-align:center}
+.bk-num{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:300;color:rgba(240,224,255,.88);line-height:1}
+.bk-label{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(214,217,255,.38);margin-top:.15rem}
+/* Divider */
+.div{color:rgba(214,217,255,.15);font-size:1.2rem;align-self:center;margin-top:-.5rem}
+/* Live digits */
+.live{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2rem;padding:1rem 2rem;border:1px solid rgba(214,217,255,.08);border-radius:16px;background:rgba(30,20,80,.25)}
+.lv-item{text-align:center}
+.lv-num{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:300;color:rgba(200,185,255,.75);line-height:1}
+.lv-label{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.3);margin-top:.1rem}
+/* Start date note */
+.start-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.92rem;color:rgba(214,217,255,.32);margin-top:1.5rem;letter-spacing:.04em}
+/* Heartbeat */
+.heart{color:rgba(200,150,255,.6);display:inline-block;animation:hb 1.5s ease-in-out infinite}
+@keyframes hb{0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="bg">
+  <div class="bg-circle bg-c1"></div>
+  <div class="bg-circle bg-c2"></div>
+  <div class="bg-circle bg-c3"></div>
+</div>
+<canvas class="stars" id="stars"></canvas>
+<div class="page">
+  <div class="topbar">
+    <a class="topbar__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
+    <a class="topbar__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+  </div>
+  <div class="stage">
+    <p class="label-top">Llevamos</p>
+    <div class="big-num" id="bigDays">0</div>
+    <p class="big-unit">días viajando juntos <span class="heart">♡</span></p>
+    <div class="breakdown">
+      <div class="bk-item"><div class="bk-num" id="bkYears">0</div><div class="bk-label">años</div></div>
+      <div class="div">·</div>
+      <div class="bk-item"><div class="bk-num" id="bkMonths">0</div><div class="bk-label">meses</div></div>
+      <div class="div">·</div>
+      <div class="bk-item"><div class="bk-num" id="bkDays">0</div><div class="bk-label">días</div></div>
+    </div>
+    <div class="live">
+      <div class="lv-item"><div class="lv-num" id="lvHours">00</div><div class="lv-label">horas</div></div>
+      <div class="lv-item"><div class="lv-num" id="lvMins">00</div><div class="lv-label">minutos</div></div>
+      <div class="lv-item"><div class="lv-num" id="lvSecs">00</div><div class="lv-label">segundos</div></div>
+    </div>
+    <p class="start-note">Desde el 23 de enero de 2025</p>
+  </div>
+</div>
+
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var START=new Date(2025,0,23,0,0,0,0);
+
+  function pad(n){return String(n).padStart(2,'0');}
+
+  function update(){
+    var now=new Date();
+    var diff=now-START;
+    if(diff<0) diff=0;
+
+    var totalSecs=Math.floor(diff/1000);
+    var totalMins=Math.floor(totalSecs/60);
+    var totalHours=Math.floor(totalMins/60);
+    var totalDays=Math.floor(totalHours/24);
+
+    var secs=totalSecs%60;
+    var mins=totalMins%60;
+    var hours=totalHours%24;
+
+    // Years / months / remaining days approximation
+    var years=now.getFullYear()-START.getFullYear();
+    var m=now.getMonth()-START.getMonth();
+    var d=now.getDate()-START.getDate();
+    if(d<0){m--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate();}
+    if(m<0){years--;m+=12;}
+
+    document.getElementById('bigDays').textContent=totalDays.toLocaleString('es');
+    document.getElementById('bkYears').textContent=years;
+    document.getElementById('bkMonths').textContent=m;
+    document.getElementById('bkDays').textContent=d;
+    document.getElementById('lvHours').textContent=pad(hours);
+    document.getElementById('lvMins').textContent=pad(mins);
+    document.getElementById('lvSecs').textContent=pad(secs);
+  }
+
+  update();
+  setInterval(update,1000);
+
+  // Stars canvas
+  var canvas=document.getElementById('stars');
+  var ctx=canvas.getContext('2d');
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  var pts=[];
+  for(var i=0;i<160;i++) pts.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.2+.2,o:Math.random()*.7+.1,v:Math.random()*.4+.05});
+  (function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pts.forEach(function(p){
+      p.y+=p.v;
+      if(p.y>canvas.height) p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,'+p.o+')';
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  })();
+})();
+</script>
+</body>
+</html>

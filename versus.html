@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;">
+<title>Álvaro & Gabriela — Versus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;border-radius:50%;filter:blur(120px);opacity:.2;animation:af 18s infinite alternate ease-in-out;z-index:0;pointer-events:none}
+.a1{width:700px;height:700px;background:#9f9fff;left:-200px;top:-200px}
+.a2{width:600px;height:600px;background:#c08fff;right:-150px;top:20%;animation-duration:22s}
+@keyframes af{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-50px) scale(1.12)}}
+.page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.1)}
+.hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:rgb(240,224,255);text-decoration:none}
+.hdr__right{display:flex;align-items:center;gap:.75rem}
+.hdr__back{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);text-decoration:none;padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);transition:background .2s,color .2s}
+.hdr__back:hover{background:rgba(214,217,255,.1);color:#fff}
+.btn-rank{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);cursor:pointer;transition:background .2s,color .2s;background:transparent}
+.btn-rank:hover{background:rgba(214,217,255,.1);color:#fff}
+
+/* Arena */
+.arena{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem 3rem}
+.subtitle{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(214,217,255,.45);margin-bottom:1.5rem;text-align:center}
+.pair-ctr{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.4);margin-bottom:1.2rem;text-align:center}
+
+.cards{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;width:100%;max-width:860px}
+.vcard{flex:0 0 calc(45% - .75rem);min-width:220px;max-width:360px;position:relative;border-radius:20px;overflow:hidden;cursor:pointer;border:2px solid rgba(214,217,255,.1);transition:border-color .28s,transform .28s,box-shadow .28s;aspect-ratio:3/4}
+.vcard:hover{border-color:rgba(214,217,255,.38);transform:translateY(-5px);box-shadow:0 16px 50px rgba(0,0,0,.55)}
+.vcard.voted{border-color:rgba(210,190,255,.55);box-shadow:0 0 30px rgba(140,110,255,.35)}
+.vcard.lost{opacity:.5;transform:scale(.97)}
+.vcard__photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.vcard:hover .vcard__photo{transform:scale(1.04)}
+.vcard__overlay{position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(5,3,22,.92))}
+.vcard__info{position:absolute;bottom:0;left:0;right:0;padding:1.4rem 1.2rem 1rem}
+.vcard__emoji{font-size:2rem;line-height:1;display:block;margin-bottom:.3rem}
+.vcard__name{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:rgb(240,224,255);line-height:1.1}
+.vcard__tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:rgba(214,217,255,.65);margin-top:.3rem}
+.vcard__vote{margin-top:.9rem;display:flex;align-items:center;gap:.4rem;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.52);background:rgba(255,255,255,.07);border:1px solid rgba(214,217,255,.15);border-radius:999px;padding:.38rem .9rem;transition:all .22s;width:fit-content}
+.vcard:hover .vcard__vote{background:rgba(140,110,255,.35);border-color:rgba(214,217,255,.38);color:#fff}
+.vcard.voted .vcard__vote{background:rgba(140,110,255,.45);border-color:rgba(210,190,255,.55);color:#fff}
+
+.vs-badge{flex:0 0 auto;font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:rgba(214,217,255,.35);text-align:center}
+.vs-badge p{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.25);margin-top:.2rem;font-family:'Jost',sans-serif}
+/* Timer */
+.vs-timer{display:flex;align-items:center;gap:.7rem;width:100%;max-width:860px;margin-bottom:.7rem}
+.vs-tnum{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:rgba(240,224,255,.65);width:2.4rem;text-align:center;flex-shrink:0;transition:color .3s;line-height:1}
+.vs-tnum.warn{color:rgba(220,80,80,.85)}
+.vs-tbar{flex:1;height:4px;background:rgba(214,217,255,.1);border-radius:999px;overflow:hidden}
+.vs-tfill{height:100%;background:linear-gradient(to right,rgba(140,110,255,.7),rgba(210,190,255,.95));border-radius:999px;transition:width 1s linear,background .4s}
+.vs-tfill.warn{background:linear-gradient(to right,rgba(220,80,80,.75),rgba(255,120,120,.9))}
+.vs-skip{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.3);flex-shrink:0;font-family:'Jost',sans-serif}
+
+/* Ranking overlay */
+.rk-overlay{position:fixed;inset:0;z-index:500;background:rgba(4,2,18,.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
+.rk-overlay.open{opacity:1;pointer-events:all}
+.rk-box{background:rgba(20,16,60,.95);border:1px solid rgba(214,217,255,.15);border-radius:24px;padding:2.5rem 2rem;max-width:440px;width:90%;max-height:85vh;overflow-y:auto}
+.rk-box h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:rgb(240,224,255);text-align:center;margin-bottom:.3rem}
+.rk-sub{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.4);text-align:center;margin-bottom:1.5rem}
+.rk-list{list-style:none}
+.rk-item{display:flex;align-items:center;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(214,217,255,.07)}
+.rk-item:last-child{border-bottom:none}
+.rk-pos{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:rgba(214,217,255,.4);width:2rem;text-align:center;flex-shrink:0}
+.rk-pos.gold{color:rgba(220,180,60,.85)}
+.rk-pos.silver{color:rgba(180,180,210,.75)}
+.rk-pos.bronze{color:rgba(190,130,80,.75)}
+.rk-emoji{font-size:1.5rem;flex-shrink:0}
+.rk-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:rgba(240,224,255,.9);flex:1}
+.rk-wins{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(214,217,255,.5)}
+.rk-bar-wrap{width:80px;height:4px;background:rgba(214,217,255,.1);border-radius:999px;overflow:hidden;flex-shrink:0}
+.rk-bar{height:100%;background:linear-gradient(to right,rgba(140,110,255,.7),rgba(210,190,255,.95));border-radius:999px;transition:width .6s ease}
+.btn-close-rk{display:block;margin:1.5rem auto 0;background:rgba(107,107,230,.45);border:1px solid rgba(214,217,255,.25);border-radius:999px;color:#fff;font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.58rem 1.8rem;cursor:pointer;transition:all .22s}
+.btn-close-rk:hover{background:rgba(140,140,255,.6)}
+
+/* Final state */
+.final-msg{text-align:center;padding:2rem 1rem}
+.final-msg h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:300;color:rgb(240,224,255);margin-bottom:.6rem}
+.final-msg p{font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(214,217,255,.65);font-size:1.05rem;margin-bottom:1.5rem}
+.btn-reset{background:rgba(107,107,230,.45);border:1px solid rgba(214,217,255,.25);border-radius:999px;color:#fff;font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1.8rem;cursor:pointer;transition:all .22s}
+.btn-reset:hover{background:rgba(140,140,255,.6)}
+
+@media(max-width:580px){.vcard{flex:0 0 100%;max-width:100%;aspect-ratio:4/3}.vs-badge{order:-1}}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="aurora a1"></div>
+<div class="aurora a2"></div>
+<div class="page">
+  <header class="hdr">
+    <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
+    <div class="hdr__right">
+      <button class="btn-rank" id="btnRestart">↺ Reiniciar</button>
+      <button class="btn-rank" id="btnRank">🏆 Clasificación</button>
+      <a class="hdr__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+    </div>
+  </header>
+  <div class="arena" id="arena"></div>
+</div>
+
+<!-- Ranking overlay -->
+<div class="rk-overlay" id="rkOverlay">
+  <div class="rk-box">
+    <h2>Clasificación</h2>
+    <p class="rk-sub">Resultados acumulados</p>
+    <ul class="rk-list" id="rkList"></ul>
+    <button class="btn-close-rk" id="btnCloseRk">Cerrar</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/versus-db.js"></script>
+<script src="js/countries.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var KEY='ag_versus_v1';
+  var PAIR_TIME=8;
+  var vsTimerInterval=null, vsTimerLeft=PAIR_TIME;
+  var vsTimerNumEl=null, vsTimerFillEl=null;
+
+  function startVsTimer(){
+    stopVsTimer();
+    vsTimerLeft=PAIR_TIME;
+    updateVsTimer();
+    vsTimerInterval=setInterval(function(){
+      vsTimerLeft--;
+      updateVsTimer();
+      if(vsTimerLeft<=0){ stopVsTimer(); skipPair(); }
+    },1000);
+  }
+
+  function stopVsTimer(){
+    if(vsTimerInterval){clearInterval(vsTimerInterval);vsTimerInterval=null;}
+  }
+
+  function updateVsTimer(){
+    if(!vsTimerNumEl) return;
+    vsTimerNumEl.textContent=vsTimerLeft;
+    vsTimerFillEl.style.width=(vsTimerLeft/PAIR_TIME*100)+'%';
+    var warn=vsTimerLeft<=3;
+    vsTimerNumEl.classList.toggle('warn',warn);
+    vsTimerFillEl.classList.toggle('warn',warn);
+  }
+
+  function skipPair(){
+    state.done++;
+    saveState(state);
+    render();
+  }
+
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  function genPairs(){
+    var p=[];
+    for(var i=0;i<COUNTRIES.length;i++)
+      for(var j=i+1;j<COUNTRIES.length;j++)
+        p.push([COUNTRIES[i].id,COUNTRIES[j].id]);
+    return shuffle(p);
+  }
+
+  function loadState(){
+    try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&s.pairs&&s.votes)return s;}catch(e){}
+    return{pairs:genPairs(),done:0,votes:{}};
+  }
+
+  function saveState(s){localStorage.setItem(KEY,JSON.stringify(s));}
+
+  var state=loadState();
+  var arena=document.getElementById('arena');
+
+  function getCountry(id){return COUNTRIES.find(function(c){return c.id===id;});}
+
+  function render(){
+    arena.innerHTML='';
+    if(state.done>=state.pairs.length){renderFinal();return;}
+    var pair=state.pairs[state.done];
+    var cA=getCountry(pair[0]), cB=getCountry(pair[1]);
+
+    var sub=document.createElement('p'); sub.className='subtitle'; sub.textContent='¿Cuál fue el mejor viaje?';
+    var ctr=document.createElement('p'); ctr.className='pair-ctr'; ctr.textContent='Par '+(state.done+1)+' de '+state.pairs.length;
+    arena.appendChild(sub);
+    arena.appendChild(ctr);
+
+    // Timer row
+    var tr=document.createElement('div'); tr.className='vs-timer';
+    vsTimerNumEl=document.createElement('div'); vsTimerNumEl.className='vs-tnum'; vsTimerNumEl.textContent=PAIR_TIME;
+    var tb=document.createElement('div'); tb.className='vs-tbar';
+    vsTimerFillEl=document.createElement('div'); vsTimerFillEl.className='vs-tfill'; vsTimerFillEl.style.width='100%';
+    var sk=document.createElement('div'); sk.className='vs-skip'; sk.textContent='auto-skip';
+    tb.appendChild(vsTimerFillEl); tr.appendChild(vsTimerNumEl); tr.appendChild(tb); tr.appendChild(sk);
+    arena.appendChild(tr);
+    startVsTimer();
+
+    var cards=document.createElement('div'); cards.className='cards';
+    cards.appendChild(makeCard(cA,cB));
+    var vs=document.createElement('div'); vs.className='vs-badge'; vs.innerHTML='VS<p>elige</p>';
+    cards.appendChild(vs);
+    cards.appendChild(makeCard(cB,cA));
+    arena.appendChild(cards);
+  }
+
+  function makeCard(c,other){
+    var card=document.createElement('div');
+    card.className='vcard';
+    var img=document.createElement('img');
+    img.className='vcard__photo';
+    img.src=c.folder+'/'+c.images[0];
+    img.alt=c.name;
+    var ov=document.createElement('div'); ov.className='vcard__overlay';
+    var info=document.createElement('div'); info.className='vcard__info';
+    var em=document.createElement('span'); em.className='vcard__emoji'; em.textContent=c.emoji;
+    var nm=document.createElement('div'); nm.className='vcard__name'; nm.textContent=c.name;
+    var tg=document.createElement('div'); tg.className='vcard__tagline'; tg.textContent=c.tagline;
+    var vb=document.createElement('div'); vb.className='vcard__vote'; vb.innerHTML='❤️ &nbsp;Votar';
+    info.appendChild(em);info.appendChild(nm);info.appendChild(tg);info.appendChild(vb);
+    card.appendChild(img);card.appendChild(ov);card.appendChild(info);
+    card.addEventListener('click',function(){vote(c.id,other.id,card);});
+    return card;
+  }
+
+  function vote(winnerId,loserId,el){
+    stopVsTimer();
+    state.votes[winnerId]=(state.votes[winnerId]||0)+1;
+    state.done++;
+    saveState(state);
+    versusDB.saveVotes(state.votes); // push to Firestore
+    el.classList.add('voted');
+    var sibling=el.parentElement.querySelector('.vcard:not(.voted)');
+    if(sibling) sibling.classList.add('lost');
+    setTimeout(render,520);
+  }
+
+  function renderFinal(){
+    stopVsTimer();
+    var div=document.createElement('div'); div.className='final-msg';
+    div.innerHTML='<h2>¡Votación completa!</h2><p>Habéis votado todos los pares. Aquí está la clasificación final.</p>';
+    var br=document.createElement('button'); br.className='btn-rank'; br.textContent='🏆 Ver clasificación';
+    br.style.cssText='display:inline-block;margin:.5rem .5rem;cursor:pointer;background:rgba(107,107,230,.45);border:1px solid rgba(214,217,255,.25);border-radius:999px;color:#fff;font-family:Jost,sans-serif;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;padding:.6rem 1.8rem;transition:all .22s';
+    br.addEventListener('click',openRanking);
+    var rst=document.createElement('button'); rst.className='btn-reset'; rst.textContent='Reiniciar';
+    rst.addEventListener('click',function(){localStorage.removeItem(KEY);state=loadState();render();});
+    div.appendChild(br); div.appendChild(document.createElement('br')); div.appendChild(rst);
+    arena.appendChild(div);
+    openRanking();
+  }
+
+  function buildRanking(){
+    var ranks=COUNTRIES.map(function(c){return{id:c.id,name:c.name,emoji:c.emoji,wins:state.votes[c.id]||0};});
+    ranks.sort(function(a,b){return b.wins-a.wins;});
+    var max=ranks[0]?ranks[0].wins:1;
+    var list=document.getElementById('rkList'); list.innerHTML='';
+    ranks.forEach(function(r,i){
+      var li=document.createElement('li'); li.className='rk-item';
+      var pos=document.createElement('div'); pos.className='rk-pos'+(i===0?' gold':i===1?' silver':i===2?' bronze':'');
+      pos.textContent=i+1;
+      var em=document.createElement('span'); em.className='rk-emoji'; em.textContent=r.emoji;
+      var nm=document.createElement('span'); nm.className='rk-name'; nm.textContent=r.name;
+      var w=document.createElement('span'); w.className='rk-wins'; w.textContent=r.wins+' victoria'+(r.wins!==1?'s':'');
+      var bw=document.createElement('div'); bw.className='rk-bar-wrap';
+      var b=document.createElement('div'); b.className='rk-bar'; b.style.width=(max?Math.round(r.wins/max*100):0)+'%';
+      bw.appendChild(b);
+      li.appendChild(pos);li.appendChild(em);li.appendChild(nm);li.appendChild(w);li.appendChild(bw);
+      list.appendChild(li);
+    });
+  }
+
+  function openRanking(){
+    document.getElementById('rkList').innerHTML='<li style="text-align:center;padding:1rem;font-family:\'Cormorant Garamond\',serif;font-style:italic;color:rgba(214,217,255,.45);font-size:.95rem">Cargando...</li>';
+    document.getElementById('rkOverlay').classList.add('open');
+    versusDB.loadVotes(function(fsVotes){
+      // Merge: take maximum per country so no vote is lost offline
+      COUNTRIES.forEach(function(c){
+        var local=state.votes[c.id]||0, remote=fsVotes[c.id]||0;
+        state.votes[c.id]=Math.max(local,remote);
+      });
+      saveState(state);
+      buildRanking();
+    });
+  }
+  function closeRanking(){document.getElementById('rkOverlay').classList.remove('open');}
+
+  document.getElementById('btnRank').addEventListener('click',openRanking);
+  document.getElementById('btnRestart').addEventListener('click',function(){
+    stopVsTimer();
+    localStorage.removeItem(KEY);
+    state=loadState();
+    render();
+  });
+  document.getElementById('btnCloseRk').addEventListener('click',closeRanking);
+  document.getElementById('rkOverlay').addEventListener('click',function(e){if(e.target===this)closeRanking();});
+
+  // Sync votes from Firestore before first render
+  versusDB.loadVotes(function(fsVotes){
+    COUNTRIES.forEach(function(c){
+      var local=state.votes[c.id]||0, remote=fsVotes[c.id]||0;
+      state.votes[c.id]=Math.max(local,remote);
+    });
+    saveState(state);
+    render();
+  });
+})();
+</script>
+</body>
+</html>

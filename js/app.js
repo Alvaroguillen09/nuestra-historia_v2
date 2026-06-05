@@ -297,6 +297,8 @@
       hdr.appendChild(ssBtn);
     }
 
+    hdr.appendChild(makeRatingSection(c));
+
     /* ── Gallery wrapper ── */
     const gw = document.createElement("div");
     gw.className = "gallery-wrapper";
@@ -714,6 +716,60 @@
     document.body.classList.remove("no-scroll");
     ssPlaying = false;
     setTimeout(function () { if (ssImgA) ssImgA.src = ""; if (ssImgB) ssImgB.src = ""; }, 500);
+  }
+
+  /* ═══════════════════════════════════════════
+     RATING SECTION
+  ═══════════════════════════════════════════ */
+  const RATING_KEY  = "ag_ratings_v1";
+  const RATING_TIPS = { "❤️": "Inolvidable", "🔥": "Épico", "🥹": "Emotivo", "✨": "Mágico" };
+
+  function makeRatingSection(c) {
+    const div = document.createElement("div");
+    div.className = "rating-section";
+
+    const label = document.createElement("p");
+    label.className = "rating-label";
+    label.textContent = "¿Cómo fue?";
+
+    const btns = document.createElement("div");
+    btns.className = "rating-btns";
+
+    const saved  = JSON.parse(localStorage.getItem(RATING_KEY) || "{}");
+    const current = saved[c.id] || null;
+
+    ["❤️", "🔥", "🥹", "✨"].forEach(function (emoji) {
+      const btn = document.createElement("button");
+      btn.className = "rating-btn" + (current === emoji ? " rating-btn--active" : "");
+
+      const tip = document.createElement("span");
+      tip.className = "rating-btn__tip";
+      tip.textContent = RATING_TIPS[emoji];
+
+      btn.appendChild(document.createTextNode(emoji));
+      btn.appendChild(tip);
+
+      btn.addEventListener("click", function () {
+        const r = JSON.parse(localStorage.getItem(RATING_KEY) || "{}");
+        if (r[c.id] === emoji) {
+          delete r[c.id];
+          btn.classList.remove("rating-btn--active");
+        } else {
+          r[c.id] = emoji;
+          btns.querySelectorAll(".rating-btn").forEach(function (b) {
+            b.classList.remove("rating-btn--active");
+          });
+          btn.classList.add("rating-btn--active");
+        }
+        localStorage.setItem(RATING_KEY, JSON.stringify(r));
+      });
+
+      btns.appendChild(btn);
+    });
+
+    div.appendChild(label);
+    div.appendChild(btns);
+    return div;
   }
 
   /* ═══════════════════════════════════════════

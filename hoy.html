@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<title>Álvaro & Gabriela — El Recuerdo de Hoy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,400&family=Great+Vibes&family=Jost:wght@200;300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#050314;overflow:hidden;font-family:'Jost',sans-serif}
+/* Fullscreen photo */
+.bg{position:fixed;inset:0;background-size:cover;background-position:center;transition:opacity .9s ease}
+.bg img{width:100%;height:100%;object-fit:contain}
+.vignette{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(4,2,18,.6) 100%);pointer-events:none}
+.vignette-bot{position:fixed;bottom:0;left:0;right:0;height:55%;background:linear-gradient(to bottom,transparent,rgba(4,2,18,.88));pointer-events:none}
+.vignette-top{position:fixed;top:0;left:0;right:0;height:20%;background:linear-gradient(to top,transparent,rgba(4,2,18,.6));pointer-events:none}
+/* Top bar */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;padding:1.2rem 1.8rem}
+.topbar__date{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;font-weight:300;color:rgba(240,224,255,.65);letter-spacing:.04em}
+.topbar__back{font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.62);text-decoration:none;padding:.42rem .88rem;border-radius:999px;border:1px solid rgba(214,217,255,.18);transition:background .2s,color .2s;background:rgba(15,10,50,.45)}
+.topbar__back:hover{background:rgba(80,60,180,.45);color:#fff;border-color:rgba(214,217,255,.38)}
+/* Bottom info */
+.info{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:2rem 2rem 2.5rem;pointer-events:none}
+.info__day{font-family:'Jost',sans-serif;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(214,217,255,.42);margin-bottom:.5rem}
+.info__script{font-family:'Great Vibes',cursive;font-size:clamp(2rem,6vw,3.2rem);color:rgba(240,224,255,.95);line-height:1;text-shadow:0 2px 20px rgba(5,3,20,.6);margin-bottom:.3rem}
+.info__country{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.35rem);font-weight:300;color:rgba(214,217,255,.72);margin-bottom:.35rem}
+.info__tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:rgba(200,180,255,.5)}
+/* Share hint */
+.hint{position:fixed;bottom:1rem;right:1.5rem;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(214,217,255,.25);z-index:10}
+/* Loading state */
+.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;background:rgb(5,3,20)}
+.loading p{font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(214,217,255,.5);font-size:1.1rem;letter-spacing:.06em}
+</style>
+<script src="js/auth.js"></script>
+</head>
+<body>
+<div class="loading" id="loading"><p>Buscando tu recuerdo de hoy...</p></div>
+
+<div class="bg" id="bg"></div>
+<div class="vignette"></div>
+<div class="vignette-bot"></div>
+<div class="vignette-top"></div>
+
+<div class="topbar">
+  <div class="topbar__date" id="topDate"></div>
+  <a class="topbar__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
+</div>
+
+<div class="info">
+  <p class="info__day">EL RECUERDO DE HOY</p>
+  <div class="info__script" id="infoScript"></div>
+  <p class="info__country" id="infoCountry"></p>
+  <p class="info__tagline" id="infoTagline"></p>
+</div>
+<div class="hint">📅 Cada día, un recuerdo diferente</div>
+
+<script src="js/countries.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/music.js"></script>
+<script>
+(function(){
+  var all=[];
+  COUNTRIES.forEach(function(c){
+    c.images.forEach(function(img){all.push({src:c.folder+'/'+img,country:c});});
+  });
+
+  var now=new Date();
+  var start=new Date(now.getFullYear(),0,1);
+  var doy=Math.floor((now-start)/(24*60*60*1000));
+  var p=all[doy%all.length];
+
+  // Format date
+  var months=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var days=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var dateStr=days[now.getDay()]+', '+now.getDate()+' de '+months[now.getMonth()]+' de '+now.getFullYear();
+  document.getElementById('topDate').textContent=dateStr;
+
+  document.getElementById('infoScript').textContent=p.country.name;
+  document.getElementById('infoCountry').textContent=p.country.emoji+'  '+p.country.tagline;
+  document.getElementById('infoTagline').textContent='"'+p.country.quote+'"';
+
+  var bg=document.getElementById('bg');
+  var img=document.createElement('img');
+  img.alt=p.country.name;
+  img.onload=function(){
+    document.getElementById('loading').style.display='none';
+  };
+  img.onerror=function(){
+    document.getElementById('loading').querySelector('p').textContent='No se encontró la foto de hoy.';
+  };
+  bg.appendChild(img);
+  img.src=p.src;
+})();
+</script>
+</body>
+</html>

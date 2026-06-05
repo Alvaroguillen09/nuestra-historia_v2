@@ -314,6 +314,8 @@ font-size:3.5rem;
 .ring:nth-child(2){width:240px;height:240px}
 .flag-container{width:130px;height:130px}
 }
+.card-rating{position:absolute;top:.9rem;left:.9rem;font-size:1.5rem;z-index:10;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));animation:ratingPop .35s var(--ease-spring,cubic-bezier(.34,1.56,.64,1)) both}
+@keyframes ratingPop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
 </style>
 <script src="js/auth.js"></script>
 <script src="js/confetti.js"></script>
@@ -380,8 +382,16 @@ font-size:3.5rem;
 <p>TODOS LOS MOMENTOS QUE MERECEN SER CONSERVADOS</p>
 
 <nav class="arch-nav">
-  <a href="mapa.html">🗺 Mapa interactivo</a>
+  <a href="mapa.html">🗺 Mapa</a>
   <a href="bucket-list.html">🔒 Bucket list</a>
+  <a href="galeria.html">🖼 Galería</a>
+  <a href="slideshow.html">▶ Slideshow</a>
+  <a href="quiz.html">🧩 Quiz</a>
+  <a href="versus.html">⚔️ Versus</a>
+  <a href="citas.html">💬 Citas</a>
+  <a href="hoy.html">📸 Hoy</a>
+  <a href="proximos.html">✨ Próximos</a>
+  <a href="contador.html">📅 Contador</a>
 </nav>
 
 <div class="stats-bar">
@@ -440,6 +450,7 @@ font-size:3.5rem;
 <script>
 
 const archive=document.getElementById('archive');
+const _ratings=(function(){try{return JSON.parse(localStorage.getItem('ag_ratings_v1')||'{}')}catch(e){return{}}}());
 
 COUNTRIES.forEach(function(c,i){
 const el=document.createElement('section');
@@ -448,9 +459,12 @@ const code="AR-"+String(i+1).padStart(3,"0");
 const flagHtml=c.flag
   ?`<img class="flag" src="${c.flag}" alt="${c.name}">`
   :`<span style="font-size:4rem;display:flex;align-items:center;justify-content:center;height:100%;">${c.emoji}</span>`;
+const rating=_ratings[c.id];
+const ratingHtml=rating?`<div class="card-rating" title="Valorado por Gabriela">${rating}</div>`:'';
 
 el.innerHTML=`
-<div class="card">
+<div class="card" style="position:relative">
+${ratingHtml}
 <div class="left">
 <div class="code">${code}</div>
 <div class="country">${c.name}</div>
