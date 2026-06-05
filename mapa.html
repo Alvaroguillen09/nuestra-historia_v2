@@ -286,23 +286,21 @@ function render(){
   ctx.strokeStyle='rgba(240,230,255,0.9)';ctx.lineWidth=1/zoom;ctx.stroke();
   ctx.restore();
 
-  /* Emoji labels — visible once effective width exceeds 400 px (mobile: needs zoom) */
-  if(W*zoom>400){
-    var fs=Math.max(8,Math.min(16,W*0.016))/zoom;
-    builtPaths.forEach(function(c){
-      if(!c.v||!c.emoji)return;
-      var geo=GEO.find(function(g){return g.id===c.id;});
-      if(!geo)return;
-      var ctr=centroid(geo);
-      ctx.font=fs+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillStyle='rgba(255,255,255,0.9)';
-      ctx.fillText(c.emoji,ctr[0],ctr[1]);
-    });
-    var vp2=proj(VATICAN.lon,VATICAN.lat,W,H);
-    ctx.font=Math.max(6,W*0.012)/zoom+'px serif';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(VATICAN.emoji,vp2[0],vp2[1]);
-  }
+  /* Emoji labels — always visible, size clamped so they fit at any zoom */
+  var fs=Math.max(8,Math.min(16,W*0.016))/zoom;
+  builtPaths.forEach(function(c){
+    if(!c.v||!c.emoji)return;
+    var geo=GEO.find(function(g){return g.id===c.id;});
+    if(!geo)return;
+    var ctr=centroid(geo);
+    ctx.font=fs+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(255,255,255,0.9)';
+    ctx.fillText(c.emoji,ctr[0],ctr[1]);
+  });
+  var vp2=proj(VATICAN.lon,VATICAN.lat,W,H);
+  ctx.font=Math.max(6,W*0.012)/zoom+'px serif';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(VATICAN.emoji,vp2[0],vp2[1]);
 }
 
 /* ── Hit test ──────────────────────────────────────────── */
