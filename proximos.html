@@ -21,22 +21,57 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
 .hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:rgb(240,224,255);text-decoration:none}
 .hdr__back{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);text-decoration:none;padding:.45rem .9rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);transition:background .2s,color .2s}
 .hdr__back:hover{background:rgba(214,217,255,.1);color:#fff}
-.hero{text-align:center;padding:3rem 1rem 1.5rem}
+.hero{text-align:center;padding:3rem 1rem 1rem}
 .hero__script{font-family:'Great Vibes',cursive;font-size:clamp(3rem,8vw,5rem);color:rgb(240,224,255);line-height:1;text-shadow:0 2px 30px rgba(58,58,152,.6)}
 .hero__sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.25rem);color:rgba(214,217,255,.65);margin-top:.5rem}
 .hero__count{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.38);margin-top:.6rem}
 
-/* Cards grid */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;max-width:1100px;margin:2rem auto 0;padding:0 1.5rem 5rem}
-.dcard{border-radius:18px;padding:1.8rem 1.5rem;text-align:center;border:1px solid rgba(220,170,60,.35);background:rgba(60,45,10,.45);backdrop-filter:blur(16px);transition:transform .28s,box-shadow .28s;position:relative;overflow:hidden}
-.dcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,215,100,.06) 0%,transparent 60%);pointer-events:none;border-radius:18px}
-.dcard:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.45)}
-.dcard__emoji{font-size:3rem;line-height:1;display:block;margin-bottom:.8rem;filter:drop-shadow(0 2px 8px rgba(220,170,60,.3))}
-.dcard__name{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:300;color:rgb(240,224,255)}
-.dcard__tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:rgba(220,190,100,.72);margin-top:.35rem}
-.dcard__extra{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.35);margin-top:.8rem}
-.dcard__star{position:absolute;top:.7rem;right:.75rem;font-size:.95rem;color:rgba(220,180,60,.75)}
-.dcard__badge{display:inline-block;margin-top:.7rem;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;background:rgba(220,170,60,.18);border:1px solid rgba(220,170,60,.3);border-radius:999px;padding:.25rem .65rem;color:rgba(220,190,100,.75)}
+/* ── Countdown widget ── */
+.cwd-outer{padding:0 1.5rem;max-width:680px;margin:1.5rem auto 0}
+.cwd{background:rgba(18,12,58,.72);border:1px solid rgba(214,217,255,.18);border-radius:24px;padding:2rem 2.5rem 1.8rem;text-align:center;backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.cwd::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(140,110,255,.1) 0%,transparent 55%);pointer-events:none}
+.cwd__tag{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(214,217,255,.4);margin-bottom:.9rem}
+.cwd__emoji{font-size:3rem;display:block;margin-bottom:.3rem;filter:drop-shadow(0 2px 12px rgba(200,160,255,.35))}
+.cwd__name{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:300;color:rgb(240,224,255);line-height:1.1}
+.cwd__note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:rgba(200,180,255,.55);margin-top:.2rem;min-height:1.2rem}
+.cwd__datestr{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(214,217,255,.45);margin:.85rem 0 1.3rem}
+.cwd__nums{display:flex;justify-content:center;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.cwd__unit{text-align:center;min-width:3.5rem}
+.cwd__n{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,8vw,5rem);font-weight:300;color:rgb(240,224,255);line-height:1;display:block;transition:opacity .15s}
+.cwd__l{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(214,217,255,.38);margin-top:.1rem}
+.cwd__sep{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:rgba(214,217,255,.15);line-height:1;padding-bottom:.5rem;align-self:flex-end}
+/* Other upcoming */
+.upcoming{margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(214,217,255,.08)}
+.upcoming__title{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.35);margin-bottom:.55rem}
+.upcoming__list{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.upcoming__pill{background:rgba(30,20,80,.45);border:1px solid rgba(214,217,255,.12);border-radius:999px;padding:.28rem .85rem;font-size:.68rem;color:rgba(214,217,255,.58);white-space:nowrap}
+/* No-trips hint */
+.cwd-hint{text-align:center;padding:1.2rem;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(214,217,255,.35);font-size:.92rem}
+
+/* ── Cards ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;max-width:1100px;margin:2rem auto 0;padding:0 1.5rem 6rem}
+.dcard{border-radius:18px;padding:1.6rem 1.4rem 1.3rem;text-align:center;border:1px solid rgba(220,170,60,.32);background:rgba(60,45,10,.42);backdrop-filter:blur(16px);transition:transform .28s,box-shadow .28s;position:relative;overflow:hidden}
+.dcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,215,100,.05) 0%,transparent 60%);pointer-events:none;border-radius:18px}
+.dcard:hover{transform:translateY(-4px);box-shadow:0 18px 45px rgba(0,0,0,.42)}
+.dcard.has-date{border-color:rgba(140,110,255,.45);background:rgba(30,20,70,.5)}
+.dcard.has-date::before{background:linear-gradient(135deg,rgba(140,110,255,.08) 0%,transparent 55%)}
+.dcard__emoji{font-size:2.8rem;line-height:1;display:block;margin-bottom:.7rem;filter:drop-shadow(0 2px 8px rgba(220,170,60,.25))}
+.dcard__name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:rgb(240,224,255)}
+.dcard__tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:rgba(220,190,100,.68);margin-top:.3rem}
+.dcard__extra{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(214,217,255,.32);margin-top:.65rem}
+.dcard__star{position:absolute;top:.65rem;right:.7rem;font-size:.9rem;color:rgba(220,180,60,.65)}
+/* Days badge on card */
+.dcard__days{display:inline-flex;align-items:center;gap:.3rem;margin-top:.6rem;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;background:rgba(140,110,255,.2);border:1px solid rgba(140,110,255,.35);border-radius:999px;padding:.24rem .7rem;color:rgba(200,185,255,.85)}
+.dcard__days.past{background:rgba(214,217,255,.07);border-color:rgba(214,217,255,.14);color:rgba(214,217,255,.38)}
+/* Date editor */
+.date-editor{margin-top:1rem;padding-top:.85rem;border-top:1px solid rgba(214,217,255,.1)}
+.date-editor__label{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(214,217,255,.35);display:block;margin-bottom:.32rem;text-align:left}
+.di{width:100%;background:rgba(12,8,40,.65);border:1px solid rgba(214,217,255,.14);border-radius:8px;color:rgba(240,224,255,.85);font-family:'Jost',sans-serif;font-size:.8rem;padding:.42rem .6rem;outline:none;transition:border-color .2s;margin-bottom:.38rem;-webkit-appearance:none}
+.di:focus{border-color:rgba(214,217,255,.42)}
+.di::placeholder{color:rgba(214,217,255,.22)}
+.di[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.55) brightness(1.2);cursor:pointer}
+.di[type="date"]::-webkit-datetime-edit{color:rgba(240,224,255,.78)}
+.di[type="date"]::-webkit-datetime-edit-fields-wrapper{color:rgba(240,224,255,.78)}
 
 /* Empty state */
 .empty{text-align:center;padding:5rem 2rem;max-width:480px;margin:0 auto}
@@ -46,7 +81,7 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
 .empty__link{display:inline-block;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);padding:.5rem 1.2rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);text-decoration:none;transition:background .2s,color .2s}
 .empty__link:hover{background:rgba(214,217,255,.1);color:#fff}
 
-@media(max-width:500px){.grid{grid-template-columns:repeat(2,1fr);padding:0 1rem 4rem}}
+@media(max-width:500px){.grid{grid-template-columns:repeat(2,1fr);padding:0 .8rem 4rem}.cwd{padding:1.5rem 1.2rem 1.4rem}.cwd-outer{padding:0 .8rem}}
 </style>
 <script src="js/auth.js"></script>
 </head>
@@ -64,6 +99,9 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
     <p class="hero__sub">Los lugares que esperan nuestros pasos</p>
     <p class="hero__count" id="heroCount"></p>
   </div>
+  <!-- Countdown widget injected here -->
+  <div class="cwd-outer" id="cwdOuter"></div>
+  <!-- Cards grid -->
   <div id="content"></div>
 </div>
 
@@ -72,8 +110,12 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
 <script>
 (function(){
   var WL_KEY='ag_wishlist_v1';
-  var wishlist=[];
+  var DATES_KEY='ag_trip_dates_v1';
+  var MONTHS=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+  var wishlist=[], dates={};
   try{wishlist=JSON.parse(localStorage.getItem(WL_KEY)||'[]');}catch(e){}
+  try{dates=JSON.parse(localStorage.getItem(DATES_KEY)||'{}');}catch(e){}
 
   var EUROPE=[
     {name:'Portugal',emoji:'🇵🇹',tagline:'Fado y océano',extra:'Europa'},
@@ -131,29 +173,168 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
   var all=EUROPE.concat(INTL);
   var wished=all.filter(function(d){return wishlist.indexOf(d.name)!==-1;});
 
-  var content=document.getElementById('content');
-
-  if(wished.length===0){
-    document.getElementById('heroCount').textContent='Wishlist vacía';
-    content.innerHTML='<div class="empty"><div class="empty__icon">🌍</div><h2 class="empty__title">El mundo espera</h2><p class="empty__text">Aún no habéis añadido destinos a vuestra wishlist. Visitad el Bucket List para marcar los lugares que queréis visitar juntos.</p><a class="empty__link" href="bucket-list.html">→ Ir al Bucket List</a></div>';
-    return;
+  /* ── Helpers ── */
+  function pad(n){return String(n).padStart(2,'0');}
+  function fmtDate(iso){
+    var d=new Date(iso+'T00:00:00');
+    return d.getDate()+' de '+MONTHS[d.getMonth()]+' de '+d.getFullYear();
+  }
+  function daysLeft(iso){
+    var now=new Date(); now.setHours(0,0,0,0);
+    var trip=new Date(iso+'T00:00:00');
+    return Math.ceil((trip-now)/(1000*60*60*24));
+  }
+  function getEntry(name){return dates[name]||{date:'',note:''};}
+  function saveEntry(name,dateVal,noteVal){
+    dates[name]={date:dateVal,note:noteVal};
+    localStorage.setItem(DATES_KEY,JSON.stringify(dates));
+  }
+  function futureDated(){
+    var now=new Date(); now.setHours(0,0,0,0);
+    return wished
+      .filter(function(d){
+        var e=getEntry(d.name);
+        return e.date && new Date(e.date+'T00:00:00')>now;
+      })
+      .map(function(d){
+        return {country:d, entry:getEntry(d.name), date:new Date(getEntry(d.name).date+'T00:00:00')};
+      })
+      .sort(function(a,b){return a.date-b.date;});
   }
 
-  document.getElementById('heroCount').textContent=wished.length+' destino'+(wished.length!==1?'s':'')+' en la wishlist';
+  /* ── Countdown widget ── */
+  var cdTimer=null;
+  function renderCountdown(){
+    if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
+    var outer=document.getElementById('cwdOuter');
+    if(!outer) return;
+    var future=futureDated();
+    if(!future.length){
+      outer.innerHTML='<p class="cwd-hint">Añade una fecha a cualquier destino y aquí aparecerá la cuenta atrás.</p>';
+      return;
+    }
+    var nearest=future[0], others=future.slice(1);
+    var e=nearest.entry;
 
-  var grid=document.createElement('div'); grid.className='grid';
-  wished.forEach(function(d){
-    var card=document.createElement('div'); card.className='dcard';
+    var othersHtml='';
+    if(others.length){
+      var pills=others.map(function(f){
+        var dl=daysLeft(f.entry.date);
+        return '<span class="upcoming__pill">'+f.country.emoji+' '+f.country.name+' · '+dl+' días</span>';
+      }).join('');
+      othersHtml='<div class="upcoming"><div class="upcoming__title">También próximamente</div><div class="upcoming__list">'+pills+'</div></div>';
+    }
+
+    outer.innerHTML='<div class="cwd">'
+      +'<div class="cwd__tag">Próxima aventura</div>'
+      +'<span class="cwd__emoji">'+nearest.country.emoji+'</span>'
+      +'<div class="cwd__name">'+nearest.country.name+'</div>'
+      +'<div class="cwd__note">'+escHtml(e.note||'')+'</div>'
+      +'<div class="cwd__datestr">'+fmtDate(e.date)+'</div>'
+      +'<div class="cwd__nums">'
+        +'<div class="cwd__unit"><span class="cwd__n" id="cdDays">-</span><div class="cwd__l">días</div></div>'
+        +'<div class="cwd__sep">·</div>'
+        +'<div class="cwd__unit"><span class="cwd__n" id="cdHours">-</span><div class="cwd__l">horas</div></div>'
+        +'<div class="cwd__sep">·</div>'
+        +'<div class="cwd__unit"><span class="cwd__n" id="cdMins">-</span><div class="cwd__l">min</div></div>'
+        +'<div class="cwd__sep">·</div>'
+        +'<div class="cwd__unit"><span class="cwd__n" id="cdSecs">-</span><div class="cwd__l">seg</div></div>'
+      +'</div>'
+      +othersHtml
+    +'</div>';
+
+    function tick(){
+      var now=new Date();
+      var diff=nearest.date-now;
+      if(diff<=0){renderCountdown();return;}
+      var days=Math.floor(diff/(1000*60*60*24));
+      var hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+      var mins=Math.floor((diff%(1000*60*60))/(1000*60));
+      var secs=Math.floor((diff%(1000*60))/1000);
+      var dEl=document.getElementById('cdDays');
+      var hEl=document.getElementById('cdHours');
+      var mEl=document.getElementById('cdMins');
+      var sEl=document.getElementById('cdSecs');
+      if(dEl) dEl.textContent=days;
+      if(hEl) hEl.textContent=pad(hours);
+      if(mEl) mEl.textContent=pad(mins);
+      if(sEl) sEl.textContent=pad(secs);
+    }
+    tick();
+    cdTimer=setInterval(tick,1000);
+  }
+
+  /* ── Cards ── */
+  function renderCards(){
+    var content=document.getElementById('content');
+    content.innerHTML='';
+    if(!wished.length){
+      document.getElementById('heroCount').textContent='Wishlist vacía';
+      content.innerHTML='<div class="empty"><div class="empty__icon">🌍</div><h2 class="empty__title">El mundo espera</h2><p class="empty__text">Aún no habéis añadido destinos a vuestra wishlist. Visitad el Bucket List para marcar los lugares que queréis visitar juntos.</p><a class="empty__link" href="bucket-list.html">→ Ir al Bucket List</a></div>';
+      return;
+    }
+    document.getElementById('heroCount').textContent=wished.length+' destino'+(wished.length!==1?'s':'')+' en la wishlist';
+
+    var grid=document.createElement('div'); grid.className='grid';
+    wished.forEach(function(d){
+      grid.appendChild(makeCard(d));
+    });
+    content.appendChild(grid);
+  }
+
+  function makeCard(d){
+    var entry=getEntry(d.name);
+    var hasFutureDate=entry.date && daysLeft(entry.date)>0;
+    var hasPastDate=entry.date && daysLeft(entry.date)<=0;
+
+    var card=document.createElement('div');
+    card.className='dcard'+(entry.date?' has-date':'');
+
     var star=document.createElement('div'); star.className='dcard__star'; star.textContent='★';
     var em=document.createElement('span'); em.className='dcard__emoji'; em.textContent=d.emoji;
     var nm=document.createElement('div'); nm.className='dcard__name'; nm.textContent=d.name;
     var tg=document.createElement('div'); tg.className='dcard__tagline'; tg.textContent=d.tagline;
     var ex=document.createElement('div'); ex.className='dcard__extra'; ex.textContent=d.extra;
-    var badge=document.createElement('div'); badge.className='dcard__badge'; badge.textContent='En wishlist';
-    card.appendChild(star);card.appendChild(em);card.appendChild(nm);card.appendChild(tg);card.appendChild(ex);card.appendChild(badge);
-    grid.appendChild(card);
-  });
-  content.appendChild(grid);
+    card.appendChild(star);card.appendChild(em);card.appendChild(nm);card.appendChild(tg);card.appendChild(ex);
+
+    // Days badge
+    if(hasFutureDate){
+      var dl=daysLeft(entry.date);
+      var badge=document.createElement('div'); badge.className='dcard__days'; badge.id='badge-'+d.name;
+      badge.textContent='⏳ '+dl+' día'+(dl!==1?'s':'');
+      card.appendChild(badge);
+    } else if(hasPastDate){
+      var badge2=document.createElement('div'); badge2.className='dcard__days past';
+      badge2.textContent='📅 '+fmtDate(entry.date);
+      card.appendChild(badge2);
+    }
+
+    // Date editor
+    var editor=document.createElement('div'); editor.className='date-editor';
+    var lbl=document.createElement('label'); lbl.className='date-editor__label'; lbl.textContent='Fecha del viaje';
+    var dateIn=document.createElement('input'); dateIn.className='di'; dateIn.type='date'; dateIn.value=entry.date||'';
+    var noteIn=document.createElement('input'); noteIn.className='di'; noteIn.type='text'; noteIn.placeholder='Nota (ej: Confirmado ✓ · Soñando...)'; noteIn.maxLength=40; noteIn.value=entry.note||'';
+    editor.appendChild(lbl); editor.appendChild(dateIn); editor.appendChild(noteIn);
+    card.appendChild(editor);
+
+    function onchange(){
+      saveEntry(d.name, dateIn.value, noteIn.value);
+      renderCountdown();
+      renderCards(); // re-render to update badges and card borders
+    }
+    dateIn.addEventListener('change', onchange);
+    noteIn.addEventListener('blur', onchange);
+    noteIn.addEventListener('keydown', function(e){ if(e.key==='Enter') noteIn.blur(); });
+
+    return card;
+  }
+
+  function escHtml(s){
+    return s.replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  }
+
+  renderCountdown();
+  renderCards();
 })();
 </script>
 </body>

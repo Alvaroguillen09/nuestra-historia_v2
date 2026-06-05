@@ -292,6 +292,7 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
   document.getElementById('btnRestart').addEventListener('click',function(){
     stopVsTimer();
     localStorage.removeItem(KEY);
+    versusDB.saveVotes({}); // also wipe Firestore ranking
     state=loadState();
     render();
   });
