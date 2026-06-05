@@ -289,6 +289,14 @@
     hdr.appendChild(taglineEl);
     hdr.appendChild(quoteEl);
 
+    if (c.images && c.images.length > 0) {
+      const ssBtn = document.createElement("button");
+      ssBtn.className = "ss-trigger";
+      ssBtn.innerHTML = "▶ Pase de fotos";
+      ssBtn.addEventListener("click", function () { openSlideshow(c); });
+      hdr.appendChild(ssBtn);
+    }
+
     /* ── Gallery wrapper ── */
     const gw = document.createElement("div");
     gw.className = "gallery-wrapper";
@@ -567,6 +575,145 @@
       if (dx < 0 && lbIndex < lbImages.length - 1) { lbIndex++; renderLbImage(false); }
       if (dx > 0 && lbIndex > 0)                   { lbIndex--; renderLbImage(false); }
     }, { passive: true });
+  }
+
+  /* ═══════════════════════════════════════════
+     SLIDESHOW
+  ═══════════════════════════════════════════ */
+  const SS_DUR = 4000; // ms per photo
+
+  let ssEl = null, ssImgA = null, ssImgB = null, ssBar = null;
+  let ssCtrEl = null, ssNameEl = null, ssPauseBtn = null;
+  let ssImages = [], ssIndex = 0, ssTimer = null, ssPlaying = false, ssSlot = "a";
+
+  function initSlideshowDOM() {
+    if (ssEl) return;
+    ssEl = document.createElement("div");
+    ssEl.className = "slideshow";
+    ssEl.setAttribute("hidden", "");
+    ssEl.innerHTML =
+      '<div class="slideshow__stage">' +
+        '<img class="slideshow__img" id="ssImgA" alt="">' +
+        '<img class="slideshow__img" id="ssImgB" alt="">' +
+      '</div>' +
+      '<div class="slideshow__head">' +
+        '<div class="slideshow__meta">' +
+          '<div class="slideshow__cname" id="ssName"></div>' +
+          '<div class="slideshow__ctr" id="ssCtr"></div>' +
+        '</div>' +
+        '<button class="slideshow__close" id="ssClose" aria-label="Cerrar">\xd7</button>' +
+      '</div>' +
+      '<div class="slideshow__foot">' +
+        '<button class="slideshow__ctrl" id="ssPrev" aria-label="Anterior">‹</button>' +
+        '<button class="slideshow__ctrl slideshow__ctrl--play" id="ssPause" aria-label="Pausa">⏸</button>' +
+        '<button class="slideshow__ctrl" id="ssNext" aria-label="Siguiente">›</button>' +
+      '</div>' +
+      '<div class="slideshow__prog"><div class="slideshow__prog-bar" id="ssBar"></div></div>';
+
+    document.body.appendChild(ssEl);
+
+    ssImgA     = document.getElementById("ssImgA");
+    ssImgB     = document.getElementById("ssImgB");
+    ssBar      = document.getElementById("ssBar");
+    ssCtrEl    = document.getElementById("ssCtr");
+    ssNameEl   = document.getElementById("ssName");
+    ssPauseBtn = document.getElementById("ssPause");
+
+    document.getElementById("ssClose").addEventListener("click", closeSlideshow);
+    document.getElementById("ssPrev").addEventListener("click", function () { ssManual(ssIndex - 1); });
+    document.getElementById("ssNext").addEventListener("click", function () { ssManual(ssIndex + 1); });
+    ssPauseBtn.addEventListener("click", ssToggle);
+
+    document.addEventListener("keydown", function (e) {
+      if (!ssEl || ssEl.hasAttribute("hidden")) return;
+      if (e.key === "Escape")     closeSlideshow();
+      if (e.key === " ")          { e.preventDefault(); ssToggle(); }
+      if (e.key === "ArrowLeft")  ssManual(ssIndex - 1);
+      if (e.key === "ArrowRight") ssManual(ssIndex + 1);
+    });
+
+    let ssTouchX = 0;
+    ssEl.addEventListener("touchstart", function (e) { ssTouchX = e.touches[0].clientX; }, { passive: true });
+    ssEl.addEventListener("touchend",   function (e) {
+      const dx = e.changedTouches[0].clientX - ssTouchX;
+      if (Math.abs(dx) < 40) return;
+      ssManual(dx < 0 ? ssIndex + 1 : ssIndex - 1);
+    }, { passive: true });
+  }
+
+  function openSlideshow(c) {
+    initSlideshowDOM();
+    ssImages  = c.images.map(function (n) { return c.folder + "/" + n; });
+    ssIndex   = 0;
+    ssPlaying = true;
+    ssSlot    = "a";
+    ssNameEl.textContent = c.name;
+    ssImgA.className = "slideshow__img";
+    ssImgB.className = "slideshow__img";
+    ssImgA.src = "";
+    ssImgB.src = "";
+    ssPauseBtn.textContent = "⏸";
+    ssEl.removeAttribute("hidden");
+    document.body.classList.add("no-scroll");
+    ssShow(0);
+    ssTick();
+  }
+
+  function ssShow(idx) {
+    ssIndex = ((idx % ssImages.length) + ssImages.length) % ssImages.length;
+    ssCtrEl.textContent = (ssIndex + 1) + " / " + ssImages.length;
+    const incoming = ssSlot === "a" ? ssImgA : ssImgB;
+    const outgoing = ssSlot === "a" ? ssImgB : ssImgA;
+    incoming.src = ssImages[ssIndex];
+    incoming.classList.add("slideshow__img--in");
+    outgoing.classList.remove("slideshow__img--in");
+    ssSlot = ssSlot === "a" ? "b" : "a";
+    (new Image()).src = ssImages[(ssIndex + 1) % ssImages.length]; // preload next
+    ssRestartBar();
+  }
+
+  function ssRestartBar() {
+    ssBar.className = "slideshow__prog-bar";
+    ssBar.style.setProperty("--ss-dur", (SS_DUR / 1000) + "s");
+    void ssBar.offsetWidth; // force reflow to restart animation
+    if (ssPlaying) ssBar.className = "slideshow__prog-bar slideshow__prog-bar--run";
+  }
+
+  function ssTick() {
+    if (ssTimer) clearTimeout(ssTimer);
+    ssTimer = setTimeout(function () {
+      ssTimer = null;
+      ssShow(ssIndex + 1);
+      if (ssPlaying) ssTick();
+    }, SS_DUR);
+  }
+
+  function ssManual(idx) {
+    if (ssTimer) { clearTimeout(ssTimer); ssTimer = null; }
+    ssShow(idx);
+    if (ssPlaying) ssTick();
+  }
+
+  function ssToggle() {
+    if (ssPlaying) {
+      ssPlaying = false;
+      if (ssTimer) { clearTimeout(ssTimer); ssTimer = null; }
+      ssPauseBtn.textContent = "▶";
+      ssBar.className = "slideshow__prog-bar"; // stop bar
+    } else {
+      ssPlaying = true;
+      ssPauseBtn.textContent = "⏸";
+      ssRestartBar();
+      ssTick();
+    }
+  }
+
+  function closeSlideshow() {
+    if (ssTimer) { clearTimeout(ssTimer); ssTimer = null; }
+    ssEl.setAttribute("hidden", "");
+    document.body.classList.remove("no-scroll");
+    ssPlaying = false;
+    setTimeout(function () { if (ssImgA) ssImgA.src = ""; if (ssImgB) ssImgB.src = ""; }, 500);
   }
 
   /* ═══════════════════════════════════════════
