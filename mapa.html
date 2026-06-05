@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;">
 <title>Álvaro & Gabriela — Nuestro mapa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,6 +77,10 @@ canvas#mapCanvas{display:block;width:100%;border-radius:16px;border:1px solid rg
 <script src="js/music.js"></script>
 <script src="js/confetti.js"></script>
 <script src="js/special-mode.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/wishlist-db.js"></script>
 <script>
 /* Natural Earth 110m — real polygon data */
 var GEO=[
@@ -128,10 +132,6 @@ var GEO=[
 
 /* Vatican point marker */
 var VATICAN={id:'vaticano',name:'Vaticano',emoji:'🇻🇦',lon:12.45,lat:41.90};
-
-/* ── Wishlist helpers ──────────────────────────────────── */
-var WL_KEY='ag_wishlist_v1';
-function getWL(){try{return JSON.parse(localStorage.getItem(WL_KEY))||[];}catch(e){return[];}}
 
 /* ── International destinations (mirrors bucket-list.html) */
 var INTL_DEST=['Japón','EEUU','México','Marruecos','Tailandia','Cuba','Brasil','Perú','Argentina','India','Vietnam','Maldivas','Sudáfrica','Australia','Nueva Zelanda','Canadá','Jordania','Tanzania','Colombia','Nepal'];
@@ -513,6 +513,7 @@ window.addEventListener('storage',function(e){if(e.key===WL_KEY)fullRefresh();})
 
 resize();
 buildIntlTags();
+syncWLFromFirestore(function() { fullRefresh(); });
 </script>
 </body>
 </html>

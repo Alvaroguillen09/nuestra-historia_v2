@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;">
 <title>Álvaro & Gabriela — Bucket List</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -250,19 +250,11 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
 <script src="js/music.js"></script>
 <script src="js/confetti.js"></script>
 <script src="js/special-mode.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/wishlist-db.js"></script>
 <script>
-/* ── Wishlist persistence ─────────────────────────────────── */
-var WL_KEY = 'ag_wishlist_v1';
-function getWL() { try { return JSON.parse(localStorage.getItem(WL_KEY)) || []; } catch(e) { return []; } }
-function saveWL(l) { localStorage.setItem(WL_KEY, JSON.stringify(l)); }
-function isWL(name) { return getWL().indexOf(name) !== -1; }
-function toggleWL(name) {
-  var l = getWL(), i = l.indexOf(name);
-  if (i === -1) l.push(name); else l.splice(i, 1);
-  saveWL(l);
-  return l.indexOf(name) !== -1;
-}
-
 var STAR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
 var STAR_SVG_EMPTY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
 
@@ -378,10 +370,19 @@ function makeCard(d, container, cls) {
 }
 
 var euroGrid = document.getElementById('euroGrid');
-EUROPE.forEach(function(d) { makeCard(d, euroGrid, 'card'); });
-
 var intlGrid = document.getElementById('intlGrid');
+EUROPE.forEach(function(d) { makeCard(d, euroGrid, 'card'); });
 INTL.forEach(function(d) { makeCard(d, intlGrid, 'intl-card'); });
+
+syncWLFromFirestore(function() {
+  document.querySelectorAll('[data-name]').forEach(function(card) {
+    var name = card.dataset.name;
+    var wl = isWL(name);
+    card.classList.toggle('wishlisted', wl);
+    var btn = card.querySelector('.card__wish-btn, .intl-card__wish-btn');
+    if (btn) btn.innerHTML = (wl ? STAR_SVG : STAR_SVG_EMPTY) + (wl ? 'En wishlist' : 'Wishlist');
+  });
+});
 </script>
 </body>
 </html>
