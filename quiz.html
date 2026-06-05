@@ -83,6 +83,16 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
 .lb-table tr.me td{color:#fff;background:rgba(107,107,230,.14)}
 .lb-table td.tdate{font-size:.65rem;color:rgba(214,217,255,.35);white-space:nowrap}
 .lb-empty{font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(214,217,255,.38);text-align:center;padding:1rem;font-size:.95rem}
+/* Global leaderboard overlay */
+.glb-overlay{position:fixed;inset:0;z-index:500;background:rgba(4,2,18,.92);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
+.glb-overlay.open{opacity:1;pointer-events:all}
+.glb-box{background:rgba(18,14,58,.96);border:1px solid rgba(214,217,255,.15);border-radius:24px;padding:2.5rem 2rem;max-width:460px;width:90%;max-height:85vh;overflow-y:auto;position:relative}
+.glb-box h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:rgb(240,224,255);text-align:center;margin-bottom:.25rem}
+.glb-sub{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.38);text-align:center;margin-bottom:1.5rem}
+.glb-close{position:absolute;top:1.1rem;right:1.3rem;background:none;border:none;color:rgba(255,255,255,.45);font-size:1.8rem;cursor:pointer;line-height:1;transition:color .2s}
+.glb-close:hover{color:#fff}
+.glb-refresh{display:block;margin:1.4rem auto 0;background:rgba(107,107,230,.42);border:1px solid rgba(214,217,255,.22);border-radius:999px;color:rgba(214,217,255,.75);font-family:'Jost',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;padding:.5rem 1.5rem;cursor:pointer;transition:all .22s}
+.glb-refresh:hover{background:rgba(140,140,255,.58);color:#fff}
 @media(max-width:480px){.opts{grid-template-columns:1fr}.name-form{flex-direction:column}}
 </style>
 <script src="js/auth.js"></script>
@@ -94,11 +104,23 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
   <header class="hdr">
     <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
     <div class="hdr__right">
+      <button class="hdr__btn" id="btnGlobalLB">🏆 Clasificación</button>
       <button class="hdr__btn" id="btnRestart">↺ Reiniciar</button>
       <a class="hdr__btn" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
     </div>
   </header>
   <div class="qwrap" id="qwrap"></div>
+</div>
+
+<!-- Global leaderboard overlay -->
+<div class="glb-overlay" id="glbOverlay">
+  <div class="glb-box">
+    <button class="glb-close" id="glbClose">×</button>
+    <h2>Clasificación</h2>
+    <p class="glb-sub">Los mejores resultados de todos los tiempos</p>
+    <div id="glbRows"></div>
+    <button class="glb-refresh" id="glbRefresh">↺ Actualizar</button>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -133,6 +155,48 @@ body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-heigh
   }
 
   document.getElementById('btnRestart').addEventListener('click', function(){ stopTimer(); init(); });
+
+  /* ─── Global leaderboard overlay ─── */
+  function openGlobalLB(){
+    document.getElementById('glbRows').innerHTML='<p class="lb-empty">Cargando...</p>';
+    document.getElementById('glbOverlay').classList.add('open');
+    quizDB.load(function(scores){ renderGlobalLB(scores); });
+  }
+  function closeGlobalLB(){
+    document.getElementById('glbOverlay').classList.remove('open');
+  }
+  function renderGlobalLB(scores){
+    var wrap=document.getElementById('glbRows');
+    if(!wrap) return;
+    if(!scores||!scores.length){
+      wrap.innerHTML='<p class="lb-empty">Aún no hay resultados. ¡Sé el primero!</p>';
+      return;
+    }
+    var t=document.createElement('table'); t.className='lb-table';
+    t.innerHTML='<thead><tr><th class="tc">#</th><th>Nombre</th><th class="tc">Puntos</th><th class="tc">Fecha</th></tr></thead>';
+    var tb=document.createElement('tbody');
+    scores.forEach(function(e,i){
+      var tr=document.createElement('tr');
+      var posClass=i===0?'gold':i===1?'silver':i===2?'bronze':'';
+      var posText=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);
+      tr.innerHTML='<td class="tpos tc '+posClass+'">'+posText+'</td>'
+        +'<td>'+escHtml(e.name)+'</td>'
+        +'<td class="tscore">'+e.score+'/'+e.total+'</td>'
+        +'<td class="tdate">'+fmtDate(e.date)+'</td>';
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); wrap.innerHTML=''; wrap.appendChild(t);
+  }
+  document.getElementById('btnGlobalLB').addEventListener('click', openGlobalLB);
+  document.getElementById('glbClose').addEventListener('click', closeGlobalLB);
+  document.getElementById('glbRefresh').addEventListener('click', function(){
+    document.getElementById('glbRows').innerHTML='<p class="lb-empty">Cargando...</p>';
+    quizDB.load(function(scores){ renderGlobalLB(scores); });
+  });
+  document.getElementById('glbOverlay').addEventListener('click', function(e){ if(e.target===this) closeGlobalLB(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape' && document.getElementById('glbOverlay').classList.contains('open')) closeGlobalLB();
+  });
 
   function buildUI(){
     var wrap = document.getElementById('qwrap');
