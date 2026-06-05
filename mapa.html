@@ -41,6 +41,10 @@ canvas#mapCanvas{display:block;width:100%;border-radius:16px;border:1px solid rg
 .intl-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
 .intl-tag{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;letter-spacing:.1em;color:rgba(214,217,255,.55);border:1px solid rgba(214,217,255,.15);border-radius:999px;padding:.3rem .75rem;background:rgba(30,25,80,.4);transition:border-color .2s,color .2s}
 .intl-tag.wl{border-color:rgba(255,215,100,.4);color:rgba(255,215,100,.8);background:rgba(60,45,10,.4)}
+.dl-wrap{text-align:center;padding:.5rem 0 .8rem}
+.dl-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.38rem 1.1rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);background:transparent;color:rgba(214,217,255,.55);font-family:'Jost',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.dl-btn:hover{border-color:rgba(180,160,255,.5);color:rgba(240,224,255,.9);background:rgba(214,217,255,.08)}
+.dl-btn:active{transform:scale(.97)}
 </style>
 <script src="js/auth.js"></script>
 </head>
@@ -62,6 +66,9 @@ canvas#mapCanvas{display:block;width:100%;border-radius:16px;border:1px solid rg
         <div class="legend__item"><div class="legend__swatch sw-vis"></div>Visitados</div>
         <div class="legend__item"><div class="legend__swatch sw-wish"></div>Wishlist</div>
         <div class="legend__item"><div class="legend__swatch sw-pend"></div>Pendientes</div>
+      </div>
+      <div class="dl-wrap">
+        <button id="dlBtn" class="dl-btn">↓ Guardar mapa</button>
       </div>
     </div>
   </div>
@@ -507,6 +514,121 @@ function buildIntlTags(){
   });
 }
 
+/* ── Map PNG download ──────────────────────────────────── */
+function downloadMap(){
+  /* Reset to full-map view for the export */
+  var prevZoom=zoom,prevPanX=panX,prevPanY=panY;
+  if(zoom!==1){zoom=1;panX=0;panY=0;render();}
+
+  var wl=getWL();
+  var mapW=W,mapH=H;
+  var titleH=55,legendH=52,intlTitleH=22,pillH=22,pillPadX=10,gap=6,sidePad=18;
+
+  /* Pre-measure intl pill layout using main ctx */
+  ctx.save();
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.font='300 11px "Jost",sans-serif';
+  var intlLayouts=computePillLayouts(ctx,0);
+  ctx.restore();
+  var intlContentH=intlLayouts.length>0
+    ?(intlLayouts[intlLayouts.length-1].y+pillH+gap):0;
+  var intlTotalH=intlContentH>0?(intlTitleH+intlContentH+16):0;
+  var totalH=titleH+mapH+legendH+intlTotalH+20;
+
+  /* Offscreen canvas at DPR resolution */
+  var oc=document.createElement('canvas');
+  oc.width=mapW*dpr;oc.height=totalH*dpr;
+  var g=oc.getContext('2d');
+  g.scale(dpr,dpr);
+
+  /* Background */
+  var bg=g.createLinearGradient(0,0,mapW,totalH);
+  bg.addColorStop(0,'rgb(10,8,42)');bg.addColorStop(1,'rgb(16,14,60)');
+  g.fillStyle=bg;g.fillRect(0,0,mapW,totalH);
+
+  /* Title */
+  g.font='300 20px "Cormorant Garamond",Georgia,serif';
+  g.fillStyle='rgba(240,224,255,.85)';
+  g.textAlign='center';g.textBaseline='middle';
+  g.fillText('A & G · Nuestro Mapa',mapW/2,titleH/2);
+
+  /* Map image */
+  g.drawImage(canvas,0,titleH,mapW,mapH);
+
+  /* Legend */
+  var legItems=[
+    {fill:'rgba(130,90,220,.8)',stroke:'rgba(180,160,255,.7)',label:'Visitados'},
+    {fill:'rgba(200,155,35,.75)',stroke:'rgba(255,210,80,.8)',label:'Wishlist'},
+    {fill:'rgba(42,52,120,.55)',stroke:'rgba(70,85,160,.4)',label:'Pendientes'}
+  ];
+  g.font='300 11px "Jost",sans-serif';g.textBaseline='middle';g.textAlign='left';
+  var swW=16,swH=10,iGap=6,bGap=22;
+  var totLegW=legItems.reduce(function(a,it){return a+swW+iGap+g.measureText(it.label).width+bGap;},0)-bGap;
+  var lx=(mapW-totLegW)/2,lmy=titleH+mapH+legendH/2;
+  legItems.forEach(function(it){
+    g.fillStyle=it.fill;g.fillRect(lx,lmy-swH/2,swW,swH);
+    g.strokeStyle=it.stroke;g.lineWidth=.8;
+    g.beginPath();g.rect(lx,lmy-swH/2,swW,swH);g.stroke();
+    g.fillStyle='rgba(214,217,255,.55)';
+    g.fillText(it.label,lx+swW+iGap,lmy);
+    lx+=swW+iGap+g.measureText(it.label).width+bGap;
+  });
+
+  /* International section */
+  if(intlTotalH>0){
+    var iy0=titleH+mapH+legendH;
+    g.font='300 10px "Jost",sans-serif';g.fillStyle='rgba(240,224,255,.3)';
+    g.textAlign='center';g.textBaseline='middle';
+    g.fillText('Más allá de Europa',mapW/2,iy0+intlTitleH/2);
+
+    g.font='300 11px "Jost",sans-serif';
+    var finalLayouts=computePillLayouts(g,iy0+intlTitleH);
+    finalLayouts.forEach(function(l){
+      var r=pillH/2,x=l.x,y=l.y,w=l.w;
+      g.beginPath();
+      g.moveTo(x+r,y);g.lineTo(x+w-r,y);
+      g.arcTo(x+w,y,x+w,y+pillH,r);g.lineTo(x+w,y+pillH-r);
+      g.arcTo(x+w,y+pillH,x+w-r,y+pillH,r);g.lineTo(x+r,y+pillH);
+      g.arcTo(x,y+pillH,x,y+pillH-r,r);g.lineTo(x,y+r);
+      g.arcTo(x,y,x+r,y,r);g.closePath();
+      g.fillStyle=l.inWL?'rgba(60,45,10,.4)':'rgba(30,25,80,.4)';
+      g.strokeStyle=l.inWL?'rgba(255,215,100,.4)':'rgba(214,217,255,.15)';
+      g.lineWidth=.5;g.fill();g.stroke();
+      g.fillStyle=l.inWL?'rgba(255,215,100,.85)':'rgba(214,217,255,.5)';
+      g.textAlign='left';g.textBaseline='middle';
+      g.fillText(l.label,x+pillPadX,y+pillH/2);
+    });
+  }
+
+  /* Download */
+  oc.toBlob(function(blob){
+    if(!blob)return;
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='nuestro-mapa.png';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(url);},2000);
+    restoreZoom();
+  },'image/png');
+
+  function computePillLayouts(ctx2,y0){
+    var x=sidePad,y=y0;
+    return INTL_DEST.map(function(name){
+      var inWL=wl.indexOf(name)!==-1;
+      var label=(inWL?'★ ':'')+name;
+      var tw=ctx2.measureText(label).width;
+      var pw=tw+pillPadX*2;
+      if(x+pw>mapW-sidePad){x=sidePad;y+=pillH+gap;}
+      var layout={x:x,y:y,w:pw,label:label,inWL:inWL};
+      x+=pw+gap;return layout;
+    });
+  }
+
+  function restoreZoom(){
+    if(prevZoom!==1){zoom=prevZoom;panX=prevPanX;panY=prevPanY;render();}
+  }
+}
+
 /* ── Init & refresh triggers ───────────────────────────── */
 function fullRefresh(){
   if(W>0){render();buildIntlTags();}
@@ -526,6 +648,7 @@ window.addEventListener('storage',function(e){if(e.key===WL_KEY)fullRefresh();})
 resize();
 buildIntlTags();
 syncWLFromFirestore(function() { fullRefresh(); });
+document.getElementById('dlBtn').addEventListener('click',downloadMap);
 </script>
 </body>
 </html>
