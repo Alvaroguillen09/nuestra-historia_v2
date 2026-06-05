@@ -297,6 +297,18 @@ function render(){
     ctx.fillStyle='rgba(255,255,255,0.9)';
     ctx.fillText(c.emoji,ctr[0],ctr[1]);
   });
+
+  /* Wishlist flag emojis */
+  builtPaths.forEach(function(c){
+    if(c.v||!c.emoji)return;
+    if(wl.indexOf(c.bucketName)===-1)return;
+    var geo=GEO.find(function(g){return g.id===c.id;});
+    if(!geo)return;
+    var ctr=centroid(geo);
+    ctx.font=fs+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(c.emoji,ctr[0],ctr[1]);
+  });
+
   var vp2=proj(VATICAN.lon,VATICAN.lat,W,H);
   ctx.font=Math.max(6,W*0.012)/zoom+'px serif';
   ctx.textAlign='center';ctx.textBaseline='middle';
