@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -10,226 +10,67 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Jost',sans-serif;background:rgb(159,161,255);color:#fff;min-height:100vh;overflow-x:hidden}
-
-.aurora{position:fixed;width:800px;height:800px;border-radius:50%;filter:blur(120px);opacity:.4;animation:float 18s infinite alternate ease-in-out;z-index:0}
-.a1{background:#c78cff;left:-200px;top:-200px}
-.a2{background:#8e7bff;right:-200px;top:15%;animation-duration:24s}
-.a3{background:#ff9ee8;left:25%;bottom:-250px;animation-duration:20s}
-@keyframes float{from{transform:translate(0,0) scale(1)}to{transform:translate(80px,-60px) scale(1.2)}}
-
+body{font-family:'Jost',sans-serif;background:rgb(15,12,50);color:#fff;min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;width:700px;height:700px;border-radius:50%;filter:blur(130px);opacity:.25;animation:float 20s infinite alternate ease-in-out;z-index:0;pointer-events:none}
+.a1{background:#c78cff;left:-150px;top:-150px}
+.a2{background:#8e7bff;right:-150px;top:10%;animation-duration:26s}
+@keyframes float{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,-50px) scale(1.15)}}
 .page{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
-
-/* Header */
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.15)}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid rgba(214,217,255,.1)}
 .hdr__logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:rgb(240,224,255);text-decoration:none}
-.hdr__back{
-  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(214,217,255,.75);text-decoration:none;
-  padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(214,217,255,.25);
-  transition:background .2s,color .2s;
-}
-.hdr__back:hover{background:rgba(214,217,255,.12);color:rgba(240,224,255,1)}
-
-/* Hero */
-.hero{text-align:center;padding:2.5rem 1rem 1.5rem}
-.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:300;color:rgb(240,224,255)}
-.hero p{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.6);margin-top:.5rem}
-
-/* Map container */
-.map-wrap{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  padding:1rem 1rem 3rem;
-}
-.map-container{
-  position:relative;
-  width:min(900px,95vw);
-  aspect-ratio:3/2;
-  border-radius:24px;
-  overflow:hidden;
-  background:radial-gradient(ellipse at 40% 55%, rgba(30,30,100,.95) 0%, rgba(10,10,50,.98) 100%);
-  border:1px solid rgba(214,217,255,.15);
-  box-shadow:0 30px 100px rgba(10,10,50,.6);
-}
-
-/* Ocean gradient overlay */
-.map-container::before{
-  content:'';
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse at 30% 60%, rgba(100,120,200,.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 70% 40%, rgba(80,100,180,.05) 0%, transparent 45%);
-  pointer-events:none;z-index:1;
-}
-
-/* Grid lines */
-.map-grid{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
-.map-grid line{stroke:rgba(214,217,255,.06);stroke-width:1}
-
-/* Continent blob */
-.map-land{position:absolute;inset:0;z-index:3;pointer-events:none}
-
-/* Country markers */
-.marker{
-  position:absolute;
-  transform:translate(-50%,-50%);
-  z-index:10;
-  cursor:pointer;
-  text-align:center;
-}
-.marker__pin{
-  width:36px;height:36px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.35rem;line-height:1;
-  background:rgba(58,58,152,.8);
-  border:2px solid rgba(214,217,255,.5);
-  box-shadow:0 0 16px rgba(107,107,230,.6),0 0 0 4px rgba(107,107,230,.12);
-  transition:transform .22s ease, box-shadow .22s ease;
-  position:relative;z-index:2;
-}
-.marker:hover .marker__pin{
-  transform:scale(1.25);
-  box-shadow:0 0 28px rgba(199,140,255,.9),0 0 0 8px rgba(199,140,255,.15);
-}
-.marker__label{
-  position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);
-  font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(240,224,255,.85);white-space:nowrap;
-  text-shadow:0 1px 4px rgba(0,0,0,.8);
-  pointer-events:none;
-  opacity:0;transition:opacity .2s;
-}
-.marker:hover .marker__label{opacity:1}
-
-/* Pulse ring */
-.marker__pulse{
-  position:absolute;top:50%;left:50%;
-  width:36px;height:36px;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  border:2px solid rgba(199,140,255,.5);
-  animation:pulse 2.5s ease-out infinite;
-  z-index:1;
-}
-@keyframes pulse{
-  0%{transform:translate(-50%,-50%) scale(1);opacity:.7}
-  100%{transform:translate(-50%,-50%) scale(2.4);opacity:0}
-}
-
-/* Tooltip on hover */
-.map-tooltip{
-  position:fixed;z-index:200;
-  background:rgba(30,30,90,.95);
-  backdrop-filter:blur(12px);
-  border:1px solid rgba(214,217,255,.2);
-  border-radius:12px;
-  padding:.6rem 1rem;
-  pointer-events:none;
-  opacity:0;transition:opacity .15s;
-  font-size:.8rem;color:rgba(240,224,255,.9);
-  white-space:nowrap;
-}
-.map-tooltip.visible{opacity:1}
-.map-tooltip strong{display:block;font-size:.95rem;margin-bottom:.15rem}
-
-/* Legend */
-.legend{
-  position:absolute;bottom:1rem;left:1rem;z-index:20;
-  display:flex;align-items:center;gap:.6rem;
-  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(214,217,255,.5);
-}
-.legend__dot{width:10px;height:10px;border-radius:50%;background:rgba(107,107,230,.8);border:1px solid rgba(214,217,255,.4)}
-
-@media(max-width:600px){
-  .marker__pin{width:28px;height:28px;font-size:1rem}
-  .marker__label{display:none}
-  .hdr{padding:.75rem 1rem}
-}
+.hdr__back{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.7);text-decoration:none;padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(214,217,255,.2);transition:background .2s,color .2s}
+.hdr__back:hover{background:rgba(214,217,255,.1);color:rgba(240,224,255,1)}
+.hero{text-align:center;padding:2rem 1rem 1.2rem}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:300;color:rgb(240,224,255)}
+.hero p{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(214,217,255,.5);margin-top:.4rem}
+.map-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:.5rem 1rem 1rem}
+.map-outer{width:min(980px,98vw);position:relative}
+canvas#mapCanvas{display:block;width:100%;border-radius:16px;border:1px solid rgba(120,100,220,.25);box-shadow:0 0 60px rgba(80,60,180,.35),0 20px 80px rgba(0,0,0,.6);cursor:default}
+#mapTip{position:fixed;z-index:500;background:rgba(25,20,75,.95);backdrop-filter:blur(12px);border:1px solid rgba(180,160,255,.25);border-radius:12px;padding:.55rem .9rem;pointer-events:none;opacity:0;transition:opacity .12s;color:rgba(240,224,255,.95);white-space:nowrap;font-size:.82rem}
+#mapTip strong{display:block;font-size:.95rem;margin-bottom:.1rem}
+#mapTip small{opacity:.65;font-style:italic}
+#mapTip .tip-lock{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(200,180,255,.5);margin-top:.2rem}
+.legend{display:flex;gap:1.4rem;justify-content:center;padding:.6rem 0 .3rem;flex-wrap:wrap}
+.legend__item{display:flex;align-items:center;gap:.5rem;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(214,217,255,.45)}
+.legend__swatch{width:14px;height:10px;border-radius:2px}
+.sw-vis{background:rgba(130,90,220,.8);border:1px solid rgba(180,160,255,.7)}
+.sw-wish{background:rgba(210,160,40,.8);border:1px solid rgba(255,215,100,.6)}
+.sw-pend{background:rgba(45,55,120,.6);border:1px solid rgba(80,95,170,.4)}
+.intl-panel{max-width:980px;margin:0 auto;padding:.4rem 1rem 2rem}
+.intl-panel__title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;color:rgba(240,224,255,.6);text-align:center;letter-spacing:.08em;margin-bottom:.7rem;font-style:italic}
+.intl-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
+.intl-tag{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;letter-spacing:.1em;color:rgba(214,217,255,.55);border:1px solid rgba(214,217,255,.15);border-radius:999px;padding:.3rem .75rem;background:rgba(30,25,80,.4);transition:border-color .2s,color .2s}
+.intl-tag.wl{border-color:rgba(255,215,100,.4);color:rgba(255,215,100,.8);background:rgba(60,45,10,.4)}
 </style>
 <script src="js/auth.js"></script>
 </head>
 <body>
-<div class="aurora a1"></div>
-<div class="aurora a2"></div>
-<div class="aurora a3"></div>
-
+<div class="aurora a1"></div><div class="aurora a2"></div>
 <div class="page">
   <header class="hdr">
     <a class="hdr__logo" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">A &amp; G</a>
     <a class="hdr__back" href="el_archivo_del_tiempo_aurora_estrellas_atlas_banderas.html">← Volver</a>
   </header>
-
   <div class="hero">
     <h1>Nuestro mapa</h1>
-    <p>Cada punto, un capítulo de nuestra historia</p>
+    <p>Cada país, un capítulo · haz clic para explorar · wishlist en sueños pendientes</p>
   </div>
-
   <div class="map-wrap">
-    <div class="map-container" id="mapContainer">
-
-      <!-- Grid SVG -->
-      <svg class="map-grid" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="150" y1="0" x2="150" y2="600"/>
-        <line x1="300" y1="0" x2="300" y2="600"/>
-        <line x1="450" y1="0" x2="450" y2="600"/>
-        <line x1="600" y1="0" x2="600" y2="600"/>
-        <line x1="750" y1="0" x2="750" y2="600"/>
-        <line x1="0" y1="100" x2="900" y2="100"/>
-        <line x1="0" y1="200" x2="900" y2="200"/>
-        <line x1="0" y1="300" x2="900" y2="300"/>
-        <line x1="0" y1="400" x2="900" y2="400"/>
-        <line x1="0" y1="500" x2="900" y2="500"/>
-      </svg>
-
-      <!-- Simplified Europe landmass hint -->
-      <svg class="map-land" viewBox="0 0 900 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="landGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(90,95,200,.12)"/>
-            <stop offset="100%" stop-color="rgba(60,65,160,.04)"/>
-          </radialGradient>
-        </defs>
-        <!-- Rough European landmass polygon -->
-        <path d="M 160 130 L 200 100 L 240 95 L 280 105 L 310 95 L 360 88 L 410 90
-                 L 460 88 L 510 82 L 560 85 L 610 80 L 660 88 L 700 82 L 730 95
-                 L 740 120 L 730 155 L 720 195 L 710 230 L 700 265 L 685 300
-                 L 670 330 L 655 360 L 640 385 L 625 410 L 605 435 L 585 460
-                 L 560 485 L 535 505 L 510 518 L 490 522 L 470 515 L 450 505
-                 L 430 498 L 410 495 L 390 490 L 370 492 L 350 488 L 330 480
-                 L 310 475 L 290 478 L 270 472 L 250 462 L 230 455 L 210 460
-                 L 190 468 L 170 462 L 150 450 L 135 435 L 120 415 L 112 390
-                 L 110 360 L 115 330 L 120 300 L 122 270 L 118 240 L 122 210
-                 L 130 180 L 145 155 Z"
-              fill="url(#landGrad)" stroke="rgba(180,190,255,.08)" stroke-width="1"/>
-        <!-- Scandinavian peninsula hint -->
-        <path d="M 570 85 L 590 70 L 620 60 L 650 55 L 680 60 L 700 82 L 680 90
-                 L 650 88 L 620 82 L 590 85 Z"
-              fill="rgba(90,95,200,.08)" stroke="rgba(180,190,255,.06)" stroke-width="1"/>
-        <!-- Iberian peninsula -->
-        <path d="M 155 385 L 170 380 L 190 375 L 210 372 L 230 378 L 245 395
-                 L 248 420 L 240 450 L 225 475 L 200 490 L 175 485 L 155 468
-                 L 140 448 L 138 420 L 142 400 Z"
-              fill="rgba(90,95,200,.08)" stroke="rgba(180,190,255,.06)" stroke-width="1"/>
-        <!-- Italian boot hint -->
-        <path d="M 450 410 L 465 430 L 472 460 L 478 490 L 480 520 L 475 545
-                 L 465 555 L 455 548 L 448 525 L 445 495 L 440 465 L 438 438 Z"
-              fill="rgba(90,95,200,.08)" stroke="rgba(180,190,255,.06)" stroke-width="1"/>
-      </svg>
-
-      <!-- Country markers injected by JS -->
-      <div id="markers"></div>
-
-      <!-- Legend -->
+    <div class="map-outer">
+      <canvas id="mapCanvas"></canvas>
       <div class="legend">
-        <div class="legend__dot"></div>
-        <span>Países visitados</span>
+        <div class="legend__item"><div class="legend__swatch sw-vis"></div>Visitados</div>
+        <div class="legend__item"><div class="legend__swatch sw-wish"></div>Wishlist</div>
+        <div class="legend__item"><div class="legend__swatch sw-pend"></div>Pendientes</div>
       </div>
     </div>
   </div>
+  <div class="intl-panel">
+    <p class="intl-panel__title">Más allá de Europa — destinos fuera del mapa</p>
+    <div class="intl-tags" id="intlTags"></div>
+  </div>
 </div>
-
-<!-- Tooltip -->
-<div class="map-tooltip" id="mapTooltip"></div>
+<div id="mapTip"></div>
 
 <script src="js/countries.js"></script>
 <script src="js/transitions.js"></script>
@@ -237,60 +78,351 @@ body{font-family:'Jost',sans-serif;background:rgb(159,161,255);color:#fff;min-he
 <script src="js/confetti.js"></script>
 <script src="js/special-mode.js"></script>
 <script>
-/* Map marker positions (% of 900×600 viewport, based on geographic coordinates) */
-var MAP_POSITIONS = {
-  'espana':        { x: 31.4, y: 79.0 },
-  'francia':       { x: 39.9, y: 57.8 },
-  'italia':        { x: 54.2, y: 75.8 },
-  'hungria':       { x: 63.3, y: 61.3 },
-  'austria':       { x: 59.7, y: 59.5 },
-  'albania':       { x: 64.4, y: 77.0 },
-  'irlanda':       { x: 27.8, y: 46.7 },
-  'alemania':      { x: 51.7, y: 53.8 },
-  'eslovaquia':    { x: 64.1, y: 58.0 },
-  'republica-checa': { x: 58.6, y: 55.8 },
-  'estonia':       { x: 71.4, y: 31.5 },
-  'finlandia':     { x: 73.3, y: 26.3 },
-  'escocia':       { x: 32.1, y: 38.8 },
-  'vaticano':      { x: 56.7, y: 78.0 }
-};
+/* Natural Earth 110m — real polygon data */
+var GEO=[
+  /* == VISITED == */
+  {id:'espana',name:'España',emoji:'🇪🇸',v:true,p:[[-7.45,37.1],[-7.54,37.43],[-7.17,37.8],[-7.03,38.08],[-7.37,38.37],[-7.1,39.03],[-7.5,39.63],[-7.07,39.71],[-7.03,40.18],[-6.86,40.33],[-6.85,41.11],[-6.39,41.38],[-6.67,41.88],[-7.25,41.92],[-7.42,41.79],[-8.01,41.79],[-8.26,42.28],[-8.67,42.13],[-9.03,41.88],[-8.98,42.59],[-9.39,43.03],[-7.98,43.75],[-6.75,43.57],[-5.41,43.57],[-4.35,43.4],[-3.52,43.46],[-1.9,43.42],[-1.5,43.03],[0.34,42.58],[0.7,42.8],[1.83,42.34],[2.99,42.47],[3.04,41.89],[2.09,41.23],[0.81,41.01],[0.72,40.68],[0.11,40.12],[-0.28,39.31],[0.11,38.74],[-0.47,38.29],[-0.68,37.64],[-1.44,37.44],[-2.15,36.67],[-3.42,36.66],[-4.37,36.68],[-5,36.32],[-5.38,35.95],[-5.87,36.03],[-6.24,36.37],[-6.52,36.94],[-7.45,37.1]]},
+  {id:'irlanda',name:'Irlanda',emoji:'🇮🇪',v:true,p:[[-6.2,53.87],[-6.03,53.15],[-6.79,52.26],[-8.56,51.67],[-9.98,51.82],[-9.17,52.86],[-9.69,53.88],[-8.33,54.66],[-7.57,55.13],[-7.37,54.6],[-7.57,54.06],[-6.95,54.07],[-6.2,53.87]]},
+  {id:'escocia',name:'Escocia',emoji:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',v:true,p:[[-3.1,54.92],[-4.84,54.79],[-5.08,55.06],[-4.72,55.51],[-5.05,55.78],[-5.59,55.31],[-5.64,56.28],[-6.15,56.79],[-5.79,57.82],[-5.01,58.63],[-4.21,58.55],[-3.01,58.64],[-4.07,57.55],[-3.06,57.69],[-1.96,57.68],[-2.22,56.87],[-3.12,55.97],[-2.09,55.91],[-2.01,55.8],[-2.04,55.77],[-3.1,54.92]]},
+  {id:'reino-unido',name:'Reino Unido',emoji:'🇬🇧',v:false,bucketName:'Reino Unido',p:[[-3.1,54.92],[-3.63,54.62],[-3.61,54.6],[-2.95,53.98],[-3.09,53.4],[-4.58,53.5],[-4.77,52.84],[-4.22,52.3],[-5.27,51.99],[-4.98,51.59],[-3.42,51.43],[-3.41,51.43],[-4.31,51.21],[-5.78,50.16],[-5.25,49.96],[-4.54,50.34],[-3.62,50.23],[-2.96,50.7],[-2.49,50.5],[-0.79,50.77],[0.55,50.77],[1.45,51.29],[1.05,51.81],[1.56,52.1],[1.68,52.74],[0.47,52.93],[0.18,53.33],[-0.43,54.46],[-1.11,54.62],[-2.04,55.77],[-3.1,54.92]]},
+  {id:'francia',name:'Francia',emoji:'🇫🇷',v:true,p:[[6.19,49.46],[6.66,49.2],[8.1,49.02],[7.59,48.33],[7.47,47.62],[7.19,47.45],[6.74,47.54],[6.77,47.29],[6.04,46.73],[6.02,46.27],[6.5,46.43],[6.84,45.99],[6.8,45.71],[7.1,45.33],[6.75,45.03],[7.01,44.25],[7.55,44.13],[7.44,43.69],[6.53,43.13],[4.56,43.4],[3.1,43.08],[2.99,42.47],[1.83,42.34],[0.7,42.8],[0.34,42.58],[-1.5,43.03],[-1.9,43.42],[-1.38,44.02],[-1.19,46.01],[-2.23,47.06],[-2.96,47.57],[-4.49,47.95],[-4.59,48.68],[-3.3,48.9],[-1.62,48.64],[-1.93,49.78],[-0.99,49.35],[1.34,50.13],[1.64,50.95],[2.51,51.15],[2.66,50.8],[3.12,50.78],[3.59,50.38],[4.29,49.91],[4.8,49.99],[5.67,49.53],[5.9,49.44],[6.19,49.46]]},
+  {id:'alemania',name:'Alemania',emoji:'🇩🇪',v:true,p:[[14.12,53.76],[14.35,53.25],[14.07,52.98],[14.44,52.62],[14.69,52.09],[14.61,51.75],[15.02,51.11],[14.57,51],[14.31,51.12],[14.06,50.93],[13.34,50.73],[12.97,50.48],[12.24,50.27],[12.42,49.97],[12.52,49.55],[13.03,49.31],[13.6,48.88],[13.24,48.42],[12.88,48.29],[13.03,47.64],[12.93,47.47],[12.62,47.67],[12.14,47.7],[11.43,47.52],[10.54,47.57],[10.4,47.3],[9.9,47.58],[9.59,47.53],[8.52,47.83],[8.32,47.61],[7.47,47.62],[7.59,48.33],[8.1,49.02],[6.66,49.2],[6.19,49.46],[6.24,49.9],[6.04,50.13],[6.16,50.8],[5.99,51.85],[6.59,51.85],[6.84,52.23],[7.09,53.14],[6.91,53.48],[7.1,53.69],[7.94,53.75],[8.12,53.53],[8.8,54.02],[8.57,54.4],[8.53,54.96],[9.28,54.83],[9.92,54.98],[9.94,54.6],[10.95,54.36],[10.94,54.01],[11.96,54.2],[12.52,54.47],[13.65,54.08],[14.12,53.76]]},
+  {id:'austria',name:'Austria',emoji:'🇦🇹',v:true,p:[[16.98,48.12],[16.9,47.71],[16.34,47.71],[16.53,47.5],[16.2,46.85],[16.01,46.68],[15.14,46.66],[14.63,46.43],[13.81,46.51],[12.38,46.77],[12.15,47.12],[11.16,46.94],[11.05,46.75],[10.44,46.89],[9.93,46.92],[9.48,47.1],[9.63,47.35],[9.59,47.53],[9.9,47.58],[10.4,47.3],[10.54,47.57],[11.43,47.52],[12.14,47.7],[12.62,47.67],[12.93,47.47],[13.03,47.64],[12.88,48.29],[13.24,48.42],[13.6,48.88],[14.34,48.56],[14.9,48.96],[15.25,49.04],[16.03,48.73],[16.5,48.79],[16.96,48.6],[16.88,48.47],[16.98,48.12]]},
+  {id:'hungria',name:'Hungría',emoji:'🇭🇺',v:true,p:[[22.09,48.42],[22.64,48.15],[22.71,47.88],[22.1,47.67],[21.63,46.99],[21.02,46.32],[20.22,46.13],[19.6,46.17],[18.83,45.91],[18.83,45.91],[18.46,45.76],[17.63,45.95],[16.88,46.38],[16.56,46.5],[16.37,46.84],[16.2,46.85],[16.53,47.5],[16.34,47.71],[16.9,47.71],[16.98,48.12],[17.49,47.87],[17.86,47.76],[18.7,47.88],[18.78,48.08],[19.17,48.11],[19.66,48.27],[19.77,48.2],[20.24,48.33],[20.47,48.56],[20.8,48.62],[21.87,48.32],[22.09,48.42]]},
+  {id:'republica-checa',name:'Rep. Checa',emoji:'🇨🇿',v:true,p:[[15.02,51.11],[15.49,50.78],[16.24,50.7],[16.18,50.42],[16.72,50.22],[16.87,50.47],[17.55,50.36],[17.65,50.05],[18.39,49.99],[18.85,49.5],[18.55,49.5],[18.4,49.32],[18.17,49.27],[18.1,49.04],[17.91,49],[17.89,48.9],[17.55,48.8],[17.1,48.82],[16.96,48.6],[16.5,48.79],[16.03,48.73],[15.25,49.04],[14.9,48.96],[14.34,48.56],[13.6,48.88],[13.03,49.31],[12.52,49.55],[12.42,49.97],[12.24,50.27],[12.97,50.48],[13.34,50.73],[14.06,50.93],[14.31,51.12],[14.57,51],[15.02,51.11]]},
+  {id:'eslovaquia',name:'Eslovaquia',emoji:'🇸🇰',v:true,p:[[22.56,49.09],[22.28,48.83],[22.09,48.42],[21.87,48.32],[20.8,48.62],[20.47,48.56],[20.24,48.33],[19.77,48.2],[19.66,48.27],[19.17,48.11],[18.78,48.08],[18.7,47.88],[17.86,47.76],[17.49,47.87],[16.98,48.12],[16.88,48.47],[16.96,48.6],[17.1,48.82],[17.55,48.8],[17.89,48.9],[17.91,49],[18.1,49.04],[18.17,49.27],[18.4,49.32],[18.55,49.5],[18.85,49.5],[18.91,49.44],[19.32,49.57],[19.83,49.22],[20.42,49.43],[20.89,49.33],[21.61,49.47],[22.56,49.09]]},
+  {id:'estonia',name:'Estonia',emoji:'🇪🇪',v:true,p:[[27.98,59.48],[27.98,59.48],[28.13,59.3],[27.42,58.72],[27.72,57.79],[27.29,57.47],[26.46,57.48],[25.6,57.85],[25.16,57.97],[24.31,57.79],[24.43,58.38],[24.06,58.26],[23.43,58.61],[23.34,59.19],[24.6,59.47],[25.86,59.61],[26.95,59.45],[27.98,59.48],[27.98,59.48]]},
+  {id:'finlandia',name:'Finlandia',emoji:'🇫🇮',v:true,p:[[28.59,69.06],[28.45,68.36],[29.98,67.7],[29.05,66.94],[30.22,65.81],[29.54,64.95],[30.44,64.2],[30.04,63.55],[31.52,62.87],[31.14,62.36],[30.21,61.78],[28.07,60.5],[28.07,60.5],[28.07,60.5],[26.26,60.42],[24.5,60.06],[22.87,59.85],[22.29,60.39],[21.32,60.72],[21.54,61.71],[21.06,62.61],[21.54,63.19],[22.44,63.82],[24.73,64.9],[25.4,65.11],[25.29,65.53],[23.9,66.01],[23.57,66.4],[23.54,67.94],[21.98,68.62],[20.65,69.11],[21.24,69.37],[22.36,68.84],[23.66,68.89],[24.74,68.65],[25.69,69.09],[26.18,69.83],[27.73,70.16],[29.02,69.77],[28.59,69.06]]},
+  {id:'albania',name:'Albania',emoji:'🇦🇱',v:true,p:[[21.02,40.84],[21,40.58],[20.67,40.44],[20.62,40.11],[20.15,39.62],[19.98,39.69],[19.96,39.92],[19.41,40.25],[19.32,40.73],[19.4,41.41],[19.54,41.72],[19.37,41.88],[19.37,41.88],[19.3,42.2],[19.74,42.69],[19.8,42.5],[20.07,42.59],[20.28,42.32],[20.52,42.22],[20.59,41.86],[20.59,41.86],[20.46,41.52],[20.61,41.09],[21.02,40.84]]},
+  {id:'italia',name:'Italia',emoji:'🇮🇹',v:true,p:[[10.44,46.89],[11.05,46.75],[11.16,46.94],[12.15,47.12],[12.38,46.77],[13.81,46.51],[13.7,46.02],[13.94,45.59],[13.14,45.74],[12.33,45.38],[12.38,44.89],[12.26,44.6],[12.59,44.09],[13.53,43.59],[14.03,42.76],[15.14,41.96],[15.93,41.96],[16.17,41.74],[15.89,41.54],[16.79,41.18],[17.52,40.88],[18.38,40.36],[18.48,40.17],[18.29,39.81],[17.74,40.28],[16.87,40.44],[16.45,39.8],[17.17,39.42],[17.05,38.9],[16.64,38.84],[16.1,37.99],[15.68,37.91],[15.69,38.21],[15.89,38.75],[16.11,38.96],[15.72,39.54],[15.41,40.05],[15,40.17],[14.7,40.6],[14.06,40.79],[13.63,41.19],[12.89,41.25],[12.11,41.7],[11.19,42.36],[10.51,42.93],[10.2,43.92],[9.7,44.04],[8.89,44.37],[8.43,44.23],[7.85,43.77],[7.44,43.69],[7.55,44.13],[7.01,44.25],[6.75,45.03],[7.1,45.33],[6.8,45.71],[6.84,45.99],[7.27,45.78],[7.76,45.82],[8.32,46.16],[8.49,46.01],[8.97,46.04],[9.18,46.44],[9.92,46.31],[10.36,46.48],[10.44,46.89]]},
+  /* == NOT VISITED == */
+  {id:'portugal',name:'Portugal',emoji:'🇵🇹',v:false,bucketName:'Portugal',p:[[-9.03,41.88],[-8.67,42.13],[-8.26,42.28],[-8.01,41.79],[-7.42,41.79],[-7.25,41.92],[-6.67,41.88],[-6.39,41.38],[-6.85,41.11],[-6.86,40.33],[-7.03,40.18],[-7.07,39.71],[-7.5,39.63],[-7.1,39.03],[-7.37,38.37],[-7.03,38.08],[-7.17,37.8],[-7.54,37.43],[-7.45,37.1],[-7.86,36.84],[-8.38,36.98],[-8.9,36.87],[-8.75,37.65],[-8.84,38.27],[-9.29,38.36],[-9.53,38.74],[-9.45,39.39],[-9.05,39.76],[-8.98,40.16],[-8.77,40.76],[-8.79,41.18],[-8.99,41.54],[-9.03,41.88]]},
+  {id:'iceland',name:'Islandia',emoji:'🇮🇸',v:false,bucketName:'Islandia',p:[[-14.51,66.46],[-14.74,65.81],[-13.61,65.13],[-14.91,64.36],[-17.79,63.68],[-18.66,63.5],[-19.97,63.64],[-22.76,63.96],[-21.78,64.4],[-23.96,64.89],[-22.18,65.08],[-22.23,65.38],[-24.33,65.61],[-23.65,66.26],[-22.13,66.41],[-20.58,65.73],[-19.06,66.28],[-17.8,65.99],[-16.17,66.53],[-14.51,66.46]]},
+  {id:'norway',name:'Noruega',emoji:'🇳🇴',v:false,bucketName:'Noruega',p:[[31.1,69.56],[29.4,69.16],[28.59,69.06],[29.02,69.77],[27.73,70.16],[26.18,69.83],[25.69,69.09],[24.74,68.65],[23.66,68.89],[22.36,68.84],[21.24,69.37],[20.65,69.11],[20.03,69.07],[19.88,68.41],[17.99,68.57],[17.73,68.01],[16.77,68.01],[16.11,67.3],[15.11,66.19],[13.56,64.79],[13.92,64.45],[13.57,64.05],[12.58,64.07],[11.93,63.13],[11.99,61.8],[12.63,61.29],[12.3,60.12],[11.47,59.43],[11.03,58.86],[10.36,59.47],[8.38,58.31],[7.05,58.08],[5.67,58.59],[5.31,59.66],[4.99,61.97],[5.91,62.61],[8.55,63.45],[10.53,64.49],[12.36,65.88],[14.76,67.81],[16.44,68.56],[19.18,69.82],[21.38,70.26],[23.02,70.2],[24.55,71.03],[26.37,70.99],[28.17,71.19],[31.29,70.45],[30.01,70.19],[31.1,69.56]]},
+  {id:'sweden',name:'Suecia',emoji:'🇸🇪',v:false,bucketName:'Suecia',p:[[11.03,58.86],[11.47,59.43],[12.3,60.12],[12.63,61.29],[11.99,61.8],[11.93,63.13],[12.58,64.07],[13.57,64.05],[13.92,64.45],[13.56,64.79],[15.11,66.19],[16.11,67.3],[16.77,68.01],[17.73,68.01],[17.99,68.57],[19.88,68.41],[20.03,69.07],[20.65,69.11],[21.98,68.62],[23.54,67.94],[23.57,66.4],[23.9,66.01],[22.18,65.72],[21.21,65.03],[21.37,64.41],[19.78,63.61],[17.85,62.75],[17.12,61.34],[17.83,60.64],[18.79,60.08],[17.87,58.95],[16.83,58.72],[16.45,57.04],[15.88,56.1],[14.67,56.2],[14.1,55.41],[12.94,55.36],[12.63,56.31],[11.79,57.44],[11.03,58.86]]},
+  {id:'denmark',name:'Dinamarca',emoji:'🇩🇰',v:false,bucketName:'Dinamarca',p:[[8.53,54.96],[8.12,55.52],[8.09,56.54],[8.26,56.81],[8.54,57.11],[9.42,57.17],[9.78,57.45],[10.58,57.73],[10.55,57.22],[10.25,56.89],[10.37,56.61],[10.91,56.46],[10.67,56.08],[10.37,56.19],[11.10,56.07],[11.55,56.18],[12.05,56.08],[12.55,56.06],[12.68,55.78],[12.62,55.50],[12.35,55.32],[11.90,55.24],[11.42,55.35],[10.75,55.45],[10.70,55.20],[10.45,55.04],[10.15,54.99],[9.92,54.98],[9.28,54.83],[8.53,54.96]]},
+  {id:'netherlands',name:'Países Bajos',emoji:'🇳🇱',v:false,bucketName:'Países Bajos',p:[[6.91,53.48],[7.09,53.14],[6.84,52.23],[6.59,51.85],[5.99,51.85],[6.16,50.8],[5.61,51.04],[4.97,51.48],[4.05,51.27],[3.31,51.35],[3.32,51.35],[3.83,51.62],[4.71,53.09],[6.07,53.51],[6.91,53.48]]},
+  {id:'belgium',name:'Bélgica',emoji:'🇧🇪',v:false,bucketName:'Bélgica',p:[[6.16,50.8],[6.04,50.13],[5.78,50.09],[5.67,49.53],[4.8,49.99],[4.29,49.91],[3.59,50.38],[3.12,50.78],[2.66,50.8],[2.51,51.15],[3.31,51.35],[3.32,51.35],[3.31,51.35],[4.05,51.27],[4.97,51.48],[5.61,51.04],[6.16,50.8]]},
+  {id:'luxembourg',name:'Luxemburgo',emoji:'🇱🇺',v:false,bucketName:'Luxemburgo',p:[[6.04,50.13],[6.24,49.9],[6.19,49.46],[5.9,49.44],[5.67,49.53],[5.78,50.09],[6.04,50.13]]},
+  {id:'switzerland',name:'Suiza',emoji:'🇨🇭',v:false,bucketName:'Suiza',p:[[9.59,47.53],[9.63,47.35],[9.48,47.1],[9.93,46.92],[10.44,46.89],[10.36,46.48],[9.92,46.31],[9.18,46.44],[8.97,46.04],[8.49,46.01],[8.32,46.16],[7.76,45.82],[7.27,45.78],[6.84,45.99],[6.5,46.43],[6.02,46.27],[6.04,46.73],[6.77,47.29],[6.74,47.54],[7.19,47.45],[7.47,47.62],[8.32,47.61],[8.52,47.83],[9.59,47.53]]},
+  {id:'poland',name:'Polonia',emoji:'🇵🇱',v:false,bucketName:'Polonia',p:[[23.48,53.91],[23.53,53.47],[23.8,53.09],[23.8,52.69],[23.2,52.49],[23.51,52.02],[23.53,51.58],[24.03,50.71],[23.92,50.42],[23.43,50.31],[22.52,49.48],[22.78,49.03],[22.56,49.09],[21.61,49.47],[20.89,49.33],[20.42,49.43],[19.83,49.22],[19.32,49.57],[18.91,49.44],[18.85,49.5],[18.39,49.99],[17.65,50.05],[17.55,50.36],[16.87,50.47],[16.72,50.22],[16.18,50.42],[16.24,50.7],[15.49,50.78],[15.02,51.11],[14.61,51.75],[14.69,52.09],[14.44,52.62],[14.07,52.98],[14.35,53.25],[14.12,53.76],[14.8,54.05],[16.36,54.51],[17.62,54.85],[18.62,54.68],[18.7,54.44],[19.66,54.43],[20.89,54.31],[22.73,54.33],[23.24,54.22],[23.48,53.91]]},
+  {id:'latvia',name:'Letonia',emoji:'🇱🇻',v:false,bucketName:'Letonia',p:[[27.29,57.47],[27.77,57.24],[27.86,56.76],[28.18,56.17],[27.1,55.78],[26.49,55.62],[25.53,56.1],[25,56.16],[24.86,56.37],[23.88,56.27],[22.2,56.34],[21.06,56.03],[21.09,56.78],[21.58,57.41],[22.52,57.75],[23.32,57.01],[24.12,57.03],[24.31,57.79],[25.16,57.97],[25.6,57.85],[26.46,57.48],[27.29,57.47]]},
+  {id:'lithuania',name:'Lituania',emoji:'🇱🇹',v:false,bucketName:'Lituania',p:[[26.49,55.62],[26.59,55.17],[25.77,54.85],[25.54,54.28],[24.45,53.91],[23.48,53.91],[23.24,54.22],[22.73,54.33],[22.65,54.58],[22.76,54.86],[22.32,55.02],[21.27,55.19],[21.06,56.03],[22.2,56.34],[23.88,56.27],[24.86,56.37],[25,56.16],[25.53,56.1],[26.49,55.62]]},
+  {id:'belarus',name:'Bielorrusia',emoji:'🇧🇾',v:false,bucketName:'Bielorrusia',p:[[28.18,56.17],[29.23,55.92],[29.37,55.67],[29.9,55.79],[30.87,55.55],[30.97,55.08],[30.76,54.81],[31.38,54.16],[31.79,53.97],[31.73,53.79],[32.41,53.62],[32.69,53.35],[32.3,53.13],[31.5,53.17],[31.31,53.07],[31.54,52.74],[31.79,52.1],[31.79,52.1],[30.93,52.04],[30.62,51.82],[30.56,51.32],[30.16,51.42],[29.25,51.37],[28.99,51.6],[28.62,51.43],[28.24,51.57],[27.45,51.59],[26.34,51.83],[25.33,51.91],[24.55,51.89],[24.01,51.62],[23.53,51.58],[23.51,52.02],[23.2,52.49],[23.8,52.69],[23.8,53.09],[23.53,53.47],[23.48,53.91],[24.45,53.91],[25.54,54.28],[25.77,54.85],[26.59,55.17],[26.49,55.62],[27.1,55.78],[28.18,56.17]]},
+  {id:'ukraine',name:'Ucrania',emoji:'🇺🇦',v:false,bucketName:'Ucrania',p:[[31.79,52.1],[32.16,52.06],[32.41,52.29],[32.72,52.24],[33.75,52.34],[34.39,51.77],[34.14,51.57],[34.22,51.26],[35.02,51.21],[35.38,50.77],[35.36,50.58],[36.63,50.23],[37.39,50.38],[38.01,49.92],[38.59,49.93],[40.07,49.6],[40.08,49.31],[39.67,48.78],[39.9,48.23],[39.74,47.9],[38.77,47.83],[38.26,47.55],[38.22,47.1],[37.43,47.02],[36.76,46.7],[35.82,46.65],[34.96,46.27],[35.01,45.74],[34.86,45.77],[34.73,45.97],[34.41,46.01],[33.7,46.22],[33.44,45.97],[33.3,46.08],[31.74,46.33],[31.68,46.71],[30.75,46.58],[30.38,46.03],[29.6,45.29],[29.15,45.46],[28.68,45.3],[28.23,45.49],[28.49,45.6],[28.66,45.94],[28.93,46.26],[28.86,46.44],[29.07,46.52],[29.17,46.38],[29.76,46.35],[30.02,46.42],[29.84,46.53],[29.91,46.67],[29.56,46.93],[29.42,47.35],[29.05,47.51],[29.12,47.85],[28.67,48.12],[28.26,48.16],[27.52,48.47],[26.86,48.37],[26.62,48.22],[26.2,48.22],[25.95,47.99],[25.21,47.89],[24.87,47.74],[24.4,47.98],[23.76,47.99],[23.14,48.1],[22.71,47.88],[22.64,48.15],[22.09,48.42],[22.28,48.83],[22.56,49.09],[22.78,49.03],[22.52,49.48],[23.43,50.31],[23.92,50.42],[24.03,50.71],[23.53,51.58],[24.01,51.62],[24.55,51.89],[25.33,51.91],[26.34,51.83],[27.45,51.59],[28.24,51.57],[28.62,51.43],[28.99,51.6],[29.25,51.37],[30.16,51.42],[30.56,51.32],[30.62,51.82],[30.93,52.04],[31.79,52.1]]},
+  {id:'moldova',name:'Moldavia',emoji:'🇲🇩',v:false,bucketName:'Moldavia',p:[[26.62,48.22],[26.86,48.37],[27.52,48.47],[28.26,48.16],[28.67,48.12],[29.12,47.85],[29.05,47.51],[29.42,47.35],[29.56,46.93],[29.91,46.67],[29.84,46.53],[30.02,46.42],[29.76,46.35],[29.17,46.38],[29.07,46.52],[28.86,46.44],[28.93,46.26],[28.66,45.94],[28.49,45.6],[28.23,45.49],[28.05,45.94],[28.16,46.37],[28.13,46.81],[27.55,47.41],[27.23,47.83],[26.92,48.12],[26.62,48.22]]},
+  {id:'romania',name:'Rumanía',emoji:'🇷🇴',v:false,bucketName:'Rumanía',p:[[28.23,45.49],[28.68,45.3],[29.15,45.46],[29.6,45.29],[29.63,45.04],[29.14,44.82],[28.84,44.91],[28.56,43.71],[27.97,43.81],[27.24,44.18],[26.07,43.94],[25.57,43.69],[24.1,43.74],[23.33,43.9],[22.94,43.82],[22.66,44.23],[22.47,44.41],[22.71,44.58],[22.46,44.7],[22.15,44.48],[21.56,44.77],[21.48,45.18],[20.87,45.42],[20.76,45.73],[20.22,46.13],[21.02,46.32],[21.63,46.99],[22.1,47.67],[22.71,47.88],[23.14,48.1],[23.76,47.99],[24.4,47.98],[24.87,47.74],[25.21,47.89],[25.95,47.99],[26.2,48.22],[26.62,48.22],[26.92,48.12],[27.23,47.83],[27.55,47.41],[28.13,46.81],[28.16,46.37],[28.05,45.94],[28.23,45.49]]},
+  {id:'bulgaria',name:'Bulgaria',emoji:'🇧🇬',v:false,bucketName:'Bulgaria',p:[[22.66,44.23],[22.94,43.82],[23.33,43.9],[24.1,43.74],[25.57,43.69],[26.07,43.94],[27.24,44.18],[27.97,43.81],[28.56,43.71],[28.04,43.29],[27.67,42.58],[28,42.01],[27.14,42.14],[26.12,41.83],[26.11,41.33],[25.2,41.23],[24.49,41.58],[23.69,41.31],[22.95,41.34],[22.88,42],[22.38,42.32],[22.55,42.46],[22.44,42.58],[22.6,42.9],[22.99,43.21],[22.5,43.64],[22.41,44.01],[22.66,44.23]]},
+  {id:'serbia',name:'Serbia',emoji:'🇷🇸',v:false,bucketName:'Serbia',p:[[18.83,45.91],[18.83,45.91],[19.6,46.17],[20.22,46.13],[20.76,45.73],[20.87,45.42],[21.48,45.18],[21.56,44.77],[22.15,44.48],[22.46,44.7],[22.71,44.58],[22.47,44.41],[22.66,44.23],[22.41,44.01],[22.5,43.64],[22.99,43.21],[22.6,42.9],[22.44,42.58],[22.55,42.46],[22.38,42.32],[21.92,42.3],[21.58,42.25],[21.54,42.32],[21.66,42.44],[21.78,42.68],[21.63,42.68],[21.44,42.86],[21.27,42.91],[21.14,43.07],[20.96,43.13],[20.81,43.27],[20.64,43.22],[20.5,42.88],[20.26,42.81],[20.34,42.9],[19.96,43.11],[19.63,43.21],[19.48,43.35],[19.22,43.52],[19.45,43.57],[19.6,44.04],[19.12,44.42],[19.37,44.86],[19.01,44.86],[19.01,44.86],[19.39,45.24],[19.07,45.52],[18.83,45.91]]},
+  {id:'northmacedonia',name:'Macedonia del Norte',emoji:'🇲🇰',v:false,bucketName:'Macedonia del Norte',p:[[22.38,42.32],[22.88,42],[22.95,41.34],[22.76,41.3],[22.6,41.13],[22.06,41.15],[21.67,40.93],[21.02,40.84],[20.61,41.09],[20.46,41.52],[20.59,41.86],[20.59,41.86],[20.72,41.85],[20.76,42.05],[21.35,42.21],[21.58,42.25],[21.92,42.3],[22.38,42.32]]},
+  {id:'kosovo',name:'Kosovo',emoji:'🇽🇰',v:false,bucketName:'Kosovo',p:[[20.59,41.86],[20.52,42.22],[20.28,42.32],[20.07,42.59],[20.26,42.81],[20.5,42.88],[20.64,43.22],[20.81,43.27],[20.96,43.13],[21.14,43.07],[21.27,42.91],[21.44,42.86],[21.63,42.68],[21.78,42.68],[21.66,42.44],[21.54,42.32],[21.58,42.25],[21.35,42.21],[20.76,42.05],[20.72,41.85],[20.59,41.86]]},
+  {id:'montenegro',name:'Montenegro',emoji:'🇲🇪',v:false,bucketName:'Montenegro',p:[[20.07,42.59],[19.8,42.5],[19.74,42.69],[19.3,42.2],[19.37,41.88],[19.16,41.96],[18.88,42.28],[18.45,42.48],[18.56,42.65],[18.71,43.2],[19.03,43.43],[19.22,43.52],[19.48,43.35],[19.63,43.21],[19.96,43.11],[20.34,42.9],[20.26,42.81],[20.07,42.59]]},
+  {id:'bosnia',name:'Bosnia y Herzegovina',emoji:'🇧🇦',v:false,bucketName:'Bosnia',p:[[18.56,42.65],[17.67,43.03],[17.3,43.45],[16.92,43.67],[16.46,44.04],[16.24,44.35],[15.75,44.82],[15.96,45.23],[16.32,45],[16.53,45.21],[17,45.23],[17.86,45.07],[18.55,45.08],[19.01,44.86],[19.01,44.86],[19.37,44.86],[19.12,44.42],[19.6,44.04],[19.45,43.57],[19.22,43.52],[19.03,43.43],[18.71,43.2],[18.56,42.65]]},
+  {id:'croatia',name:'Croacia',emoji:'🇭🇷',v:false,bucketName:'Croacia',p:[[16.56,46.5],[16.88,46.38],[17.63,45.95],[18.46,45.76],[18.83,45.91],[19.07,45.52],[19.39,45.24],[19.01,44.86],[18.55,45.08],[17.86,45.07],[17,45.23],[16.53,45.21],[16.32,45],[15.96,45.23],[15.75,44.82],[16.24,44.35],[16.46,44.04],[16.92,43.67],[17.3,43.45],[17.67,43.03],[18.56,42.65],[18.45,42.48],[18.45,42.48],[17.51,42.85],[16.93,43.21],[16.02,43.51],[15.17,44.24],[15.38,44.32],[14.92,44.74],[14.9,45.08],[14.26,45.23],[13.95,44.8],[13.66,45.14],[13.68,45.48],[13.72,45.5],[14.41,45.47],[14.6,45.63],[14.94,45.47],[15.33,45.45],[15.32,45.73],[15.67,45.83],[15.77,46.24],[16.56,46.5]]},
+  {id:'slovenia',name:'Eslovenia',emoji:'🇸🇮',v:false,bucketName:'Eslovenia',p:[[13.81,46.51],[14.63,46.43],[15.14,46.66],[16.01,46.68],[16.2,46.85],[16.37,46.84],[16.56,46.5],[15.77,46.24],[15.67,45.83],[15.32,45.73],[15.33,45.45],[14.94,45.47],[14.6,45.63],[14.41,45.47],[13.72,45.5],[13.94,45.59],[13.7,46.02],[13.81,46.51]]},
+  {id:'greece',name:'Grecia',emoji:'🇬🇷',v:false,bucketName:'Grecia',p:[[22.95,41.34],[23.69,41.31],[24.49,41.58],[25.2,41.23],[26.11,41.33],[26.12,41.83],[26.6,41.56],[26.29,40.94],[26.06,40.82],[25.45,40.85],[24.93,40.95],[23.71,40.69],[24.41,40.12],[23.9,39.96],[23.34,39.96],[22.81,40.48],[22.63,40.26],[22.85,39.66],[23.35,39.19],[22.97,38.97],[23.53,38.51],[24.03,38.22],[24.04,37.66],[23.12,37.92],[23.41,37.41],[22.77,37.31],[23.15,36.42],[22.49,36.41],[21.67,36.84],[21.3,37.64],[21.12,38.31],[20.73,38.77],[20.22,39.34],[20.15,39.62],[20.62,40.11],[20.67,40.44],[21,40.58],[21.02,40.84],[21.67,40.93],[22.06,41.15],[22.6,41.13],[22.76,41.3],[22.95,41.34]]},
+  {id:'cyprus',name:'Chipre',emoji:'🇨🇾',v:false,bucketName:'Chipre',p:[[32.73,35.14],[32.92,35.09],[33.19,35.17],[33.38,35.16],[33.46,35.1],[33.48,35],[33.53,35.04],[33.68,35.02],[33.87,35.09],[33.97,35.06],[34,34.98],[32.98,34.57],[32.49,34.7],[32.26,35.1],[32.73,35.14]]},
+  {id:'turkey-eu',name:'Turquía',emoji:'🇹🇷',v:false,bucketName:'Turquía',p:[[26.04,41.56],[26.32,41.71],[27.22,40.69],[27.97,40.97],[28.23,41.96],[29.08,41.26],[28.09,40.99],[26.04,41.56]]},
+  {id:'malta',name:'Malta',emoji:'🇲🇹',v:false,bucketName:'Malta',p:[[14.18,36.1],[14.53,36.1],[14.53,35.82],[14.18,35.82]]},
+];
 
-var tooltip = document.getElementById('mapTooltip');
-var markersEl = document.getElementById('markers');
+/* Vatican point marker */
+var VATICAN={id:'vaticano',name:'Vaticano',emoji:'🇻🇦',lon:12.45,lat:41.90};
 
-COUNTRIES.forEach(function(c){
-  var pos = MAP_POSITIONS[c.id];
-  if(!pos) return;
+/* ── Wishlist helpers ──────────────────────────────────── */
+var WL_KEY='ag_wishlist_v1';
+function getWL(){try{return JSON.parse(localStorage.getItem(WL_KEY))||[];}catch(e){return[];}}
 
-  var m = document.createElement('a');
-  m.className = 'marker';
-  m.href = c.id + '.html';
-  m.setAttribute('aria-label', c.name);
-  m.style.left = pos.x + '%';
-  m.style.top  = pos.y + '%';
+/* ── International destinations (mirrors bucket-list.html) */
+var INTL_DEST=['Japón','EEUU','México','Marruecos','Tailandia','Cuba','Brasil','Perú','Argentina','India','Vietnam','Maldivas','Sudáfrica','Australia','Nueva Zelanda','Canadá','Jordania','Tanzania','Colombia','Nepal'];
 
-  m.innerHTML =
-    '<div class="marker__pulse"></div>' +
-    '<div class="marker__pin">' + c.emoji + '</div>' +
-    '<div class="marker__label">' + c.name + '</div>';
+/* ── Projection ───────────────────────────────────────────
+   lon: -25 → 45  (range 70)
+   lat:  34 → 72  (range 38)
+──────────────────────────────────────────────────────── */
+var LON_MIN=-25,LON_RANGE=70,LAT_MAX=72,LAT_RANGE=38;
+function proj(lon,lat,W,H){
+  return[(lon-LON_MIN)/LON_RANGE*W,(LAT_MAX-lat)/LAT_RANGE*H];
+}
 
-  /* Tooltip */
-  m.addEventListener('mouseenter', function(e){
-    tooltip.innerHTML = '<strong>' + c.emoji + ' ' + c.name + '</strong>' + c.tagline;
-    tooltip.classList.add('visible');
+/* ── Canvas ────────────────────────────────────────────── */
+var canvas=document.getElementById('mapCanvas');
+var ctx=canvas.getContext('2d');
+var dpr=Math.min(window.devicePixelRatio||1,2);
+var W=0,H=0,hovered=null,builtPaths=[];
+
+function resize(){
+  var outer=canvas.parentElement;
+  W=outer.clientWidth;
+  H=Math.round(W*580/980);
+  canvas.style.width=W+'px';
+  canvas.style.height=H+'px';
+  canvas.width=W*dpr;
+  canvas.height=H*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  buildPaths();
+  render();
+}
+
+function buildPaths(){
+  builtPaths=[];
+  GEO.forEach(function(c){
+    if(!c.p||c.p.length<1)return;
+    var path=new Path2D();
+    /* Support multi-polygon: p is [[pt,pt,...],[pt,pt,...]] when p[0][0] is an array */
+    var isMulti=Array.isArray(c.p[0][0]);
+    var polys=isMulti?c.p:[c.p];
+    polys.forEach(function(poly){
+      if(poly.length<3)return;
+      var p0=proj(poly[0][0],poly[0][1],W,H);
+      path.moveTo(p0[0],p0[1]);
+      for(var i=1;i<poly.length;i++){
+        var pi=proj(poly[i][0],poly[i][1],W,H);
+        path.lineTo(pi[0],pi[1]);
+      }
+      path.closePath();
+    });
+    builtPaths.push({
+      id:c.id,path:path,v:c.v,
+      name:c.name||'',emoji:c.emoji||'',
+      bucketName:c.bucketName||c.name||''
+    });
   });
-  m.addEventListener('mousemove', function(e){
-    var x = e.clientX + 14, y = e.clientY - 10;
-    if(x + 200 > innerWidth) x = e.clientX - 204;
-    tooltip.style.left = x + 'px';
-    tooltip.style.top  = y + 'px';
+}
+
+function centroid(geoEntry){
+  var sx=0,sy=0,n=0;
+  var isMulti=Array.isArray(geoEntry.p[0][0]);
+  var polys=isMulti?geoEntry.p:[geoEntry.p];
+  polys.forEach(function(poly){
+    poly.forEach(function(pt){
+      var pp=proj(pt[0],pt[1],W,H);
+      sx+=pp[0];sy+=pp[1];n++;
+    });
   });
-  m.addEventListener('mouseleave', function(){
-    tooltip.classList.remove('visible');
+  return n>0?[sx/n,sy/n]:[0,0];
+}
+
+/* ── Render ────────────────────────────────────────────── */
+function render(){
+  if(!W||!H)return;
+  ctx.clearRect(0,0,W,H);
+  var wl=getWL();
+
+  /* Ocean */
+  var bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'rgb(10,8,42)');
+  bg.addColorStop(1,'rgb(16,14,60)');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  /* Grid */
+  ctx.strokeStyle='rgba(100,120,220,0.05)';ctx.lineWidth=0.5;
+  for(var gx=0;gx<W;gx+=W/12){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+  for(var gy=0;gy<H;gy+=H/8){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+
+  /* Pass 1 — non-visited, non-wishlisted (dark blue) */
+  builtPaths.forEach(function(c){
+    if(c.v)return;
+    var inWL=wl.indexOf(c.bucketName)!==-1;
+    if(inWL)return;
+    var isHov=hovered===c.id;
+    ctx.save();
+    ctx.fillStyle=isHov?'rgba(55,65,140,.75)':'rgba(42,52,120,.55)';
+    ctx.strokeStyle=isHov?'rgba(100,120,200,.7)':'rgba(70,85,160,.4)';
+    ctx.lineWidth=isHov?1.1:0.6;
+    ctx.fill(c.path);
+    ctx.stroke(c.path);
+    ctx.restore();
   });
 
-  markersEl.appendChild(m);
+  /* Pass 2 — wishlisted countries (gold, drawn on top of dark blue) */
+  builtPaths.forEach(function(c){
+    if(c.v)return;
+    var inWL=wl.indexOf(c.bucketName)!==-1;
+    if(!inWL)return;
+    var isHov=hovered===c.id;
+    ctx.save();
+    ctx.fillStyle=isHov?'rgba(240,190,60,.85)':'rgba(200,155,35,.75)';
+    ctx.strokeStyle=isHov?'rgba(255,215,100,.95)':'rgba(255,210,80,.8)';
+    ctx.lineWidth=isHov?1.8:1.1;
+    if(isHov){ctx.shadowBlur=16;ctx.shadowColor='rgba(255,200,60,.7)';}
+    ctx.fill(c.path);
+    ctx.stroke(c.path);
+    ctx.restore();
+  });
+
+  /* Visited */
+  builtPaths.forEach(function(c){
+    if(!c.v)return;
+    var isHov=hovered===c.id;
+    ctx.save();
+    ctx.shadowBlur=isHov?28:14;
+    ctx.shadowColor=isHov?'rgba(200,170,255,0.9)':'rgba(150,110,240,0.7)';
+    ctx.fillStyle=isHov?'rgba(165,125,255,0.88)':'rgba(115,80,210,0.72)';
+    ctx.fill(c.path);
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=isHov?'rgba(220,205,255,1.0)':'rgba(180,155,255,0.8)';
+    ctx.lineWidth=isHov?1.8:1.0;
+    ctx.stroke(c.path);
+    ctx.restore();
+  });
+
+  /* Vatican dot */
+  var vp=proj(VATICAN.lon,VATICAN.lat,W,H);
+  var vr=Math.max(5,W*0.008);
+  var vHov=hovered==='vaticano';
+  ctx.save();
+  ctx.shadowBlur=vHov?20:10;ctx.shadowColor='rgba(200,170,255,0.9)';
+  ctx.fillStyle=vHov?'rgba(220,200,255,0.95)':'rgba(180,155,255,0.85)';
+  ctx.beginPath();ctx.arc(vp[0],vp[1],vr,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(240,230,255,0.9)';ctx.lineWidth=1;ctx.stroke();
+  ctx.restore();
+
+  /* Emoji labels for visited */
+  if(W>600){
+    builtPaths.forEach(function(c){
+      if(!c.v||!c.emoji)return;
+      var geo=GEO.find(function(g){return g.id===c.id;});
+      if(!geo)return;
+      var ctr=centroid(geo);
+      var fs=Math.max(10,Math.min(16,W*0.016));
+      ctx.font=fs+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(255,255,255,0.9)';
+      ctx.fillText(c.emoji,ctr[0],ctr[1]);
+    });
+    var vp2=proj(VATICAN.lon,VATICAN.lat,W,H);
+    ctx.font=Math.max(8,W*0.012)+'px serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(VATICAN.emoji,vp2[0],vp2[1]);
+  }
+}
+
+/* ── Hit test ──────────────────────────────────────────── */
+var tip=document.getElementById('mapTip');
+
+function getHovered(cx,cy){
+  var vp=proj(VATICAN.lon,VATICAN.lat,W,H);
+  var vr=Math.max(6,W*0.012);
+  var dx=cx-vp[0],dy=cy-vp[1];
+  if(dx*dx+dy*dy<=vr*vr)return'vaticano';
+  /* Reset transform to identity so isPointInPath uses logical (CSS-pixel)
+     coordinates that match the path coordinates, regardless of DPR scaling. */
+  ctx.save();
+  ctx.setTransform(1,0,0,1,0,0);
+  var found=null;
+  for(var i=builtPaths.length-1;i>=0;i--){
+    if(builtPaths[i].v&&ctx.isPointInPath(builtPaths[i].path,cx,cy)){found=builtPaths[i].id;break;}
+  }
+  if(!found){
+    for(var j=builtPaths.length-1;j>=0;j--){
+      if(!builtPaths[j].v&&ctx.isPointInPath(builtPaths[j].path,cx,cy)){found=builtPaths[j].id;break;}
+    }
+  }
+  ctx.restore();
+  return found;
+}
+
+function findBP(id){return builtPaths.find(function(c){return c.id===id;});}
+
+function showTip(ex,ey,bp,isVat){
+  var info;
+  if(isVat){info={name:VATICAN.name,emoji:VATICAN.emoji,tagline:'El corazón de Italia',v:true};}
+  else{
+    var cnt=bp.v?COUNTRIES.find(function(c){return c.id===bp.id;}):null;
+    info={name:bp.name,emoji:bp.emoji,tagline:cnt?cnt.tagline:'',v:bp.v};
+  }
+  var lock=info.v?'':'<div class="tip-lock">🔒 Pendiente</div>';
+  tip.innerHTML='<strong>'+info.emoji+' '+info.name+'</strong>'+(info.tagline?'<small>'+info.tagline+'</small>':'')+lock;
+  tip.style.opacity='1';
+  var tx=ex+15,ty=ey-12;
+  if(tx+240>innerWidth)tx=ex-245;
+  tip.style.left=tx+'px';tip.style.top=ty+'px';
+}
+
+canvas.addEventListener('mousemove',function(e){
+  var r=canvas.getBoundingClientRect();
+  var cx=e.clientX-r.left,cy=e.clientY-r.top;
+  var h=getHovered(cx,cy);
+  if(h!==hovered){hovered=h;canvas.style.cursor=h?'pointer':'default';render();}
+  if(h){
+    var isVat=h==='vaticano';
+    var bp=isVat?{v:true}:findBP(h);
+    if(bp)showTip(e.clientX,e.clientY,bp,isVat);
+  }else{tip.style.opacity='0';}
 });
+
+canvas.addEventListener('mouseleave',function(){
+  hovered=null;tip.style.opacity='0';canvas.style.cursor='default';render();
+});
+
+canvas.addEventListener('click',function(){
+  if(!hovered)return;
+  var isVat=hovered==='vaticano';
+  var bp=isVat?{v:true}:findBP(hovered);
+  if(!bp||!bp.v)return;
+  document.documentElement.style.transition='opacity 0.35s ease';
+  document.documentElement.style.opacity='0';
+  var target=isVat?'vaticano.html':hovered+'.html';
+  setTimeout(function(){window.location.href=target;},380);
+});
+
+/* Touch */
+var touchTimer=null;
+canvas.addEventListener('touchstart',function(e){
+  e.preventDefault();
+  var r=canvas.getBoundingClientRect();
+  var t=e.touches[0];
+  var cx=t.clientX-r.left,cy=t.clientY-r.top;
+  var h=getHovered(cx,cy);
+  if(!h)return;
+  var isVat=h==='vaticano';
+  var bp=isVat?{v:true,name:'Vaticano',emoji:'🇻🇦'}:findBP(h);
+  if(!bp)return;
+  if(bp.v){
+    document.documentElement.style.transition='opacity 0.35s ease';
+    document.documentElement.style.opacity='0';
+    var target=isVat?'vaticano.html':h+'.html';
+    setTimeout(function(){window.location.href=target;},380);
+  }else{
+    hovered=h;render();
+    showTip(t.clientX,t.clientY,bp,false);
+    if(touchTimer)clearTimeout(touchTimer);
+    touchTimer=setTimeout(function(){tip.style.opacity='0';hovered=null;render();},1800);
+  }
+},{passive:false});
+
+/* ── International tags ────────────────────────────────── */
+function buildIntlTags(){
+  var wl=getWL();
+  var el=document.getElementById('intlTags');
+  el.innerHTML='';
+  INTL_DEST.forEach(function(name){
+    var tag=document.createElement('span');
+    var inWL=wl.indexOf(name)!==-1;
+    tag.className='intl-tag'+(inWL?' wl':'');
+    tag.innerHTML=(inWL?'<span>★</span> ':'')+name;
+    el.appendChild(tag);
+  });
+}
+
+/* ── Init & refresh triggers ───────────────────────────── */
+function fullRefresh(){
+  if(W>0){render();buildIntlTags();}
+}
+
+window.addEventListener('resize',function(){resize();});
+window.addEventListener('load',function(){resize();buildIntlTags();});
+/* Re-render when navigating back via browser back/forward */
+window.addEventListener('pageshow',function(){setTimeout(function(){resize();buildIntlTags();},50);});
+/* Re-render when tab becomes visible again */
+document.addEventListener('visibilitychange',function(){if(!document.hidden)fullRefresh();});
+/* Re-render when window regains focus (switching from bucket-list tab) */
+window.addEventListener('focus',function(){fullRefresh();});
+/* Re-render immediately when wishlist changes in another tab */
+window.addEventListener('storage',function(e){if(e.key===WL_KEY)fullRefresh();});
+
+resize();
+buildIntlTags();
 </script>
 </body>
 </html>

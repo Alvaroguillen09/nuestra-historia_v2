@@ -334,6 +334,22 @@ a { color: inherit; }
   justify-content: space-between;
 }
 
+.header__back {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: .68rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding: .4rem .9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(58,58,152,.25);
+  transition: background .2s, color .2s;
+  white-space: nowrap;
+}
+.header__back:hover { background: rgba(58,58,152,.08); color: var(--wine); }
+
 .header__note {
   font-family: var(--font-display);
   font-style: italic;
