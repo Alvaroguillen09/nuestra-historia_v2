@@ -1,6 +1,6 @@
 /* Secret message: click the ♡ in the footer */
 (function(){
-  var MSG = 'Solo para ti, Gabi 💜\n\nDe todo lo que existe en este mundo, lo que más me gusta es verte sonreír cuando miras estas fotos.\n\nEste sitio es solo un pequeño reflejo de todo lo que hemos vivido juntos. Y lo mejor aún está por venir.\n\nTe quiero más que a todos los países del mundo juntos.\n\n— Álvaro ♡';
+  var MSG = 'Solo para ti, Gabri 💜\n\nDe todo lo que existe en este mundo, lo que más me gusta es verte sonreír cuando miras estas fotos.\n\nEste sitio es solo un pequeño reflejo de todo lo que hemos vivido juntos. Y lo mejor aún está por venir.\n\nTe quiero más que a todos los países del mundo juntos.\n\n— Álvaro ♡';
 
   function show(){
     if(document.getElementById('eggOverlay')) return;
