@@ -3,7 +3,7 @@
   var d = new Date();
   var m = d.getMonth() + 1;
   var day = d.getDate();
-  if(!(m === 6 && (day === 11 || day === 15))) return;
+  if(!(m === 6 && (day === 11))) return;
 
   window.addEventListener('load', function(){
     setTimeout(function(){
