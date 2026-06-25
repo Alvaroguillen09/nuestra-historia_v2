@@ -148,7 +148,7 @@ const COUNTRIES = [
     accentColor: "#8b0000",
     bgTone:      "#fdf5f5",
     flag:        "flags/al.png",
-    images: ["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"]
+    images: ["C1FCC28F-C436-4738-A12C-E87A9EA324CA.JPEG","DSC04679.JPEG","DSC04727.JPEG","DSC04804.JPEG","DSC04816.JPG","DSC04820.JPG","DSC04823.JPG","DSC04838.JPG","DSC04868.JPG","DSC04879.JPEG","DSC04901.JPG","DSC04977.JPEG","DSC05036.JPG","DSC05041.JPEG","DSC05043.JPEG","DSC05047.JPG","DSC05056.JPEG","DSC05069.JPEG","DSC05121.JPEG","DSC05172.JPEG","DSC05185.JPEG","DSC05190.JPEG","DSC05207.JPEG","DSC05229.JPEG","DSC05237 2.JPEG","DSC05239 2.JPEG","DSC05251.JPG","DSC05270.JPEG","DSC05289.JPEG","DSC05299.JPEG","DSC05327.JPEG","DSC05341.JPEG","DSC05354.JPEG","IMG_0501.JPEG","IMG_0565.JPEG","IMG_0584.JPEG","IMG_0632.JPEG","IMG_0634.JPEG","IMG_0899.jpg","IMG_0951.JPEG","IMG_0991.JPEG","IMG_1161.JPEG","IMG_1194.JPEG","IMG_1235.JPEG","IMG_1668.JPEG","IMG_1671.JPEG","IMG_1694.JPEG","IMG_1753.JPEG","IMG_1782.JPEG","IMG_2120.JPEG","IMG_2610.JPEG","IMG_2650.JPEG","IMG_2818.JPEG","IMG_2956.JPEG","IMG_3194.JPEG","IMG_3225.JPEG","IMG_3230.JPEG","IMG_4071.JPEG","IMG_4122.JPEG","IMG_4136.JPEG","IMG_4151.JPEG","IMG_4195.JPEG","IMG_4237.JPEG","IMG_4240.JPEG","IMG_4243.JPEG","IMG_8095.JPEG","IMG_8219.JPEG","IMG_8242.JPEG","IMG_9846.JPEG"]
   },
   {
     id:          "vaticano",
@@ -161,6 +161,18 @@ const COUNTRIES = [
     bgTone:      "#f5f9fd",
     flag:        "flags/vatican.png",
     images: ["foto1.jpg","foto2.jpg","foto3.jpg","foto4.jpg"]
+  },
+  {
+    id:          "polonia",
+    name:        "Polonia",
+    folder:      "fotos/polonia",
+    emoji:       "🇵🇱",
+    tagline:     "Historia y resiliencia",
+    quote:       "Entre adoquines de historia, encontramos nuestro propio cuento.",
+    accentColor: "#c0392b",
+    bgTone:      "#fdf5f5",
+    flag:        "flags/pl.svg",
+    images: []
   },
   {
     id:          "eslovaquia",

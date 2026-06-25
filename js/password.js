@@ -1,5 +1,5 @@
 (function(){
-  var PASSWORD = '1234';
+  var PASSWORD = '2608';
 
   var form      = document.getElementById('passForm');
   var passInput = document.getElementById('passInput');

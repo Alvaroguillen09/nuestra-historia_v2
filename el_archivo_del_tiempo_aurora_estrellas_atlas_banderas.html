@@ -419,7 +419,7 @@ font-size:3.5rem;
 <script>
 /* Stats counter */
 (function(){
-  var targets = { statCountries: 13, statPhotos: 457, statKm: 28000 };
+  var targets = { statCountries: 14, statPhotos: 522, statKm: 28000 };
   var animated = false;
   function animate(){
     if(animated) return; animated = true;
@@ -458,7 +458,7 @@ el.className='record';
 const code="AR-"+String(i+1).padStart(3,"0");
 const flagHtml=c.flag
   ?`<img class="flag" src="${c.flag}" alt="${c.name}">`
-  :`<span style="font-size:4rem;display:flex;align-items:center;justify-content:center;height:100%;">${c.emoji}</span>`;
+  :`<span style="font-size:7rem;display:flex;align-items:center;justify-content:center;height:100%;">${c.emoji}</span>`;
 const rating=_ratings[c.id];
 const ratingHtml=rating?`<div class="card-rating" title="Valorado por Gabriela">${rating}</div>`:'';
 
